@@ -4,6 +4,9 @@
 
 **Live demo:** https://ibrahimbaabdullah-jpg-nurseglance-streamlit-app-uvwgbm.streamlit.app/
 
+**Demo video (3 min, captioned):** [docs/video/nurseglance_demo.mp4](docs/video/nurseglance_demo.mp4) ·
+**Technical report:** [PDF](docs/pdf/technical_report.pdf) · **One-page brief:** [PDF](docs/pdf/brief.pdf)
+
 A nurse-centered ICU handoff dashboard built on HL7 FHIR data from the open
 MIMIC-IV Clinical Database Demo on FHIR. It shows the same four ICU patients in two
 ways: a conventional tabbed EHR-style view (the control) and the NurseGlance view,
@@ -54,6 +57,7 @@ whether the same approach helps bedside and virtual nurses.
 | `docs/protocol.md` ([PDF](docs/pdf/protocol.pdf)) | Proposed crossover usability study with ICU and virtual nurses, modeled on the AWARE trial; not started, needs IRB approval |
 | `analysis/sample_size.py`, `analysis/allocation.py` | The protocol's sample size (34 nurses for d<sub>z</sub> = 0.5, recruit 40) and its balanced allocation list |
 | `tools/build_pdf.py` | Renders a Markdown file in `docs/` to PDF (pandoc and Chromium) |
+| `tools/record_demo.py`, `docs/video/` | Records the captioned demo video from the running app, with subtitles (`.srt`) and a narration script |
 | `streamlit_app.py`, `app/` | The dashboard: `glance.py` (NurseGlance view), `tabbed.py` (control view), `timeline.py` (12 h timeline), `data.py` (shared loading) |
 | `app/study.py`, `app/events.py`, `app/scoring.py` | Study mode: seeded randomization, event log, SUS and raw NASA-TLX scoring, CSV export |
 | `app/flags.py` | 8 transparent rule-based flags, each showing its rule, values, times and FHIR IDs (off in study mode) |
