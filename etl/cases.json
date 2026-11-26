@@ -8,12 +8,12 @@
     {
       "case_id": "S1",
       "complexity": "standard",
-      "subject_id": 10023239,
-      "hadm_id": 29295881,
-      "stay_id": 33846653,
-      "careunit": "Medical/Surgical Intensive Care Unit (MICU/SICU)",
-      "handoff_time": "2137-06-22T07:00:00",
-      "why": "no invasive ventilation or vasopressor during the ICU stay; 4 abnormal of 20 lab results in the prior 24 h; 12 heart-rate entries in the prior 12 h"
+      "subject_id": 10005909,
+      "hadm_id": 20199380,
+      "stay_id": 36496303,
+      "careunit": "Cardiac Vascular Intensive Care Unit (CVICU)",
+      "handoff_time": "2144-10-31T19:00:00",
+      "why": "swapped in by the author on 2026-11-26 (rank 8 standard candidate): the first-ranked stay 33846653 has no eMAR records, so its 12-hour medication timeline was empty; no invasive ventilation or vasopressor during the ICU stay; 14 abnormal of 48 lab results in the prior 24 h; 13 heart-rate entries in the prior 12 h"
     },
     {
       "case_id": "S2",

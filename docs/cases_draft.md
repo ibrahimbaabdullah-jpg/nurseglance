@@ -4,11 +4,12 @@ Suggested by `etl/select_cases.py`. Replace each summary with your own clinical 
 
 ## S1 — standard
 
-- Stay 33846653 (subject 10023239, admission 29295881), Medical/Surgical Intensive Care Unit (MICU/SICU)
-- Handoff: 2137-06-22 07:00, ICU day 4
-- 29 y, F; EW EMER.; principal diagnosis: Mechanical complication due to insulin pump
+- Stay 36496303 (subject 10005909, admission 20199380), Cardiac Vascular Intensive Care Unit (CVICU)
+- Handoff: 2144-10-31 19:00, ICU day 3
+- 40 y, F; OBSERVATION ADMIT; principal diagnosis: Acute embolism and thrombosis of left iliac vein
 - Died later in this hospital stay: no
-- Why standard: no invasive ventilation or vasopressor during the ICU stay; 4 abnormal of 20 lab results in the prior 24 h; 12 heart-rate entries in the prior 12 h
+- Why standard: no invasive ventilation or vasopressor during the ICU stay; 14 abnormal of 48 lab results in the prior 24 h; 13 heart-rate entries in the prior 12 h
+- Swapped in on 2026-11-26 (rank 8 standard candidate). The first-ranked stay, 33846653 (29 F, insulin pump complication), has no eMAR records, so its 12-hour medication timeline was empty.
 - Clinical summary (3 lines, your words): ...
 
 ## S2 — standard

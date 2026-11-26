@@ -51,14 +51,16 @@ unprefixed copies.
 `select_cases.py` was run on the MIMIC-IV demo v2.2 downloaded from PhysioNet, and
 `build_cases.py` on the FHIR demo v2.1.0. The results are in
 `etl/cases.json`, `docs/cases_draft.md` and `docs/case_candidates.csv` (all 41
-eligible stays). Rerun it after your download to confirm you get the same list.
+eligible stays). S1 was then swapped by hand for the rank-8 standard candidate,
+because the first-ranked stay has no eMAR records. Rerunning `select_cases.py`
+resets `etl/cases.json` to the automatic picks.
 
 | Case | Stay | Handoff | Unit | Why |
 | --- | --- | --- | --- | --- |
-| S1 | 33846653 | 2137-06-22 07:00, ICU day 4 | MICU/SICU | 29 F, insulin pump complication; no ventilation or pressors |
+| S1 | 36496303 | 2144-10-31 19:00, ICU day 3 | CVICU | 40 F, left iliac vein thrombosis; no ventilation or pressors |
 | S2 | 37509585 | 2169-01-16 07:00, ICU day 2 | Neuro SICU | 63 F, subarachnoid hemorrhage; no ventilation or pressors |
 | C1 | 32359580 | 2146-06-23 19:00, ICU day 2 | MICU | 69 M, cirrhosis; ventilated, norepinephrine and vasopressin, CRRT |
-| C2 | 37093652 | 2177-03-26 19:00, ICU day 3 | MICU/SICU | 88 M, melena; ventilated, norepinephrine weaning, new central and arterial lines |
+| C2 | 37093652 | 2177-03-26 19:00, ICU day 3 | MICU/SICU | 87 M, melena; ventilated, norepinephrine weaning, new central and arterial lines |
 
 These are rankings, not clinical judgments. Both complex patients died later in
 the admission; if you'd rather use a survivor, the next complex candidate
@@ -97,8 +99,9 @@ the admission; if you'd rather use a survivor, the next complex candidate
   from the CSV demo into `docs/value_codes.csv` (40 pairs, 10 items), and
   `build_cases.py` restores the text. This is a FHIR data-quality finding worth
   reporting under research question 1.
-- **eMAR coverage.** The demo has eMAR records for only some admissions. S1 has
-  none, so its 12-hour medication timeline is empty.
+- **eMAR coverage.** The demo has eMAR records for only some admissions (6 of the
+  top 10 standard candidates have none). Cases were checked for eMAR data so every
+  case has a 12-hour medication timeline.
 - **Code status** is rarely charted in the demo. When a hospital diagnosis code for
   DNR status (Z66 or V49.86) exists, the NurseGlance view shows "DNR (dx code)" and
   says where it came from; the tabbed view shows the same code in the problem list.
