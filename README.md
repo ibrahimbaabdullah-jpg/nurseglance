@@ -2,6 +2,8 @@
 
 > **Research prototype — not for clinical use; not clinically validated.**
 
+**Live demo:** https://ibrahimbaabdullah-jpg-nurseglance-streamlit-app-uvwgbm.streamlit.app/
+
 A nurse-centered ICU handoff dashboard built on HL7 FHIR data from the open
 MIMIC-IV Clinical Database Demo on FHIR. It shows the same four ICU patients in two
 ways: a conventional tabbed EHR-style view (the control) and the NurseGlance view,
