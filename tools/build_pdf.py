@@ -9,6 +9,7 @@ Images resolve relative to the Markdown file.
 from __future__ import annotations
 
 import argparse
+import re
 import subprocess
 import tempfile
 from pathlib import Path
@@ -35,11 +36,22 @@ th, td { border-bottom: 1px solid #c9c9cf; padding: 0.28em 0.45em; text-align: l
 th { border-bottom: 1.5px solid #6e6e73; font-weight: 600; }
 code { font-family: "DejaVu Sans Mono", Menlo, monospace; font-size: 0.86em; }
 img { max-width: 100%; }
-figure { margin: 0.4em 0 0.8em; break-inside: avoid; }
-figcaption { font-size: 0.85em; color: #515154; }
+figure { margin: 0.5em 0 0.9em; break-inside: avoid; text-align: center; }
+figure img { max-height: 4.1in; border: 1px solid #d2d2d7; }
+figcaption { font-size: 0.85em; color: #515154; text-align: left; margin-top: 0.3em; }
 a { color: #1a5fb4; text-decoration: none; }
 strong { font-weight: 650; }
 """
+
+
+def _figures(body: str) -> str:
+    """Turn a paragraph that holds only an image into a figure captioned with its alt text."""
+    def repl(m: re.Match) -> str:
+        img = m.group(1)
+        alt = re.search(r'alt="([^"]*)"', img)
+        caption = alt.group(1) if alt else ""
+        return f"<figure>{img}<figcaption>{caption}</figcaption></figure>" if caption else m.group(0)
+    return re.sub(r"<p>(<img [^>]*?/?>)</p>", repl, body, flags=re.S)
 
 
 def build(md: Path, out: Path, title: str | None, font_size: float) -> Path:
@@ -47,6 +59,7 @@ def build(md: Path, out: Path, title: str | None, font_size: float) -> Path:
     html_body = subprocess.run(
         ["pandoc", str(md), "--from", "gfm", "--to", "html5"],
         check=True, capture_output=True, text=True).stdout
+    html_body = _figures(html_body)
     title = title or md.stem.replace("_", " ").title()
     page = (f"<!doctype html><html lang='en'><head><meta charset='utf-8'>"
             f"<base href='{md.parent.as_uri()}/'><title>{title}</title>"

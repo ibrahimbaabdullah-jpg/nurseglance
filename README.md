@@ -49,6 +49,7 @@ whether the same approach helps bedside and virtual nurses.
 | `analysis/` | Task analysis: the shortest path to every study answer in each view (`paths.py`), a Playwright replay that measures it in the running app (`replay.py`), and keystroke-level estimates (`task_analysis.py`) |
 | `docs/task_analysis.md` | Clicks, scrolls, screens and estimated seconds per question, before and after the redesign |
 | `docs/heuristic_evaluation.md` | Draft heuristic evaluation of both views (Nielsen's 10, severity 0 to 4), with what version 0.3 changed |
+| `docs/technical_report.md` ([PDF](docs/pdf/technical_report.pdf)) | Six-page technical report: background, methods, results for the three research questions, limitations, equity and responsible use |
 | `docs/protocol.md` ([PDF](docs/pdf/protocol.pdf)) | Proposed crossover usability study with ICU and virtual nurses, modeled on the AWARE trial; not started, needs IRB approval |
 | `analysis/sample_size.py`, `analysis/allocation.py` | The protocol's sample size (34 nurses for d<sub>z</sub> = 0.5, recruit 40) and its balanced allocation list |
 | `tools/build_pdf.py` | Renders a Markdown file in `docs/` to PDF (pandoc and Chromium) |
