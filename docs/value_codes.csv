@@ -1,0 +1,41 @@
+itemid,label,code,text,n
+223791,Pain Level,0.0,None,600
+223791,Pain Level,1.0,None to Mild,40
+223791,Pain Level,2.0,Mild,61
+223791,Pain Level,3.0,Mild to Moderate,131
+223791,Pain Level,4.0,Mild to Moderate,120
+223791,Pain Level,5.0,Moderate,177
+223791,Pain Level,6.0,Moderate to Severe,111
+223791,Pain Level,7.0,Moderate to Severe,81
+223791,Pain Level,8.0,Severe,89
+223791,Pain Level,9.0,Severe to Worse,29
+223791,Pain Level,10.0,Worst,17
+223849,Ventilator Mode,2.0,CMV/ASSIST,29
+223849,Ventilator Mode,10.0,CPAP,2
+223849,Ventilator Mode,11.0,CPAP/PSV,467
+223849,Ventilator Mode,13.0,MMV/PSV,2
+223849,Ventilator Mode,30.0,Standby,22
+223849,Ventilator Mode,49.0,CMV/ASSIST/AutoFlow,467
+223849,Ventilator Mode,51.0,MMV/PSV/AutoFlow,21
+223849,Ventilator Mode,53.0,CPAP/PPS,1
+228334,CAM-ICU Altered LOC,0.0,No,67
+228334,CAM-ICU Altered LOC,1.0,Yes,307
+228335,CAM-ICU Disorganized thinking,0.0,Unable to Assess,7
+228335,CAM-ICU Disorganized thinking,1.0,Yes,18
+228336,CAM-ICU Inattention,0.0,No,22
+228336,CAM-ICU Inattention,1.0,Yes,157
+228337,CAM-ICU MS Change,0.0,No,307
+228337,CAM-ICU MS Change,1.0,Yes,199
+229314,Ventilator Mode (Hamilton),5.0,SPONT,148
+229314,Ventilator Mode (Hamilton),7.0,P-CMV,15
+229314,Ventilator Mode (Hamilton),9.0,APV (cmv),219
+229314,Ventilator Mode (Hamilton),10.0,ASV,1
+229314,Ventilator Mode (Hamilton),13.0,NIV,7
+229314,Ventilator Mode (Hamilton),14.0,NIV-ST,2
+229314,Ventilator Mode (Hamilton),16.0,VS,10
+229324,CAM-ICU Disorganized thinking,0.0,No,8
+229324,CAM-ICU Disorganized thinking,1.0,Yes,19
+229325,CAM-ICU Inattention,0.0,No,76
+229325,CAM-ICU Inattention,1.0,Yes,215
+229326,CAM-ICU MS Change,0.0,No,297
+229326,CAM-ICU MS Change,1.0,Yes,300

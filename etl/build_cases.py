@@ -35,6 +35,17 @@ NON_VOLUME_OUTPUT = {str(i) for i in config.NON_VOLUME_OUTPUT_ITEMS}
 DEVICE_IDS = {str(i): label for i, label in config.DEVICE_ITEMS.items()}
 BRADEN_IDS = ("224054", "224055", "224056", "224057", "224058", "224059")
 NEGATE_IDS = {str(i) for i in config.NEGATE_ITEMS}
+
+
+def load_value_codes(path: Path = config.VALUE_CODES_FILE) -> dict[tuple[str, float], str]:
+    """(item_id, numeric code) -> charted text, from docs/value_codes.csv."""
+    if not path.exists():
+        return {}
+    with open(path, newline="", encoding="utf-8") as handle:
+        return {(row["itemid"], float(row["code"])): row["text"] for row in csv.DictReader(handle)}
+
+
+VALUE_CODES = load_value_codes()
 CARRIER_IDS = {str(i) for i in config.CARRIER_FLUIDS}
 OBSERVATION_SOURCES = {"chart": "chartevents", "lab": "labevents", "output": "outputevents"}
 
@@ -171,6 +182,9 @@ def read_observations(path: Path, source: str, by_patient: dict, needles: list[s
             obs = {"t": iso(moment), "source": source, "item_id": item, "label": coding.get("display"),
                    "category": first_coding(categories[0]).get("code"),
                    "value": number, "value_text": text, "unit": unit, "fhir_id": res.get("id")}
+            if text is None and number is not None and (item, float(number)) in VALUE_CODES:
+                obs["value_text"] = VALUE_CODES[(item, float(number))]
+                obs["note"] = "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
             if item in NEGATE_IDS and number is not None:
                 obs["value"] = -abs(number)
                 obs["note"] = "MIMIC stores this goal without its minus sign; sign restored"

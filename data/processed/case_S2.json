@@ -135,7 +135,7 @@
    "latest": {
     "t": "2169-01-16T06:33:00",
     "value": 3,
-    "value_text": null,
+    "value_text": "Mild to Moderate",
     "unit": null,
     "fhir_id": "37c78e8a-5c80-5da1-8258-f346cb684bf4"
    },
@@ -159,7 +159,7 @@
    "latest": {
     "t": "2169-01-16T04:00:00",
     "value": 0,
-    "value_text": null,
+    "value_text": "No",
     "unit": null,
     "fhir_id": "8f5df488-fd38-5aef-8a79-8b05c0c90f66"
    },
@@ -3562,9 +3562,10 @@
    "label": "CAM-ICU MS Change",
    "category": "Pain/Sedation",
    "value": 0,
-   "value_text": null,
+   "value_text": "No",
    "unit": null,
-   "fhir_id": "47464f40-c53d-5cfb-bd2a-917f151ad13c"
+   "fhir_id": "47464f40-c53d-5cfb-bd2a-917f151ad13c",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2169-01-15T08:00:00",
@@ -10361,9 +10362,10 @@
    "label": "Pain Level",
    "category": "Pain/Sedation",
    "value": 0,
-   "value_text": null,
+   "value_text": "None",
    "unit": null,
-   "fhir_id": "fb57efcb-a481-592f-bb26-d0d39ca15418"
+   "fhir_id": "fb57efcb-a481-592f-bb26-d0d39ca15418",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2169-01-15T20:00:00",
@@ -11748,9 +11750,10 @@
    "label": "CAM-ICU MS Change",
    "category": "Pain/Sedation",
    "value": 0,
-   "value_text": null,
+   "value_text": "No",
    "unit": null,
-   "fhir_id": "bde49e5c-5290-599a-8dd3-8cf4796a0f69"
+   "fhir_id": "bde49e5c-5290-599a-8dd3-8cf4796a0f69",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2169-01-15T20:00:00",
@@ -13701,9 +13704,10 @@
    "label": "Pain Level",
    "category": "Pain/Sedation",
    "value": 2,
-   "value_text": null,
+   "value_text": "Mild",
    "unit": null,
-   "fhir_id": "459fb416-af19-5258-bf04-b51d45592184"
+   "fhir_id": "459fb416-af19-5258-bf04-b51d45592184",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2169-01-16T00:00:00",
@@ -14835,9 +14839,10 @@
    "label": "CAM-ICU MS Change",
    "category": "Pain/Sedation",
    "value": 0,
-   "value_text": null,
+   "value_text": "No",
    "unit": null,
-   "fhir_id": "c60ce767-fe52-5dd9-af0e-7d4836d06365"
+   "fhir_id": "c60ce767-fe52-5dd9-af0e-7d4836d06365",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2169-01-16T00:00:00",
@@ -18334,9 +18339,10 @@
    "label": "CAM-ICU MS Change",
    "category": "Pain/Sedation",
    "value": 0,
-   "value_text": null,
+   "value_text": "No",
    "unit": null,
-   "fhir_id": "8f5df488-fd38-5aef-8a79-8b05c0c90f66"
+   "fhir_id": "8f5df488-fd38-5aef-8a79-8b05c0c90f66",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2169-01-16T04:00:00",
@@ -18479,9 +18485,10 @@
    "label": "Pain Level",
    "category": "Pain/Sedation",
    "value": 1,
-   "value_text": null,
+   "value_text": "None to Mild",
    "unit": null,
-   "fhir_id": "e9412857-6fa3-5786-b9a9-e845217dfc9a"
+   "fhir_id": "e9412857-6fa3-5786-b9a9-e845217dfc9a",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2169-01-16T04:30:00",
@@ -19515,9 +19522,10 @@
    "label": "Pain Level",
    "category": "Pain/Sedation",
    "value": 3,
-   "value_text": null,
+   "value_text": "Mild to Moderate",
    "unit": null,
-   "fhir_id": "37c78e8a-5c80-5da1-8258-f346cb684bf4"
+   "fhir_id": "37c78e8a-5c80-5da1-8258-f346cb684bf4",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2169-01-16T06:33:00",

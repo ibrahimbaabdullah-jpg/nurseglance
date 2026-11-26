@@ -135,7 +135,7 @@
    "latest": {
     "t": "2146-06-23T16:00:00",
     "value": 0,
-    "value_text": null,
+    "value_text": "None",
     "unit": null,
     "fhir_id": "e6ed60a4-8428-520d-a4fb-88897455ce67"
    },
@@ -497,7 +497,7 @@
    "latest": {
     "t": "2146-06-23T15:00:00",
     "value": 49,
-    "value_text": null,
+    "value_text": "CMV/ASSIST/AutoFlow",
     "unit": null,
     "fhir_id": "eb16bfac-31c3-55dd-939c-5ea3101d70a2"
    },
@@ -4990,9 +4990,10 @@
    "label": "Ventilator Mode",
    "category": "Respiratory",
    "value": 2,
-   "value_text": null,
+   "value_text": "CMV/ASSIST",
    "unit": null,
-   "fhir_id": "647633f4-2ea9-5a0c-b432-d3a7af12effe"
+   "fhir_id": "647633f4-2ea9-5a0c-b432-d3a7af12effe",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2146-06-22T19:00:00",
@@ -9626,9 +9627,10 @@
    "label": "Ventilator Mode",
    "category": "Respiratory",
    "value": 49,
-   "value_text": null,
+   "value_text": "CMV/ASSIST/AutoFlow",
    "unit": null,
-   "fhir_id": "822ff347-66f0-5acb-8d1e-72d1e21e133a"
+   "fhir_id": "822ff347-66f0-5acb-8d1e-72d1e21e133a",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2146-06-22T23:00:00",
@@ -17549,9 +17551,10 @@
    "label": "Ventilator Mode",
    "category": "Respiratory",
    "value": 49,
-   "value_text": null,
+   "value_text": "CMV/ASSIST/AutoFlow",
    "unit": null,
-   "fhir_id": "6a8216aa-d3ce-52d7-97b5-80fc564619f0"
+   "fhir_id": "6a8216aa-d3ce-52d7-97b5-80fc564619f0",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2146-06-23T05:00:00",
@@ -20767,9 +20770,10 @@
    "label": "Ventilator Mode",
    "category": "Respiratory",
    "value": 49,
-   "value_text": null,
+   "value_text": "CMV/ASSIST/AutoFlow",
    "unit": null,
-   "fhir_id": "7308e12b-b6a3-5fa7-ab9a-683664ec73a1"
+   "fhir_id": "7308e12b-b6a3-5fa7-ab9a-683664ec73a1",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2146-06-23T07:00:00",
@@ -21582,9 +21586,10 @@
    "label": "Pain Level",
    "category": "Pain/Sedation",
    "value": 0,
-   "value_text": null,
+   "value_text": "None",
    "unit": null,
-   "fhir_id": "eb5ecb74-1dc1-5298-8a55-16e121d693bf"
+   "fhir_id": "eb5ecb74-1dc1-5298-8a55-16e121d693bf",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2146-06-23T07:43:00",
@@ -26539,9 +26544,10 @@
    "label": "Pain Level",
    "category": "Pain/Sedation",
    "value": 0,
-   "value_text": null,
+   "value_text": "None",
    "unit": null,
-   "fhir_id": "a6519863-73ce-5151-b128-c54567383dde"
+   "fhir_id": "a6519863-73ce-5151-b128-c54567383dde",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2146-06-23T14:00:00",
@@ -29765,9 +29771,10 @@
    "label": "Ventilator Mode",
    "category": "Respiratory",
    "value": 49,
-   "value_text": null,
+   "value_text": "CMV/ASSIST/AutoFlow",
    "unit": null,
-   "fhir_id": "eb16bfac-31c3-55dd-939c-5ea3101d70a2"
+   "fhir_id": "eb16bfac-31c3-55dd-939c-5ea3101d70a2",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2146-06-23T15:00:00",
@@ -30802,9 +30809,10 @@
    "label": "Pain Level",
    "category": "Pain/Sedation",
    "value": 0,
-   "value_text": null,
+   "value_text": "None",
    "unit": null,
-   "fhir_id": "e6ed60a4-8428-520d-a4fb-88897455ce67"
+   "fhir_id": "e6ed60a4-8428-520d-a4fb-88897455ce67",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2146-06-23T16:00:00",

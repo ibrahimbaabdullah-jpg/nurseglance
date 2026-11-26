@@ -4,5 +4,5 @@ pytest>=8
 tzdata          # time-zone data; needed on Windows
 
 # Day 2 onward (the app)
-streamlit>=1.40
+streamlit>=1.50
 plotly>=5.24

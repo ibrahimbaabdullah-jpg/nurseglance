@@ -3,8 +3,10 @@
 > **Research prototype — not for clinical use; not clinically validated.**
 
 A nurse-centered ICU handoff dashboard built on HL7 FHIR data from the open
-MIMIC-IV Clinical Database Demo on FHIR. This repo is the Day 1 starter: the
-scripts that pick the handoff cases and turn FHIR into one clean JSON file per case.
+MIMIC-IV Clinical Database Demo on FHIR. It shows the same four ICU patients in two
+ways: a conventional tabbed EHR-style view (the control) and the NurseGlance view,
+one screen organized by organ system with sparklines, abnormal highlighting and a
+12-hour medication and infusion timeline.
 
 ## What's here
 
@@ -14,6 +16,8 @@ scripts that pick the handoff cases and turn FHIR into one clean JSON file per c
 | `etl/build_cases.py` | Reads the FHIR demo and writes `data/processed/case_<id>.json` for each case |
 | `etl/coverage.py` | Reports how many handoff data elements FHIR can fill (research question 1) |
 | `etl/config.py` | Item IDs, time windows and file paths, all in one place |
+| `etl/value_codes.py` | Rebuilds `docs/value_codes.csv`, which restores text that FHIR carries only as a numeric code |
+| `streamlit_app.py`, `app/` | The dashboard: `glance.py` (NurseGlance view), `tabbed.py` (control view), `timeline.py` (12 h timeline), `data.py` (shared loading) |
 | `docs/data_elements.csv` | Starter list of 58 handoff data elements by organ system, for you to edit |
 | `tests/` | Unit tests, a synthetic end-to-end test, and a FHIR-vs-CSV check |
 | `download_data.sh` | Downloads both datasets from PhysioNet and checks their checksums |
@@ -32,7 +36,11 @@ python etl/select_cases.py           # suggests cases -> etl/cases.json, docs/ca
 python etl/build_cases.py            # -> data/processed/case_S1.json ... case_C2.json
 pytest                               # all tests, including FHIR vs CSV
 python etl/coverage.py               # -> docs/coverage.csv
+streamlit run streamlit_app.py       # opens the dashboard at http://localhost:8501
 ```
+
+The processed case files are committed, so the app runs (and deploys to
+Streamlit Community Cloud) without downloading anything.
 
 If your data lives elsewhere, pass `--csv-dir` and `--fhir-dir`. The FHIR
 reader accepts PhysioNet's names (`MimicPatient.ndjson.gz`) and unzipped or
@@ -40,7 +48,8 @@ unprefixed copies.
 
 ## Suggested cases (already generated)
 
-`select_cases.py` was run on the MIMIC-IV demo v2.2. The results are in
+`select_cases.py` was run on the MIMIC-IV demo v2.2 downloaded from PhysioNet, and
+`build_cases.py` on the FHIR demo v2.1.0. The results are in
 `etl/cases.json`, `docs/cases_draft.md` and `docs/case_candidates.csv` (all 41
 eligible stays). Rerun it after your download to confirm you get the same list.
 
@@ -82,18 +91,30 @@ the admission; if you'd rather use a survivor, the next complex candidate
 - **Intake and output** totals are approximate (ICU input events in mL, prorated by time).
 - **Organ systems.** The starter list adds a Heme/ID group (temperature, WBC,
   hemoglobin, platelets, INR, antibiotics). Fold it into another panel if you want seven.
+- **Coded text.** FHIR demo v2.1.0 carries some charted text items only as
+  MIMIC's numeric code (ventilator mode "CMV/ASSIST/AutoFlow" arrives as 49; pain
+  level, CAM-ICU likewise). `etl/value_codes.py` rebuilds the code-to-text table
+  from the CSV demo into `docs/value_codes.csv` (40 pairs, 10 items), and
+  `build_cases.py` restores the text. This is a FHIR data-quality finding worth
+  reporting under research question 1.
+- **eMAR coverage.** The demo has eMAR records for only some admissions. S1 has
+  none, so its 12-hour medication timeline is empty.
+- **Code status** is rarely charted in the demo. When a hospital diagnosis code for
+  DNR status (Z66 or V49.86) exists, the NurseGlance view shows "DNR (dx code)" and
+  says where it came from; the tabbed view shows the same code in the problem list.
+- **Control view tabs** are a radio control, not `st.tabs`, so each tab change is a
+  real interaction that study mode (Day 3) can log as a click and a screen visit.
 - **Thresholds** marked "placeholder" in `docs/data_elements.csv` are yours to set
   and cite. Labs with no threshold use each result's own reference range.
 
 ## How it was tested
 
-- 17 unit and synthetic tests (`pytest`); the synthetic test checks windows,
-  calculated MAP, GCS, urine output per kg, drip titration, line days and lab flags.
-- The full pipeline ran on a 10-patient copy of the FHIR demo (an older 2.0
-  release with truncated chart data). For all 4 test cases, 20 randomly sampled
-  values each matched the MIMIC-IV demo CSV exactly on value, item and time.
-- It has not yet run on the full v2.1.0 FHIR files. If a step fails there, the
-  error names the file and resource; the fix is usually in `etl/fhir_io.py`.
+- 32 tests (`pytest`): unit and synthetic ETL tests (windows, calculated MAP, GCS,
+  urine output per kg, drip titration, line days, lab flags), the FHIR-vs-CSV check,
+  the restored text codes, and the app's data helpers, timeline and panels for every case.
+- The full pipeline ran on the official FHIR demo v2.1.0 and CSV demo v2.2 from
+  PhysioNet (checksums verified). The FHIR-vs-CSV test passes for all 4 cases.
+- Both views were clicked through for all 4 cases in a headless browser with no errors.
 
 ## Data
 

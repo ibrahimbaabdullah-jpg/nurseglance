@@ -135,7 +135,7 @@
    "latest": {
     "t": "2177-03-26T16:11:00",
     "value": 0,
-    "value_text": null,
+    "value_text": "None",
     "unit": null,
     "fhir_id": "6b4e3cc5-4460-514d-9b91-ea2b92a1b413"
    },
@@ -159,7 +159,7 @@
    "latest": {
     "t": "2177-03-26T14:58:00",
     "value": 0,
-    "value_text": null,
+    "value_text": "No",
     "unit": null,
     "fhir_id": "4a64d9a5-2b81-5b11-8a34-54b0102446a3"
    },
@@ -496,7 +496,7 @@
    "latest": {
     "t": "2177-03-26T19:00:00",
     "value": 11,
-    "value_text": null,
+    "value_text": "CPAP/PSV",
     "unit": null,
     "fhir_id": "89c19717-fdbb-52ef-b9e4-ce9dc557429f"
    },
@@ -3883,9 +3883,10 @@
    "label": "Ventilator Mode",
    "category": "Respiratory",
    "value": 11,
-   "value_text": null,
+   "value_text": "CPAP/PSV",
    "unit": null,
-   "fhir_id": "622f6938-419e-5edb-b92f-aa74d84c2243"
+   "fhir_id": "622f6938-419e-5edb-b92f-aa74d84c2243",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2177-03-25T19:00:00",
@@ -5140,9 +5141,10 @@
    "label": "Pain Level",
    "category": "Pain/Sedation",
    "value": 0,
-   "value_text": null,
+   "value_text": "None",
    "unit": null,
-   "fhir_id": "2a7dc533-c964-5c44-9485-3d0487e7fa01"
+   "fhir_id": "2a7dc533-c964-5c44-9485-3d0487e7fa01",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2177-03-25T20:00:00",
@@ -6846,9 +6848,10 @@
    "label": "CAM-ICU MS Change",
    "category": "Pain/Sedation",
    "value": 0,
-   "value_text": null,
+   "value_text": "No",
    "unit": null,
-   "fhir_id": "8769d3d1-498e-5d76-bca2-0642375414c5"
+   "fhir_id": "8769d3d1-498e-5d76-bca2-0642375414c5",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2177-03-25T20:00:00",
@@ -7850,9 +7853,10 @@
    "label": "Ventilator Mode",
    "category": "Respiratory",
    "value": 11,
-   "value_text": null,
+   "value_text": "CPAP/PSV",
    "unit": null,
-   "fhir_id": "2d5f5404-c55f-55df-bde3-c82deb528958"
+   "fhir_id": "2d5f5404-c55f-55df-bde3-c82deb528958",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2177-03-25T22:00:00",
@@ -9064,9 +9068,10 @@
    "label": "Pain Level",
    "category": "Pain/Sedation",
    "value": 0,
-   "value_text": null,
+   "value_text": "None",
    "unit": null,
-   "fhir_id": "d68d642e-32a0-5827-bfe1-8668cfbbd76e"
+   "fhir_id": "d68d642e-32a0-5827-bfe1-8668cfbbd76e",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2177-03-26T00:00:00",
@@ -9152,9 +9157,10 @@
    "label": "Ventilator Mode",
    "category": "Respiratory",
    "value": 11,
-   "value_text": null,
+   "value_text": "CPAP/PSV",
    "unit": null,
-   "fhir_id": "9d17b61e-ea95-54b0-90a0-83bc5cebae56"
+   "fhir_id": "9d17b61e-ea95-54b0-90a0-83bc5cebae56",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2177-03-26T00:00:00",
@@ -12058,9 +12064,10 @@
    "label": "Ventilator Mode",
    "category": "Respiratory",
    "value": 11,
-   "value_text": null,
+   "value_text": "CPAP/PSV",
    "unit": null,
-   "fhir_id": "47471fd7-f95c-5ed1-be51-dae5812320a3"
+   "fhir_id": "47471fd7-f95c-5ed1-be51-dae5812320a3",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2177-03-26T03:00:00",
@@ -12542,9 +12549,10 @@
    "label": "Pain Level",
    "category": "Pain/Sedation",
    "value": 0,
-   "value_text": null,
+   "value_text": "None",
    "unit": null,
-   "fhir_id": "2dd5ec1c-1b31-5536-9c7b-3f4302c49302"
+   "fhir_id": "2dd5ec1c-1b31-5536-9c7b-3f4302c49302",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2177-03-26T04:00:00",
@@ -14887,9 +14895,10 @@
    "label": "Ventilator Mode",
    "category": "Respiratory",
    "value": 11,
-   "value_text": null,
+   "value_text": "CPAP/PSV",
    "unit": null,
-   "fhir_id": "a2c631bf-59ee-5423-92da-7fb5fe23687f"
+   "fhir_id": "a2c631bf-59ee-5423-92da-7fb5fe23687f",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2177-03-26T05:00:00",
@@ -15602,9 +15611,10 @@
    "label": "Ventilator Mode",
    "category": "Respiratory",
    "value": 49,
-   "value_text": null,
+   "value_text": "CMV/ASSIST/AutoFlow",
    "unit": null,
-   "fhir_id": "112005b6-3931-58f4-b72d-01bcf8f16b2a"
+   "fhir_id": "112005b6-3931-58f4-b72d-01bcf8f16b2a",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2177-03-26T05:30:00",
@@ -17147,9 +17157,10 @@
    "label": "Ventilator Mode",
    "category": "Respiratory",
    "value": 49,
-   "value_text": null,
+   "value_text": "CMV/ASSIST/AutoFlow",
    "unit": null,
-   "fhir_id": "3fa154d0-81cf-5867-8052-b9e759d6cf10"
+   "fhir_id": "3fa154d0-81cf-5867-8052-b9e759d6cf10",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2177-03-26T08:00:00",
@@ -18788,9 +18799,10 @@
    "label": "Pain Level",
    "category": "Pain/Sedation",
    "value": 0,
-   "value_text": null,
+   "value_text": "None",
    "unit": null,
-   "fhir_id": "9a97032b-9478-5f1f-bcef-442f73377ee5"
+   "fhir_id": "9a97032b-9478-5f1f-bcef-442f73377ee5",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2177-03-26T08:22:00",
@@ -18921,9 +18933,10 @@
    "label": "CAM-ICU MS Change",
    "category": "Pain/Sedation",
    "value": 0,
-   "value_text": null,
+   "value_text": "No",
    "unit": null,
-   "fhir_id": "74efbd63-dbfe-5662-913e-3e1c253c1673"
+   "fhir_id": "74efbd63-dbfe-5662-913e-3e1c253c1673",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2177-03-26T09:00:00",
@@ -18965,9 +18978,10 @@
    "label": "Ventilator Mode",
    "category": "Respiratory",
    "value": 11,
-   "value_text": null,
+   "value_text": "CPAP/PSV",
    "unit": null,
-   "fhir_id": "fd0773f8-b8de-5abf-8a68-bb50f5d0f15e"
+   "fhir_id": "fd0773f8-b8de-5abf-8a68-bb50f5d0f15e",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2177-03-26T09:00:00",
@@ -22120,9 +22134,10 @@
    "label": "Ventilator Mode",
    "category": "Respiratory",
    "value": 11,
-   "value_text": null,
+   "value_text": "CPAP/PSV",
    "unit": null,
-   "fhir_id": "dec1e67d-c2f7-57ee-95a5-9f3895e7b43a"
+   "fhir_id": "dec1e67d-c2f7-57ee-95a5-9f3895e7b43a",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2177-03-26T13:00:00",
@@ -24539,9 +24554,10 @@
    "label": "Pain Level",
    "category": "Pain/Sedation",
    "value": 0,
-   "value_text": null,
+   "value_text": "None",
    "unit": null,
-   "fhir_id": "73da211f-6db4-5cce-b214-6a1c1cc4f318"
+   "fhir_id": "73da211f-6db4-5cce-b214-6a1c1cc4f318",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2177-03-26T14:58:00",
@@ -24760,9 +24776,10 @@
    "label": "CAM-ICU MS Change",
    "category": "Pain/Sedation",
    "value": 0,
-   "value_text": null,
+   "value_text": "No",
    "unit": null,
-   "fhir_id": "4a64d9a5-2b81-5b11-8a34-54b0102446a3"
+   "fhir_id": "4a64d9a5-2b81-5b11-8a34-54b0102446a3",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2177-03-26T14:58:00",
@@ -24904,9 +24921,10 @@
    "label": "Ventilator Mode",
    "category": "Respiratory",
    "value": 11,
-   "value_text": null,
+   "value_text": "CPAP/PSV",
    "unit": null,
-   "fhir_id": "4a7bd3f2-ea3a-5d13-8e64-ac4ae78a7f01"
+   "fhir_id": "4a7bd3f2-ea3a-5d13-8e64-ac4ae78a7f01",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2177-03-26T15:00:00",
@@ -25807,9 +25825,10 @@
    "label": "Pain Level",
    "category": "Pain/Sedation",
    "value": 0,
-   "value_text": null,
+   "value_text": "None",
    "unit": null,
-   "fhir_id": "6b4e3cc5-4460-514d-9b91-ea2b92a1b413"
+   "fhir_id": "6b4e3cc5-4460-514d-9b91-ea2b92a1b413",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2177-03-26T16:11:00",
@@ -28712,9 +28731,10 @@
    "label": "Ventilator Mode",
    "category": "Respiratory",
    "value": 11,
-   "value_text": null,
+   "value_text": "CPAP/PSV",
    "unit": null,
-   "fhir_id": "89c19717-fdbb-52ef-b9e4-ce9dc557429f"
+   "fhir_id": "89c19717-fdbb-52ef-b9e4-ce9dc557429f",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2177-03-26T19:00:00",

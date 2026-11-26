@@ -15,6 +15,7 @@ DEFAULT_CSV_DIR = REPO_ROOT / "data/raw/physionet.org/files/mimic-iv-demo/2.2"
 CASES_FILE = REPO_ROOT / "etl/cases.json"
 PROCESSED_DIR = REPO_ROOT / "data/processed"
 DATA_ELEMENTS_FILE = REPO_ROOT / "docs/data_elements.csv"
+VALUE_CODES_FILE = REPO_ROOT / "docs/value_codes.csv"
 
 # Time windows (hours) around the handoff time.
 LOOKBACK_HOURS = 24      # vitals, assessments, I&O, infusions before handoff
@@ -100,4 +101,19 @@ DEVICE_ITEMS = {
     229351: "Foley catheter",
     225802: "CRRT",
     225441: "Hemodialysis",
+}
+
+# Text items that the FHIR demo v2.1.0 carries only as a number. MIMIC stores an
+# internal code in valuenum for these (ventilator mode "CMV/ASSIST/AutoFlow" = 49),
+# and the FHIR conversion kept the code and dropped the text. etl/value_codes.py
+# rebuilds the code -> text table from the CSV demo into docs/value_codes.csv,
+# and build_cases.py uses it to restore the text.
+CODED_TEXT_ITEMS = {
+    223791: "Pain Level",
+    223849: "Ventilator Mode",
+    229314: "Ventilator Mode (Hamilton)",
+    228334: "CAM-ICU Altered LOC", 228335: "CAM-ICU Disorganized thinking",
+    228336: "CAM-ICU Inattention", 228337: "CAM-ICU MS Change",
+    229324: "CAM-ICU Disorganized thinking", 229325: "CAM-ICU Inattention",
+    229326: "CAM-ICU MS Change",
 }

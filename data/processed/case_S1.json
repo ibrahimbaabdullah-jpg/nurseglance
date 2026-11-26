@@ -144,7 +144,7 @@
    "latest": {
     "t": "2137-06-21T20:00:00",
     "value": 0,
-    "value_text": null,
+    "value_text": "No",
     "unit": null,
     "fhir_id": "62e40e13-1c75-5111-b099-faa828e36483"
    },
@@ -4227,9 +4227,10 @@
    "label": "CAM-ICU MS Change",
    "category": "Pain/Sedation",
    "value": 0,
-   "value_text": null,
+   "value_text": "No",
    "unit": null,
-   "fhir_id": "5d9b8715-a430-5eb4-82cf-283f434a347c"
+   "fhir_id": "5d9b8715-a430-5eb4-82cf-283f434a347c",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2137-06-21T09:00:00",
@@ -6454,9 +6455,10 @@
    "label": "CAM-ICU MS Change",
    "category": "Pain/Sedation",
    "value": 0,
-   "value_text": null,
+   "value_text": "No",
    "unit": null,
-   "fhir_id": "62e40e13-1c75-5111-b099-faa828e36483"
+   "fhir_id": "62e40e13-1c75-5111-b099-faa828e36483",
+   "note": "FHIR carries MIMIC's numeric code; text restored from docs/value_codes.csv"
   },
   {
    "t": "2137-06-21T20:00:00",
