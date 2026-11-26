@@ -1234,20 +1234,52 @@
    "mappable": true
   },
   "fall_risk": {
-   "label": "Risk for falls",
+   "label": "Morse Fall Scale",
    "organ_system": "Safety",
-   "source": "chart",
+   "source": "derived",
    "display_rule": "latest",
-   "has_data": false,
-   "mappable": true
+   "has_data": true,
+   "mappable": true,
+   "item_id": "MORSE_TOTAL",
+   "latest": {
+    "t": "2177-03-25T20:00:00",
+    "value": 60,
+    "value_text": null,
+    "unit": "points",
+    "fhir_id": null
+   },
+   "n_12h": 0,
+   "min_12h": null,
+   "max_12h": null,
+   "change_12h": null,
+   "abnormal": true,
+   "abnormal_reason": "above 44",
+   "any_abnormal_12h": null,
+   "note": "Sum of the six Morse items when all are charted together"
   },
   "restraints": {
    "label": "Restraints",
    "organ_system": "Safety",
    "source": "chart",
    "display_rule": "latest",
-   "has_data": false,
-   "mappable": true
+   "has_data": true,
+   "mappable": true,
+   "item_id": "227945",
+   "latest": {
+    "t": "2177-03-26T18:06:00",
+    "value": null,
+    "value_text": "On",
+    "unit": null,
+    "fhir_id": "ec148c64-bcbc-5c98-b771-6aef591e2fc6"
+   },
+   "n_12h": 5,
+   "min_12h": null,
+   "max_12h": null,
+   "change_12h": null,
+   "abnormal": null,
+   "abnormal_reason": null,
+   "any_abnormal_12h": false,
+   "note": "Non-violent restraint status and device"
   },
   "precautions": {
    "label": "Precautions",
@@ -6964,6 +6996,18 @@
    "unit": "points",
    "fhir_id": null,
    "note": "Eye + verbal + motor charted at the same time; patient ventilated, so verbal 1 likely means 'No Response-ETT' (report as GCS with T)"
+  },
+  {
+   "t": "2177-03-25T20:00:00",
+   "source": "derived",
+   "item_id": "MORSE_TOTAL",
+   "label": "Morse Fall Scale",
+   "category": "Derived",
+   "value": 60,
+   "value_text": null,
+   "unit": "points",
+   "fhir_id": null,
+   "note": "Sum of six items"
   },
   {
    "t": "2177-03-25T20:00:00",
@@ -32712,7 +32756,7 @@
   }
  ],
  "counts": {
-  "observations": 2404,
+  "observations": 2405,
   "infusions": 144,
   "med_administrations": 51,
   "med_orders_active": 48,

@@ -34,6 +34,8 @@ IRRIGANT_IN = str(config.GU_IRRIGANT_IN)
 NON_VOLUME_OUTPUT = {str(i) for i in config.NON_VOLUME_OUTPUT_ITEMS}
 DEVICE_IDS = {str(i): label for i, label in config.DEVICE_ITEMS.items()}
 BRADEN_IDS = ("224054", "224055", "224056", "224057", "224058", "224059")
+# Morse Fall Scale items; MIMIC stores each item's points in valuenum (history 25, IV 20, ...).
+MORSE_IDS = ("227341", "227342", "227343", "227344", "227345", "227346")
 NEGATE_IDS = {str(i) for i in config.NEGATE_ITEMS}
 
 
@@ -397,6 +399,9 @@ def add_derived(case: Case) -> dict:
         if all(b in items for b in BRADEN_IDS):
             new.append(derived_obs(moment, "BRADEN_TOTAL", "Braden score",
                                    sum(items[b]["value"] for b in BRADEN_IDS), "points", "Sum of six subscales"))
+        if all(m in items for m in MORSE_IDS):
+            new.append(derived_obs(moment, "MORSE_TOTAL", "Morse Fall Scale",
+                                   sum(items[m]["value"] for m in MORSE_IDS), "points", "Sum of six items"))
         for item, to_c in (("223762", lambda v: v), ("223761", lambda v: (v - 32) * 5 / 9)):
             if item in items:
                 new.append(derived_obs(moment, "TEMP_C", "Temperature", round(to_c(items[item]["value"]), 1),

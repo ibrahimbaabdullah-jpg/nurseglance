@@ -1058,20 +1058,52 @@
    "mappable": true
   },
   "fall_risk": {
-   "label": "Risk for falls",
+   "label": "Morse Fall Scale",
    "organ_system": "Safety",
-   "source": "chart",
+   "source": "derived",
    "display_rule": "latest",
-   "has_data": false,
-   "mappable": true
+   "has_data": true,
+   "mappable": true,
+   "item_id": "MORSE_TOTAL",
+   "latest": {
+    "t": "2169-01-15T20:00:00",
+    "value": 20,
+    "value_text": null,
+    "unit": "points",
+    "fhir_id": null
+   },
+   "n_12h": 1,
+   "min_12h": 20,
+   "max_12h": 20,
+   "change_12h": null,
+   "abnormal": false,
+   "abnormal_reason": null,
+   "any_abnormal_12h": false,
+   "note": "Sum of the six Morse items when all are charted together"
   },
   "restraints": {
    "label": "Restraints",
    "organ_system": "Safety",
    "source": "chart",
    "display_rule": "latest",
-   "has_data": false,
-   "mappable": true
+   "has_data": true,
+   "mappable": true,
+   "item_id": "227945",
+   "latest": {
+    "t": "2169-01-15T21:43:00",
+    "value": null,
+    "value_text": "Off",
+    "unit": null,
+    "fhir_id": "81184e70-1fde-5737-8274-31df1e11a40e"
+   },
+   "n_12h": 1,
+   "min_12h": null,
+   "max_12h": null,
+   "change_12h": null,
+   "abnormal": null,
+   "abnormal_reason": null,
+   "any_abnormal_12h": false,
+   "note": "Non-violent restraint status and device"
   },
   "precautions": {
    "label": "Precautions",
@@ -2564,6 +2596,18 @@
    "value_text": "Some, but limited",
    "unit": null,
    "fhir_id": "1f3267a9-a142-57fa-9f2e-8cbf3a722dc6"
+  },
+  {
+   "t": "2169-01-15T07:45:00",
+   "source": "derived",
+   "item_id": "MORSE_TOTAL",
+   "label": "Morse Fall Scale",
+   "category": "Derived",
+   "value": 20,
+   "value_text": null,
+   "unit": "points",
+   "fhir_id": null,
+   "note": "Sum of six items"
   },
   {
    "t": "2169-01-15T07:46:00",
@@ -11888,6 +11932,18 @@
    "unit": "points",
    "fhir_id": null,
    "note": "Eye + verbal + motor charted at the same time"
+  },
+  {
+   "t": "2169-01-15T20:00:00",
+   "source": "derived",
+   "item_id": "MORSE_TOTAL",
+   "label": "Morse Fall Scale",
+   "category": "Derived",
+   "value": 20,
+   "value_text": null,
+   "unit": "points",
+   "fhir_id": null,
+   "note": "Sum of six items"
   },
   {
    "t": "2169-01-15T20:00:00",
@@ -21462,7 +21518,7 @@
   }
  ],
  "counts": {
-  "observations": 1667,
+  "observations": 1669,
   "infusions": 30,
   "med_administrations": 51,
   "med_orders_active": 33,

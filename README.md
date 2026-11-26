@@ -43,6 +43,8 @@ whether the same approach helps bedside and virtual nurses.
 | `etl/coverage.py` | Reports how many handoff data elements FHIR can fill (research question 1) |
 | `etl/config.py` | Item IDs, time windows and file paths, all in one place |
 | `etl/value_codes.py` | Rebuilds `docs/value_codes.csv`, which restores text that FHIR carries only as a numeric code |
+| `etl/loinc_mapping.py` | Writes `docs/loinc_mapping.csv`: 50 MIMIC items mapped to LOINC, each name checked at NLM (`--verify`) |
+| `docs/coverage.md` | Research question 1 write-up: coverage by organ system, FHIR vs CSV completeness, gaps and causes |
 | `streamlit_app.py`, `app/` | The dashboard: `glance.py` (NurseGlance view), `tabbed.py` (control view), `timeline.py` (12 h timeline), `data.py` (shared loading) |
 | `app/study.py`, `app/events.py`, `app/scoring.py` | Study mode: seeded randomization, event log, SUS and raw NASA-TLX scoring, CSV export |
 | `app/flags.py` | 8 transparent rule-based flags, each showing its rule, values, times and FHIR IDs (off in study mode) |
@@ -66,6 +68,7 @@ python etl/select_cases.py           # suggests cases -> etl/cases.json, docs/ca
 python etl/build_cases.py            # -> data/processed/case_S1.json ... case_C2.json
 pytest                               # all tests, including FHIR vs CSV
 python etl/coverage.py               # -> docs/coverage.csv
+python etl/loinc_mapping.py --verify # -> docs/loinc_mapping.csv
 streamlit run streamlit_app.py       # opens the dashboard at http://localhost:8501
 ```
 
@@ -137,6 +140,13 @@ the admission; if you'd rather use a survivor, the next complex candidate
   says where it came from; the tabbed view shows the same code in the problem list.
 - **Control view tabs** are a radio control, not `st.tabs`, so each tab change is a
   real interaction that study mode (Day 3) can log as a click and a screen visit.
+- **Standard codes.** MIMIC-IV on FHIR codes chart and lab items in MIMIC's own code
+  systems. `docs/loinc_mapping.csv` maps each item NurseGlance shows to LOINC; hovering
+  a value shows its LOINC code and name. Five codes from MIMIC-IV v1.0 were replaced
+  (two deprecated, one unit mismatch, one manual-count code, blood gases had none).
+- **Fall risk and restraints.** The starter item IDs had no rows in the demo. Fall
+  risk is now the sum of the six Morse Fall Scale items; restraints use items 227945
+  and 227948.
 - **Thresholds** marked "placeholder" in `docs/data_elements.csv` are yours to set
   and cite. Labs with no threshold use each result's own reference range.
 

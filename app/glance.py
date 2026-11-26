@@ -102,6 +102,9 @@ def value_row(case: dict, eid: str, el: dict, ref: datetime) -> tuple[str, bool]
         title.append(f"Flag: {el.get('abnormal_reason')}")
     elif recent:
         title.append("Abnormal at least once in the last 12 h")
+    loinc = data.loinc_for(case, eid, latest)
+    if loinc:
+        title.append(f"LOINC {loinc[0]} {loinc[1]}")
     if latest.get("fhir_id"):
         title.append(f"FHIR id {latest['fhir_id']}")
     if el.get("note"):
@@ -176,13 +179,13 @@ def panel_html(case: dict, system: str, ref: datetime) -> str:
 def render(case: dict) -> None:
     ref = data.handoff(case)
     st.markdown(CSS, unsafe_allow_html=True)
-    dx = ", ".join(d["display"] for d in case["diagnoses"][:3])
+    dx = "; ".join(data.dx_text(d) for d in case["diagnoses"][:3])
     st.markdown(f"#### {data.patient_line(case)} · {data.weight_text(case)}")
     st.caption(f"Handoff {ref:%Y-%m-%d %H:%M} · Diagnoses (billing codes, unordered): {dx}"
                f"{' …' if len(case['diagnoses']) > 3 else ''}")
     st.markdown('<div class="ng-legend">Red = latest value outside the threshold · '
                 '<span style="color:#ef6c00">•</span> = abnormal earlier in the last 12 h · '
-                'sparklines show 12 h (labs 72 h) · hover any row for time, reason and FHIR id</div>',
+                'sparklines show 12 h (labs 72 h) · hover any row for time, reason, LOINC code and FHIR id</div>',
                 unsafe_allow_html=True)
     systems = data.ORGAN_SYSTEMS
     for start in range(0, len(systems), 4):

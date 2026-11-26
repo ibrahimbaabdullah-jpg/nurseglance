@@ -1080,12 +1080,28 @@
    "mappable": true
   },
   "fall_risk": {
-   "label": "Risk for falls",
+   "label": "Morse Fall Scale",
    "organ_system": "Safety",
-   "source": "chart",
+   "source": "derived",
    "display_rule": "latest",
-   "has_data": false,
-   "mappable": true
+   "has_data": true,
+   "mappable": true,
+   "item_id": "MORSE_TOTAL",
+   "latest": {
+    "t": "2144-10-31T08:00:00",
+    "value": 35,
+    "value_text": null,
+    "unit": "points",
+    "fhir_id": null
+   },
+   "n_12h": 1,
+   "min_12h": 35,
+   "max_12h": 35,
+   "change_12h": null,
+   "abnormal": false,
+   "abnormal_reason": null,
+   "any_abnormal_12h": false,
+   "note": "Sum of the six Morse items when all are charted together"
   },
   "restraints": {
    "label": "Restraints",
@@ -1093,7 +1109,8 @@
    "source": "chart",
    "display_rule": "latest",
    "has_data": false,
-   "mappable": true
+   "mappable": true,
+   "note": "Non-violent restraint status and device"
   },
   "precautions": {
    "label": "Precautions",
@@ -4386,6 +4403,18 @@
    "unit": "points",
    "fhir_id": null,
    "note": "Eye + verbal + motor charted at the same time"
+  },
+  {
+   "t": "2144-10-30T20:00:00",
+   "source": "derived",
+   "item_id": "MORSE_TOTAL",
+   "label": "Morse Fall Scale",
+   "category": "Derived",
+   "value": 50,
+   "value_text": null,
+   "unit": "points",
+   "fhir_id": null,
+   "note": "Sum of six items"
   },
   {
    "t": "2144-10-30T20:00:00",
@@ -9158,6 +9187,18 @@
    "unit": "points",
    "fhir_id": null,
    "note": "Eye + verbal + motor charted at the same time"
+  },
+  {
+   "t": "2144-10-31T08:00:00",
+   "source": "derived",
+   "item_id": "MORSE_TOTAL",
+   "label": "Morse Fall Scale",
+   "category": "Derived",
+   "value": 35,
+   "value_text": null,
+   "unit": "points",
+   "fhir_id": null,
+   "note": "Sum of six items"
   },
   {
    "t": "2144-10-31T08:00:00",
@@ -16520,7 +16561,7 @@
   }
  ],
  "counts": {
-  "observations": 1206,
+  "observations": 1208,
   "infusions": 29,
   "med_administrations": 53,
   "med_orders_active": 35,

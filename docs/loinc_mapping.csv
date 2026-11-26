@@ -1,0 +1,52 @@
+element_id,mimic_item_id,mimic_label,mimic_unit,loinc_code,loinc_long_name,code_source,verified,note
+heart_rate,220045,Heart Rate,bpm,8867-4,Heart rate,mimic_fhir_ed,NLM Clinical Tables 2026-11-26,
+heart_rhythm,220048,Heart Rhythm,,8884-9,Heart rate rhythm,author,NLM Clinical Tables 2026-11-26,
+map,220052,Arterial Blood Pressure mean,mmHg,76214-6,Invasive Mean blood pressure,author,NLM Clinical Tables 2026-11-26,Arterial line mean
+map,220181,Non Invasive Blood Pressure mean,mmHg,76536-2,Mean blood pressure by Noninvasive,author,NLM Clinical Tables 2026-11-26,Non-invasive (cuff) mean
+map,MAP_CALC,NurseGlance derived value,,8478-0,Mean blood pressure,author,NLM Clinical Tables 2026-11-26,Calculated (SBP + 2 x DBP) / 3 by NurseGlance; method-less code
+sbp,220050,Arterial Blood Pressure systolic,mmHg,76215-3,Invasive Systolic blood pressure,author,NLM Clinical Tables 2026-11-26,Arterial line systolic
+sbp,220179,Non Invasive Blood Pressure systolic,mmHg,8480-6,Systolic blood pressure,mimic_fhir_ed,NLM Clinical Tables 2026-11-26,Non-invasive systolic
+map,220180,Non Invasive Blood Pressure diastolic,mmHg,8462-4,Diastolic blood pressure,mimic_fhir_ed,NLM Clinical Tables 2026-11-26,Non-invasive diastolic (used for calculated MAP)
+map,220051,Arterial Blood Pressure diastolic,mmHg,76213-8,Invasive Diastolic blood pressure,author,NLM Clinical Tables 2026-11-26,Arterial line diastolic (used for calculated MAP)
+cvp,220074,Central Venous Pressure,mmHg,60985-9,Central venous pressure (CVP),author,NLM Clinical Tables 2026-11-26,
+resp_rate,220210,Respiratory Rate,insp/min,9279-1,Respiratory rate,mimic_fhir_ed,NLM Clinical Tables 2026-11-26,
+spo2,220277,O2 saturation pulseoxymetry,%,59408-5,Oxygen saturation in Arterial blood by Pulse oximetry,author,NLM Clinical Tables 2026-11-26,"MIMIC-IV-ED on FHIR uses 2708-6 (arterial blood, method-less); 59408-5 names pulse oximetry"
+fio2,223835,Inspired O2 Fraction,,3150-0,Inhaled oxygen concentration,author,NLM Clinical Tables 2026-11-26,MIMIC charts FiO2 as a percentage
+peep,220339,PEEP set,cmH2O,20077-4,Positive end expiratory pressure setting Ventilator,author,NLM Clinical Tables 2026-11-26,PEEP set on the ventilator
+vent_mode,223849,Ventilator Mode,,20124-4,Ventilation mode Ventilator,author,NLM Clinical Tables 2026-11-26,Value is coded text; FHIR v2.1.0 carries only MIMIC's numeric code
+temperature,223761,Temperature Fahrenheit,°F,8310-5,Body temperature,mimic_fhir_ed,NLM Clinical Tables 2026-11-26,Fahrenheit; NurseGlance converts to Celsius
+temperature,223762,Temperature Celsius,°C,8310-5,Body temperature,mimic_fhir_ed,NLM Clinical Tables 2026-11-26,Celsius
+temperature,TEMP_C,NurseGlance derived value,,8310-5,Body temperature,mimic_fhir_ed,NLM Clinical Tables 2026-11-26,"The value NurseGlance shows, always in Celsius"
+gcs_total,GCS_TOTAL,NurseGlance derived value,,9269-2,Glasgow coma score total,author,NLM Clinical Tables 2026-11-26,Sum of eye + verbal + motor charted at the same time
+gcs_total,220739,GCS - Eye Opening,,9267-6,Glasgow coma score eye opening,author,NLM Clinical Tables 2026-11-26,Eye opening
+gcs_total,223900,GCS - Verbal Response,,9270-0,Glasgow coma score verbal,author,NLM Clinical Tables 2026-11-26,Verbal
+gcs_total,223901,GCS - Motor Response,,9268-4,Glasgow coma score motor,author,NLM Clinical Tables 2026-11-26,Motor
+rass,228096,Richmond-RAS Scale,,,,author,,"No LOINC term found (NLM searches 'richmond', 'RASS', 'agitation sedation')"
+pain,223791,Pain Level,,72514-3,Pain severity - 0-10 verbal numeric rating [Score] - Reported,author,NLM Clinical Tables 2026-11-26,"review: MIMIC charts pain as categories (None ... Worst) coded 0-10, not a patient-reported number"
+cam_icu,228337,CAM-ICU MS Change,,52495-9,Confusion Assessment Method (CAM),author,NLM Clinical Tables 2026-11-26,review: one code for the CAM as a whole; MIMIC charts its features separately
+braden_total,BRADEN_TOTAL,NurseGlance derived value,,38227-5,Braden scale total score,author,NLM Clinical Tables 2026-11-26,Sum of the six Braden subscales charted at the same time
+fall_risk,MORSE_TOTAL,NurseGlance derived value,,59460-6,Fall risk total [Morse Fall Scale],author,NLM Clinical Tables 2026-11-26,Sum of the six Morse items charted at the same time
+weight,226512,Admission Weight (Kg),kg,29463-7,Body weight,author,NLM Clinical Tables 2026-11-26,Admission weight
+weight,224639,Daily Weight,kg,29463-7,Body weight,author,NLM Clinical Tables 2026-11-26,Daily weight
+glucose_poc,225664,Glucose finger stick (range 70-100),,41653-7,Glucose [Mass/volume] in Capillary blood by Glucometer,author,NLM Clinical Tables 2026-11-26,Fingerstick (glucometer)
+glucose_poc,226537,Glucose (whole blood),,2339-0,Glucose [Mass/volume] in Blood,author,NLM Clinical Tables 2026-11-26,Whole blood
+glucose_poc,220621,Glucose (serum),,2345-7,Glucose [Mass/volume] in Serum or Plasma,author,NLM Clinical Tables 2026-11-26,Serum glucose charted in chartevents
+urine_output_6h,UO_6H,NurseGlance derived value,,9187-6,Urine output,author,NLM Clinical Tables 2026-11-26,"6-hour total; LOINC has 1, 8, 10, 12 and 24 h urine output but no 6 h term"
+intake_12h,INTAKE_12H,NurseGlance derived value,,9107-4,Fluid intake total 12 hour,author,NLM Clinical Tables 2026-11-26,Approximate: MIMIC input events prorated by time
+output_12h,OUTPUT_12H,NurseGlance derived value,,9261-9,Fluid output total 12 hour,author,NLM Clinical Tables 2026-11-26,
+net_12h,NET_12H,NurseGlance derived value,,9096-9,Fluid balance 12 hour,author,NLM Clinical Tables 2026-11-26,
+lactate,50813,Lactate,,32693-4,Lactate [Moles/volume] in Blood,author,NLM Clinical Tables 2026-11-26,Blood gas lactate (whole blood); MIMIC v1.0 gave no code
+lactate,52442,Lactate,,32693-4,Lactate [Moles/volume] in Blood,author,NLM Clinical Tables 2026-11-26,MIMIC v1.0 gave no code
+ph,50820,pH,,11558-4,pH of Blood,author,NLM Clinical Tables 2026-11-26,"Blood gas pH; specimen may be arterial or venous, so the specimen-neutral code"
+pco2,50818,pCO2,,11557-6,Carbon dioxide [Partial pressure] in Blood,author,NLM Clinical Tables 2026-11-26,"Specimen-neutral, as for pH"
+po2,50821,pO2,,11556-8,Oxygen [Partial pressure] in Blood,author,NLM Clinical Tables 2026-11-26,"Specimen-neutral, as for pH"
+creatinine,50912,Creatinine,,2160-0,Creatinine [Mass/volume] in Serum or Plasma,mimic_v1_d_labitems,NLM Clinical Tables 2026-11-26,
+bun,51006,Urea Nitrogen,,3094-0,Urea nitrogen [Mass/volume] in Serum or Plasma,mimic_v1_d_labitems,NLM Clinical Tables 2026-11-26,
+potassium,50971,Potassium,,2823-3,Potassium [Moles/volume] in Serum or Plasma,mimic_v1_d_labitems,NLM Clinical Tables 2026-11-26,
+sodium,50983,Sodium,,2951-2,Sodium [Moles/volume] in Serum or Plasma,mimic_v1_d_labitems,NLM Clinical Tables 2026-11-26,
+magnesium,50960,Magnesium,,19123-9,Magnesium [Mass/volume] in Serum or Plasma,author,NLM Clinical Tables 2026-11-26,"MIMIC v1.0 gives 2601-3 (moles/volume), but MIMIC reports mg/dL, a mass/volume unit"
+glucose_lab,50931,Glucose,,2345-7,Glucose [Mass/volume] in Serum or Plasma,author,NLM Clinical Tables 2026-11-26,"MIMIC v1.0 gives 6777-7, which LOINC has deprecated"
+wbc,51301,White Blood Cells,,6690-2,Leukocytes [#/volume] in Blood by Automated count,author,NLM Clinical Tables 2026-11-26,MIMIC v1.0 gives 804-5 (manual count); a CBC white count is usually automated. review
+hemoglobin,51222,Hemoglobin,,718-7,Hemoglobin [Mass/volume] in Blood,mimic_v1_d_labitems,NLM Clinical Tables 2026-11-26,
+platelets,51265,Platelet Count,,777-3,Platelets [#/volume] in Blood by Automated count,mimic_v1_d_labitems,NLM Clinical Tables 2026-11-26,
+inr,51237,INR(PT),,6301-6,INR in Platelet poor plasma by Coagulation assay,author,NLM Clinical Tables 2026-11-26,"MIMIC v1.0 gives 5895-7, which LOINC has deprecated"

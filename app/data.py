@@ -131,3 +131,45 @@ def patient_line(case: dict) -> str:
 def weight_text(case: dict) -> str:
     w = case.get("weight") or {}
     return f"{fmt_num(w.get('value'))} kg" if w.get("value") else "weight not charted"
+
+
+LOINC_CSV = ROOT / "docs" / "loinc_mapping.csv"
+
+
+@lru_cache(maxsize=1)
+def loinc_table() -> dict[str, tuple[str, str]]:
+    """MIMIC item ID (or derived code) -> (LOINC code, LOINC long name)."""
+    if not LOINC_CSV.exists():
+        return {}
+    with open(LOINC_CSV, newline="", encoding="utf-8") as handle:
+        return {r["mimic_item_id"]: (r["loinc_code"], r["loinc_long_name"])
+                for r in csv.DictReader(handle) if r["loinc_code"]}
+
+
+@lru_cache(maxsize=4096)
+def _item_by_fhir_id(case_id: str, fhir_id: str) -> str | None:
+    for obs in load_case(case_id)["observations"]:
+        if obs.get("fhir_id") == fhir_id:
+            return obs["item_id"]
+    return None
+
+
+def loinc_for(case: dict, element_id: str, latest: dict | None) -> tuple[str, str] | None:
+    """LOINC (code, name) for the item behind an element's latest value, else the element's first item."""
+    table = loinc_table()
+    item = None
+    if latest and latest.get("fhir_id"):
+        item = _item_by_fhir_id(case["case_id"], latest["fhir_id"])
+    if latest and latest.get("item_id"):
+        item = latest["item_id"]
+    if item is None:
+        el = case["elements"].get(element_id) or {}
+        item = str(el.get("item_id") or "")
+    return table.get(str(item))
+
+
+def dx_text(diagnosis: dict) -> str:
+    code = diagnosis.get("code") or ""
+    if code and len(code) > 3 and "." not in code and diagnosis.get("version") == "ICD-10":
+        code = f"{code[:3]}.{code[3:]}"
+    return f"{diagnosis['display']} ({code})" if code else diagnosis["display"]

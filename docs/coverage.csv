@@ -53,7 +53,7 @@ foley,Skin/Lines/Devices,Foley catheter,device,yes,no,yes,yes,yes
 braden_total,Skin/Lines/Devices,Braden score,derived,yes,yes,yes,yes,yes
 skin_condition,Skin/Lines/Devices,Skin condition,chart,yes,yes,yes,yes,yes
 code_status,Safety,Code status,chart,yes,no,no,no,no
-fall_risk,Safety,Risk for falls,chart,yes,no,no,no,no
-restraints,Safety,Restraints,chart,yes,no,no,no,no
+fall_risk,Safety,Morse Fall Scale,derived,yes,yes,yes,yes,yes
+restraints,Safety,Restraints,chart,yes,no,yes,yes,yes
 precautions,Safety,Precautions,chart,yes,no,no,no,no
 allergies,Safety,Allergies,none,no,no,no,no,no

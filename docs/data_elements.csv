@@ -53,7 +53,7 @@ foley,Skin/Lines/Devices,Foley catheter,device,229351,,in_place,,,,,
 braden_total,Skin/Lines/Devices,Braden score,derived,BRADEN_TOTAL,points,latest,19,,"Placeholder: 18 or less = at risk; confirm",,Sum of the six subscales when all are charted together
 skin_condition,Skin/Lines/Devices,Skin condition,chart,224860,,latest,,,,,
 code_status,Safety,Code status,chart,223758|228687,,latest,,,,code status,
-fall_risk,Safety,Risk for falls,chart,223754,,latest,,,,,
-restraints,Safety,Restraints,chart,224063|227965,,latest,,,,,
+fall_risk,Safety,Morse Fall Scale,derived,MORSE_TOTAL,points,latest,,44,"Placeholder: 45 or more = high fall risk (Morse 1989); confirm",,Sum of the six Morse items when all are charted together
+restraints,Safety,Restraints,chart,227945|227948,,latest,,,,,Non-violent restraint status and device
 precautions,Safety,Precautions,chart,223759,,latest,,,,,
 allergies,Safety,Allergies,none,,,,,,,,The FHIR demo has no AllergyIntolerance resource
