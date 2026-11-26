@@ -441,9 +441,9 @@ def answer_for(q) -> str:
 
 # ------------------------------------------------------------- session driver
 
-def run_session(page, seed: int, shots: Path | None) -> tuple[list[dict], list[dict]]:
+def run_session(page, seed: int, shots: Path | None, url: str) -> tuple[list[dict], list[dict]]:
     r = Replay(page, shots)
-    page.goto("http://localhost:8501")
+    page.goto(url)
     page.wait_for_timeout(4000)
     page.get_by_text("Study session", exact=True).click()
     page.wait_for_timeout(2000)
@@ -517,6 +517,7 @@ def main(argv=None) -> int:
     from playwright.sync_api import sync_playwright
 
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--url", default="http://localhost:8501")
     ap.add_argument("--width", type=int, default=1440)
     ap.add_argument("--height", type=int, default=900)
     ap.add_argument("--out", type=Path, default=ROOT / "docs" / "task_replay.json")
@@ -531,7 +532,7 @@ def main(argv=None) -> int:
         for seed in SEEDS:
             ctx = browser.new_context(viewport={"width": args.width, "height": args.height}, accept_downloads=True)
             page = ctx.new_page()
-            records, summary = run_session(page, seed, args.shots)
+            records, summary = run_session(page, seed, args.shots, args.url)
             by_q = {row["question_id"]: row for row in summary}
             for rec in records:
                 app = by_q.get(rec["question_id"], {})

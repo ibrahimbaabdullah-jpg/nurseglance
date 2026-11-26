@@ -87,10 +87,7 @@ PATHS: dict[str, dict[str, list[dict]]] = {
     },
     # ---------------------------------------------------------------- S2
     "S2-Q1": {
-        "tabbed": [group("Neurological"),
-                   grid(["GCS - Eye Opening", "GCS - Motor Response", "GCS - Verbal Response"],
-                        ["last"], "vitals"),
-                   think(1, "add eye, verbal and motor scores")],
+        "tabbed": [group("Derived"), grid(["GCS total"], ["last"], "vitals")],
         "glance": [see_row("GCS total", "15")],
     },
     "S2-Q2": {
@@ -107,10 +104,7 @@ PATHS: dict[str, dict[str, list[dict]]] = {
         "tabbed": [tab("Vitals"),
                    grid(["ART BP Mean", "Arterial Blood Pressure mean"], ["window"], "vitals"),
                    think(2, "find the lowest MAP in two rows, then compare"),
-                   group("Neurological"),
-                   grid(["GCS - Eye Opening", "GCS - Motor Response", "GCS - Verbal Response"],
-                        ["last"], "vitals"),
-                   think(1, "add eye, verbal and motor scores")],
+                   group("Derived"), grid(["GCS total"], ["last"], "vitals")],
         "glance": [see_row("GCS total", "15"), hover_row("Mean arterial pressure", "range 63")],
     },
     # ---------------------------------------------------------------- C1

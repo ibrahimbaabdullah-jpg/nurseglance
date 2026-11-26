@@ -173,3 +173,23 @@ def dx_text(diagnosis: dict) -> str:
     if code and len(code) > 3 and "." not in code and diagnosis.get("version") == "ICD-10":
         code = f"{code[:3]}.{code[3:]}"
     return f"{diagnosis['display']} ({code})" if code else diagnosis["display"]
+
+
+def dx_rank(diagnosis: dict) -> int:
+    """Sort key that lists disease codes first, then status codes, then external causes.
+
+    FHIR Condition in the demo carries no billing priority (MIMIC's seq_num is not
+    converted), so this is the only ordering available, and it is labeled as such.
+    """
+    code = (diagnosis.get("code") or "").upper()
+    if diagnosis.get("version") == "ICD-10":
+        if code[:1] in ("V", "W", "X", "Y"):
+            return 2
+        return 1 if code.startswith("Z") else 0
+    if code.startswith("E"):
+        return 2
+    return 1 if code.startswith("V") else 0
+
+
+def diagnoses_sorted(case: dict) -> list[dict]:
+    return sorted(case["diagnoses"], key=dx_rank)
