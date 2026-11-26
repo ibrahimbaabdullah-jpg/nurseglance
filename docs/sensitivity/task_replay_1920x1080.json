@@ -32,7 +32,7 @@
    "think_why": [],
    "seen": [
     {
-     "Norepinephrine": "Norepinephrine 0.2 mcg/kg/min (↓ from 0.4)rate since 17:19"
+     "vasoactive_drips": "Norepinephrine 0.2 mcg/kg/min (↓ from 0.4) since 17:19"
     }
    ],
    "log": [
@@ -53,8 +53,8 @@
    "tabs": [
     "Meds"
    ],
-   "scroll_page": 1,
-   "scroll_grid": 1,
+   "scroll_page": 0,
+   "scroll_grid": 0,
    "scroll_list": 0,
    "hovers": 0,
    "targets": 1,
@@ -68,7 +68,6 @@
    "log": [
     "tab: Meds",
     "section: Infusions",
-    "table rows ['Norepinephrine', 'True']: 1 gesture(s) (end_up)",
     "grid:"
    ],
    "screens": 2,
@@ -93,11 +92,11 @@
    "think_why": [],
    "seen": [
     {
-     "Lactate": "Lactate4.3 mmol/L ↓"
+     "lactate": "Lactate4.3 mmol/LH ↓12 h 4.3–9"
     }
    ],
    "log": [
-    "see: Lactate"
+    "see:"
    ],
    "screens": 1,
    "seed": 6,
@@ -114,8 +113,8 @@
    "tabs": [
     "Labs"
    ],
-   "scroll_page": 1,
-   "scroll_grid": 5,
+   "scroll_page": 0,
+   "scroll_grid": 4,
    "scroll_list": 0,
    "hovers": 0,
    "targets": 1,
@@ -134,7 +133,6 @@
    "log": [
     "tab: Labs",
     "table rows 'Lactate': 4 gesture(s) (down)",
-    "table columns ['06-23 09:22', '06-23 17:41']: 1 gesture(s) (end_left)",
     "grid:",
     "think:"
    ],
@@ -151,20 +149,20 @@
    "clicks": 0,
    "app_interactions_expected": 0,
    "tabs": [],
-   "scroll_page": 1,
+   "scroll_page": 0,
    "scroll_grid": 0,
    "scroll_list": 0,
-   "hovers": 1,
+   "hovers": 0,
    "targets": 1,
    "think": 0,
    "think_why": [],
    "seen": [
     {
-     "Vancomycin": "Vancomycin + Iso-Osmotic Dextrose01:011000 mg"
+     "Vancomycin": "01:01 (+1d) Vancomycin"
     }
    ],
    "log": [
-    "hover: Vancomycin"
+    "see: Vancomycin"
    ],
    "screens": 1,
    "seed": 6,
@@ -181,8 +179,8 @@
    "tabs": [
     "Meds"
    ],
-   "scroll_page": 1,
-   "scroll_grid": 1,
+   "scroll_page": 0,
+   "scroll_grid": 0,
    "scroll_list": 0,
    "hovers": 0,
    "targets": 1,
@@ -195,7 +193,6 @@
    ],
    "log": [
     "tab: Meds",
-    "table rows ['vancomycin', '01:01']: 1 gesture(s) (end_up)",
     "grid:"
    ],
    "screens": 2,
@@ -220,23 +217,23 @@
    "think_why": [],
    "seen": [
     {
-     "Mean arterial pressure": "Mean arterial pressure64 mmHg ↓"
+     "map": "MAP64 mmHgL ↓12 h 60–94"
     },
     {
-     "Norepinephrine": "Norepinephrine 0.2 mcg/kg/min (↓ from 0.4)rate since 17:19"
+     "vasoactive_drips": "Norepinephrine 0.2 mcg/kg/min (↓ from 0.4) since 17:19"
     },
     {
-     "Vasopressin": "Vasopressin 2.41 units/hourrate since 03:15"
+     "vasoactive_drips": "Vasopressin 2.41 units/hour since 03:15"
     },
     {
-     "Lactate": "Lactate4.3 mmol/L ↓"
+     "lactate": "Lactate4.3 mmol/LH ↓12 h 4.3–9"
     }
    ],
    "log": [
-    "see: Mean arterial pressure",
+    "see:",
     "see: Norepinephrine",
     "see: Vasopressin",
-    "see: Lactate"
+    "see:"
    ],
    "screens": 1,
    "seed": 6,
@@ -254,8 +251,8 @@
     "Labs",
     "Vitals"
    ],
-   "scroll_page": 2,
-   "scroll_grid": 10,
+   "scroll_page": 0,
+   "scroll_grid": 5,
    "scroll_list": 0,
    "hovers": 0,
    "targets": 4,
@@ -281,15 +278,12 @@
    ],
    "log": [
     "section: Infusions",
-    "table rows ['Norepinephrine', 'True']: 1 gesture(s) (end_up)",
-    "table rows ['Vasopressin', 'True']: 6 gesture(s) (home_down)",
+    "table rows ['Vasopressin', 'True']: 1 gesture(s) (down)",
     "grid:",
     "tab: Labs",
-    "table rows 'Lactate': 1 gesture(s) (up)",
-    "table columns ['06-23 17:41']: 1 gesture(s) (end_left)",
+    "table rows 'Lactate': 4 gesture(s) (down)",
     "grid:",
     "tab: Vitals",
-    "table columns ['06-23 19:00']: 1 gesture(s) (end_left)",
     "grid:"
    ],
    "screens": 3,
@@ -314,11 +308,11 @@
    "think_why": [],
    "seen": [
     {
-     "Heart rate": "Heart rate130 bpm ↓"
+     "heart_rate": "Heart rate130 bpmH ↓12 h 126–143"
     }
    ],
    "log": [
-    "see: Heart rate"
+    "see:"
    ],
    "screens": 1,
    "seed": 2,
@@ -333,8 +327,8 @@
    "clicks": 0,
    "app_interactions_expected": 0,
    "tabs": [],
-   "scroll_page": 1,
-   "scroll_grid": 1,
+   "scroll_page": 0,
+   "scroll_grid": 0,
    "scroll_list": 0,
    "hovers": 0,
    "targets": 1,
@@ -348,7 +342,6 @@
     }
    ],
    "log": [
-    "table columns ['03-26 19:00']: 1 gesture(s) (end_left)",
     "grid:"
    ],
    "screens": 1,
@@ -373,7 +366,7 @@
    "think_why": [],
    "seen": [
     {
-     "Norepinephrine": "Norepinephrine 0.04 mcg/kg/min (↓ from 0.2)rate since 18:24"
+     "vasoactive_drips": "Norepinephrine 0.04 mcg/kg/min (↓ from 0.2) since 18:24"
     }
    ],
    "log": [
@@ -394,7 +387,7 @@
    "tabs": [
     "Meds"
    ],
-   "scroll_page": 1,
+   "scroll_page": 0,
    "scroll_grid": 6,
    "scroll_list": 0,
    "hovers": 0,
@@ -405,7 +398,7 @@
    ],
    "seen": [
     {
-     "Norepinephrine + 03-26 06:30": "03-26 06:10 | 03-26 06:30 | Norepinephrine | 01-Drips | 0.22 mcg/kg/min | 0.26 mg | false"
+     "Norepinephrine + 03-26 06:30": "03-26 06:30 | 03-26 07:46 | Norepinephrine | 01-Drips | 0.2 mcg/kg/min | 0.91 mg | false"
     },
     {
      "Norepinephrine + True": "03-26 18:24 | 03-26 20:22 | Norepinephrine | 01-Drips | 0.04 mcg/kg/min | 0.28 mg | true"
@@ -415,7 +408,7 @@
     "tab: Meds",
     "section: Infusions",
     "table rows ['Norepinephrine', '03-26 06:30']: 5 gesture(s) (down)",
-    "table rows ['Norepinephrine', 'True']: 1 gesture(s) (end_up)",
+    "table rows ['Norepinephrine', 'True']: 1 gesture(s) (home_down)",
     "grid:",
     "think:"
    ],
@@ -432,20 +425,20 @@
    "clicks": 0,
    "app_interactions_expected": 0,
    "tabs": [],
-   "scroll_page": 1,
+   "scroll_page": 0,
    "scroll_grid": 0,
    "scroll_list": 0,
-   "hovers": 1,
+   "hovers": 0,
    "targets": 1,
    "think": 0,
    "think_why": [],
    "seen": [
     {
-     "CefePIME": "CefePIME + 0.9% Sodium Chloride (Mini Bag Plus)01:411 g"
+     "CefePIME": "01:41 (+1d) CefePIME"
     }
    ],
    "log": [
-    "hover: CefePIME"
+    "see: CefePIME"
    ],
    "screens": 1,
    "seed": 2,
@@ -460,8 +453,8 @@
    "clicks": 1,
    "app_interactions_expected": 1,
    "tabs": [],
-   "scroll_page": 1,
-   "scroll_grid": 1,
+   "scroll_page": 0,
+   "scroll_grid": 0,
    "scroll_list": 0,
    "hovers": 0,
    "targets": 1,
@@ -474,7 +467,6 @@
    ],
    "log": [
     "section: MAR",
-    "table rows ['cefepime', '01:41']: 1 gesture(s) (end_up)",
     "grid:"
    ],
    "screens": 1,
@@ -490,7 +482,7 @@
    "clicks": 0,
    "app_interactions_expected": 0,
    "tabs": [],
-   "scroll_page": 2,
+   "scroll_page": 0,
    "scroll_grid": 0,
    "scroll_list": 0,
    "hovers": 0,
@@ -499,15 +491,15 @@
    "think_why": [],
    "seen": [
     {
-     "Hemoglobin": "Hemoglobin7.9 g/dL ↓"
+     "hemoglobin": "Hemoglobin7.9 g/dLL ↓12 h 7.9–9.6"
     },
     {
-     "Platelets": "Platelets68 K/uL"
+     "platelets": "Platelets68 K/uLL"
     }
    ],
    "log": [
-    "see: Hemoglobin",
-    "see: Platelets"
+    "see:",
+    "see:"
    ],
    "screens": 1,
    "seed": 2,
@@ -524,8 +516,8 @@
    "tabs": [
     "Labs"
    ],
-   "scroll_page": 1,
-   "scroll_grid": 6,
+   "scroll_page": 0,
+   "scroll_grid": 5,
    "scroll_list": 0,
    "hovers": 0,
    "targets": 2,
@@ -549,7 +541,6 @@
    "log": [
     "tab: Labs",
     "table rows 'Hemoglobin': 3 gesture(s) (down)",
-    "table columns ['03-26 09:41', '03-26 17:54']: 1 gesture(s) (right)",
     "grid:",
     "think:",
     "table rows 'Platelet Count': 2 gesture(s) (down)",
@@ -577,11 +568,11 @@
    "think_why": [],
    "seen": [
     {
-     "Potassium": "Potassium3.2 mEq/L 17h ago"
+     "potassium": "Potassium3.2 mEq/LL 17h ago"
     }
    ],
    "log": [
-    "see: Potassium"
+    "see:"
    ],
    "screens": 1,
    "seed": 6,
@@ -598,7 +589,7 @@
    "tabs": [
     "Labs"
    ],
-   "scroll_page": 1,
+   "scroll_page": 0,
    "scroll_grid": 1,
    "scroll_list": 0,
    "hovers": 0,
@@ -639,11 +630,11 @@
    "think_why": [],
    "seen": [
     {
-     "Heart rate": "Heart rate81 bpm ↓"
+     "heart_rate": "Heart rate81 bpm ↓12 h 71–98"
     }
    ],
    "log": [
-    "see: Heart rate"
+    "see:"
    ],
    "screens": 1,
    "seed": 6,
@@ -660,8 +651,8 @@
    "tabs": [
     "Vitals"
    ],
-   "scroll_page": 1,
-   "scroll_grid": 2,
+   "scroll_page": 0,
+   "scroll_grid": 1,
    "scroll_list": 0,
    "hovers": 0,
    "targets": 1,
@@ -678,7 +669,7 @@
    ],
    "log": [
     "tab: Vitals",
-    "table columns ['10-31 07:00', '10-31 19:00']: 2 gesture(s) (end_left)",
+    "table columns ['10-31 07:00', '10-31 19:00']: 1 gesture(s) (right)",
     "grid:",
     "think:"
    ],
@@ -695,20 +686,20 @@
    "clicks": 0,
    "app_interactions_expected": 0,
    "tabs": [],
-   "scroll_page": 1,
+   "scroll_page": 0,
    "scroll_grid": 0,
    "scroll_list": 0,
-   "hovers": 1,
+   "hovers": 0,
    "targets": 1,
    "think": 0,
    "think_why": [],
    "seen": [
     {
-     "OxyCODONE": "OxyCODONE (Immediate Release)21:375 mg"
+     "OxyCODONE": "21:37 OxyCODONE (Immediate Release) ×4"
     }
    ],
    "log": [
-    "hover: OxyCODONE"
+    "see: OxyCODONE"
    ],
    "screens": 1,
    "seed": 6,
@@ -725,8 +716,8 @@
    "tabs": [
     "Meds"
    ],
-   "scroll_page": 1,
-   "scroll_grid": 2,
+   "scroll_page": 0,
+   "scroll_grid": 0,
    "scroll_list": 0,
    "hovers": 0,
    "targets": 1,
@@ -739,7 +730,6 @@
    ],
    "log": [
     "tab: Meds",
-    "table rows ['oxycodone', '21:37']: 2 gesture(s) (end_up)",
     "grid:"
    ],
    "screens": 2,
@@ -755,7 +745,7 @@
    "clicks": 0,
    "app_interactions_expected": 0,
    "tabs": [],
-   "scroll_page": 2,
+   "scroll_page": 0,
    "scroll_grid": 0,
    "scroll_list": 0,
    "hovers": 0,
@@ -764,15 +754,15 @@
    "think_why": [],
    "seen": [
     {
-     "Hemoglobin": "Hemoglobin9.3 g/dL 17h ago"
+     "Heparin Sodium": "Heparin Sodium 1401 units/hour"
     },
     {
-     "Heparin Sodium": "▬ Heparin Sodium"
+     "hemoglobin": "Hemoglobin9.3 g/dLL 17h ago"
     }
    ],
    "log": [
-    "see: Hemoglobin",
-    "see: Heparin Sodium"
+    "see: Heparin Sodium",
+    "see:"
    ],
    "screens": 1,
    "seed": 6,
@@ -789,7 +779,7 @@
    "tabs": [
     "Labs"
    ],
-   "scroll_page": 1,
+   "scroll_page": 0,
    "scroll_grid": 1,
    "scroll_list": 0,
    "hovers": 0,
@@ -808,9 +798,9 @@
    ],
    "log": [
     "section: Infusions",
-    "table rows ['Heparin', 'True']: 1 gesture(s) (down)",
     "grid:",
     "tab: Labs",
+    "table rows 'Hemoglobin': 1 gesture(s) (down)",
     "grid:"
    ],
    "screens": 2,
@@ -835,11 +825,11 @@
    "think_why": [],
    "seen": [
     {
-     "GCS total": "GCS total15"
+     "gcs_total": "GCS total15 12 h 14–15"
     }
    ],
    "log": [
-    "see: GCS total"
+    "see:"
    ],
    "screens": 1,
    "seed": 2,
@@ -854,37 +844,23 @@
    "clicks": 2,
    "app_interactions_expected": 1,
    "tabs": [],
-   "scroll_page": 1,
-   "scroll_grid": 1,
+   "scroll_page": 0,
+   "scroll_grid": 0,
    "scroll_list": 1,
    "hovers": 0,
-   "targets": 3,
-   "think": 1,
-   "think_why": [
-    "add eye, verbal and motor scores"
-   ],
+   "targets": 1,
+   "think": 0,
+   "think_why": [],
    "seen": [
     {
-     "GCS - Eye Opening": {
-      "01-16 06:00": "4"
-     }
-    },
-    {
-     "GCS - Motor Response": {
-      "01-16 06:00": "6"
-     }
-    },
-    {
-     "GCS - Verbal Response": {
-      "01-16 06:00": "5"
+     "GCS Total": {
+      "01-16 06:00": "15"
      }
     }
    ],
    "log": [
     "group: Neurological",
-    "table columns ['01-16 06:00']: 1 gesture(s) (right)",
-    "grid:",
-    "think:"
+    "grid:"
    ],
    "screens": 1,
    "seed": 6,
@@ -902,17 +878,17 @@
    "scroll_page": 0,
    "scroll_grid": 0,
    "scroll_list": 0,
-   "hovers": 1,
+   "hovers": 0,
    "targets": 1,
    "think": 0,
    "think_why": [],
    "seen": [
     {
-     "Mean arterial pressure": "Charted 07:00 · 12 h: 13 values, range 63–97 · Abnormal at least once in the last 12 h · LOINC 76214-6 Invasive Mean blood pressure · FHIR id 82b1e5a9-f102-59b0"
+     "map": "MAP87 mmHg ↑12 h 63–97"
     }
    ],
    "log": [
-    "hover: Mean arterial pressure"
+    "see:"
    ],
    "screens": 1,
    "seed": 2,
@@ -927,8 +903,8 @@
    "clicks": 2,
    "app_interactions_expected": 1,
    "tabs": [],
-   "scroll_page": 1,
-   "scroll_grid": 1,
+   "scroll_page": 0,
+   "scroll_grid": 0,
    "scroll_list": 2,
    "hovers": 0,
    "targets": 2,
@@ -952,7 +928,6 @@
    ],
    "log": [
     "group: Routine Vital Signs",
-    "table columns ['01-15 19:00', '01-16 07:00']: 1 gesture(s) (end_left)",
     "grid:",
     "think:"
    ],
@@ -969,20 +944,20 @@
    "clicks": 0,
    "app_interactions_expected": 0,
    "tabs": [],
-   "scroll_page": 1,
+   "scroll_page": 0,
    "scroll_grid": 0,
    "scroll_list": 0,
-   "hovers": 1,
+   "hovers": 0,
    "targets": 1,
    "think": 0,
    "think_why": [],
    "seen": [
     {
-     "NiMODipine": "NiMODipine10:5030 mg"
+     "NiMODipine": "10:50 NiMODipine ×4"
     }
    ],
    "log": [
-    "hover: NiMODipine"
+    "see: NiMODipine"
    ],
    "screens": 1,
    "seed": 2,
@@ -999,8 +974,8 @@
    "tabs": [
     "Meds"
    ],
-   "scroll_page": 1,
-   "scroll_grid": 1,
+   "scroll_page": 0,
+   "scroll_grid": 0,
    "scroll_list": 0,
    "hovers": 0,
    "targets": 1,
@@ -1013,7 +988,6 @@
    ],
    "log": [
     "tab: Meds",
-    "table rows ['nimodipine', '10:50']: 1 gesture(s) (end_up)",
     "grid:"
    ],
    "screens": 2,
@@ -1032,21 +1006,21 @@
    "scroll_page": 0,
    "scroll_grid": 0,
    "scroll_list": 0,
-   "hovers": 1,
+   "hovers": 0,
    "targets": 2,
    "think": 0,
    "think_why": [],
    "seen": [
     {
-     "GCS total": "GCS total15"
+     "gcs_total": "GCS total15 12 h 14–15"
     },
     {
-     "Mean arterial pressure": "Charted 07:00 · 12 h: 13 values, range 63–97 · Abnormal at least once in the last 12 h · LOINC 76214-6 Invasive Mean blood pressure · FHIR id 82b1e5a9-f102-59b0"
+     "map": "MAP87 mmHg ↑12 h 63–97"
     }
    ],
    "log": [
-    "see: GCS total",
-    "hover: Mean arterial pressure"
+    "see:",
+    "see:"
    ],
    "screens": 1,
    "seed": 2,
@@ -1063,15 +1037,14 @@
    "tabs": [
     "Vitals"
    ],
-   "scroll_page": 1,
-   "scroll_grid": 1,
+   "scroll_page": 0,
+   "scroll_grid": 0,
    "scroll_list": 1,
    "hovers": 0,
-   "targets": 5,
-   "think": 3,
+   "targets": 3,
+   "think": 2,
    "think_why": [
-    "find the lowest MAP in two rows, then compare",
-    "add eye, verbal and motor scores"
+    "find the lowest MAP in two rows, then compare"
    ],
    "seen": [
     {
@@ -1087,29 +1060,17 @@
      }
     },
     {
-     "GCS - Eye Opening": {
-      "01-16 06:00": "4"
-     }
-    },
-    {
-     "GCS - Motor Response": {
-      "01-16 06:00": "6"
-     }
-    },
-    {
-     "GCS - Verbal Response": {
-      "01-16 06:00": "5"
+     "GCS Total": {
+      "01-16 06:00": "15"
      }
     }
    ],
    "log": [
     "tab: Vitals",
-    "table columns ['01-15 19:00', '01-16 07:00']: 1 gesture(s) (end_left)",
     "grid:",
     "think:",
     "group: Neurological",
-    "grid:",
-    "think:"
+    "grid:"
    ],
    "screens": 2,
    "seed": 6,

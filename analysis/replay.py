@@ -308,11 +308,11 @@ class Replay:
     # ------------------------------------------------------------- NurseGlance
     def glance_locator(self, step):
         if step["kind"] == "row":
-            return self.p.locator(".ng-row").filter(
-                has=self.p.locator(".ng-label", has_text=step["label"])).filter(
-                has=self.p.locator(f'.ng-label:text-is("{step["label"]}")'))
+            return self.p.locator(f'.ng-row[data-eid="{step["eid"]}"]')
         if step["kind"] == "li":
-            return self.p.locator(".ng-list li").filter(has_text=step["text"])
+            return self.p.locator(f'.ng-row[data-eid="{step["eid"]}"] li').filter(has_text=step["text"])
+        if step["kind"] == "strip":
+            return self.p.locator(".ng-meds .ng-item").filter(has_text=step["text"])
         if step["kind"] == "ytick":
             return self.p.locator(".js-plotly-plot .ytick text").filter(has_text=step["text"])
         raise ValueError(step)
@@ -324,7 +324,7 @@ class Replay:
         if step["expect"] not in text:
             raise PathError(f"{step} : saw {text!r}")
         rec["targets"] += 1
-        rec["seen"].append({step.get("label") or step.get("text"): " ".join(text.split())})
+        rec["seen"].append({step.get("eid") or step.get("text"): " ".join(text.split())})
 
     def do_hover(self, step, rec):
         if step["kind"] == "row":
@@ -352,7 +352,7 @@ class Replay:
             raise PathError(f"{step}: hover text {text!r}")
         rec["hovers"] += 1
         rec["targets"] += 1
-        rec["seen"].append({step.get("label") or step.get("name"): " ".join(text.split())[:160]})
+        rec["seen"].append({step.get("eid") or step.get("name"): " ".join(text.split())[:160]})
 
     # ------------------------------------------------------------- one question
     def run_path(self, qid, view, case):
@@ -416,7 +416,7 @@ def resolve_cols(case, table, label, specs, group) -> list[str]:
         chart = df[(df["source"] != "labevents") & (df["t"] >= ref - timedelta(hours=24))]
         pv = tabbed._pivot(chart[chart["category"] == group])
     row = pv.loc[label]
-    filled = [c for c in pv.columns if row[c] != ""]
+    filled = sorted(c for c in pv.columns if row[c] != "")   # "mm-dd HH:MM", oldest first, whatever the display order
     out = []
     for spec in specs:
         if spec == "last":

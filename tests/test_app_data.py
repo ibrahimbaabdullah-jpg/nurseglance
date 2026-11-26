@@ -51,4 +51,34 @@ def test_every_organ_panel_builds(case_id):
     from app import glance
     case = data.load_case(case_id)
     for system in data.ORGAN_SYSTEMS:
-        assert f"<h4>{system}" in glance.panel_html(case, system, data.handoff(case)).replace("&amp;", "&")
+        assert f'<div class="ng-h">{system}' in glance.panel_html(case, system, data.handoff(case)).replace("&amp;", "&")
+
+
+@needs_cases
+@pytest.mark.parametrize("case_id", CASES)
+def test_every_element_is_shown_once(case_id):
+    """Each element appears as a row, or by name in a panel's none / not charted line."""
+    import re
+
+    from app import glance
+    case = data.load_case(case_id)
+    ref = data.handoff(case)
+    page = "".join(glance.panel_html(case, s, ref) for s in data.ORGAN_SYSTEMS)
+    rows = set(re.findall(r'data-eid="([a-z0-9_]+)"', page))
+    empty = " ".join(re.findall(r'<div class="ng-empty">(.*?)</div>', page)).replace("&amp;", "&")
+    for eid, el in case["elements"].items():
+        assert eid in rows or glance.short(el["label"]) in empty, eid
+
+
+@needs_cases
+def test_meds_strip_lists_running_drips_and_next_doses():
+    from app import glance
+    case = data.load_case("S1")
+    strip = glance.meds_strip(case, data.handoff(case))
+    assert "Heparin Sodium" in strip and "21:37" in strip and "OxyCODONE" in strip
+
+
+def test_diagnoses_sorted_puts_external_causes_last():
+    dx = [{"code": "Y838", "version": "ICD-10"}, {"code": "Z66", "version": "ICD-10"},
+          {"code": "I609", "version": "ICD-10"}, {"code": "E8788", "version": "ICD-9"}]
+    assert [d["code"] for d in sorted(dx, key=data.dx_rank)] == ["I609", "Z66", "Y838", "E8788"]

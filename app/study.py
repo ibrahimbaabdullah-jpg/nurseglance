@@ -172,7 +172,7 @@ def _advance() -> None:
     st.session_state["study"]["i"] += 1
 
 
-def _question_step(study: dict, step: dict) -> None:
+def _question_step(study: dict, step: dict, slot) -> None:
     q, i = step["question"], study["i"]
     _set_context(view=step["view"], case_id=step["case_id"], question_id=q["id"])
     if i not in study["shown"]:
@@ -180,7 +180,7 @@ def _question_step(study: dict, step: dict) -> None:
         events.log("question_shown", target=q["kind"], value=q["text"])
     n_q = sum(1 for s in study["steps"] if s["kind"] == "question")
     q_no = sum(1 for s in study["steps"][:i + 1] if s["kind"] == "question")
-    with st.container(border=True):
+    with slot.container(border=True):   # in the sidebar, so it stays in view while the participant scrolls
         st.caption(f"Question {q_no} of {n_q} · {VIEW_NAMES[step['view']]} · patient {step['case_id']}")
         with st.form(f"q_{q['id']}", clear_on_submit=True):
             st.markdown(f"**{q['text']}**")
@@ -193,9 +193,8 @@ def _question_step(study: dict, step: dict) -> None:
                 answer = st.text_input("Answer (24-hour time, HH:MM)", key=key, placeholder="21:30")
             else:
                 answer = st.text_input(f"Answer ({q.get('unit', '')})", key=key)
-            c1, c2 = st.columns([1, 1])
-            submit = c1.form_submit_button("Submit answer", type="primary")
-            cant = c2.form_submit_button("I can't find it")
+            submit = st.form_submit_button("Submit answer", type="primary", width="stretch")
+            cant = st.form_submit_button("I can't find it", width="stretch")
         if submit or cant:
             events.log("answer_submit", target="cant_find" if cant else "submit",
                        value="" if cant else (answer or ""))
@@ -261,8 +260,10 @@ def _done_step(study: dict) -> None:
                + (f" A copy was also saved to {study['saved']}." if study.get("saved") else ""))
 
 
-def render() -> None:
+def render(question_slot=None) -> None:
+    """question_slot: a sidebar container for the question card (defaults to the sidebar's end)."""
     study = st.session_state.get("study")
+    question_slot = question_slot if question_slot is not None else st.sidebar
     if not study:
         _start_screen()
         return
@@ -274,7 +275,7 @@ def render() -> None:
             _reset()
             st.rerun()
     if step["kind"] == "question":
-        _question_step(study, step)
+        _question_step(study, step, question_slot)
     elif step["kind"] == "survey":
         _survey_step(study, step)
     else:

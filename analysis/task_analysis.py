@@ -111,14 +111,14 @@ def summarize(rows: list[dict]) -> list[dict]:
 
 # ------------------------------------------------------------------ chart (hand-written SVG)
 
-def svg_chart(rows: list[dict]) -> str:
+def svg_chart(rows: list[dict], title: str, xmax: int | None = None) -> str:
     """Dumbbell: estimated seconds per question, tabbed vs NurseGlance, standard and complex panels."""
     blue, orange = "#257de0", "#f47230"          # categorical slots 1 and 2 (validated, light mode)
     ink, ink2, grid = "#191919", "#666666", "#e6e6e6"
     qids = list(dict.fromkeys(r["question_id"] for r in rows))
     val = {(r["question_id"], r["view"]): r for r in rows}
-    xmax = max(r["klm_seconds"] for r in rows)
-    xmax = (int(xmax / 10) + 1) * 10
+    if xmax is None:
+        xmax = (int(max(r["klm_seconds"] for r in rows) / 10) + 1) * 10
     W, left, right, top, row_h, gap = 760, 210, 70, 78, 26, 34
     x = lambda s: left + (W - left - right) * s / xmax  # noqa: E731
     standard = [q for q in qids if q.startswith("S")]
@@ -128,7 +128,7 @@ def svg_chart(rows: list[dict]) -> str:
            f'font-family="Source Sans Pro, Helvetica, Arial, sans-serif" role="img" '
            f'aria-label="Estimated seconds to answer each question in the tabbed EHR view and in NurseGlance">',
            f'<rect width="{W}" height="{H}" fill="#ffffff"/>',
-           f'<text x="16" y="26" font-size="16" font-weight="600" fill="{ink}">Estimated time to find each answer</text>',
+           f'<text x="16" y="26" font-size="16" font-weight="600" fill="{ink}">{title}</text>',
            f'<text x="16" y="46" font-size="12" fill="{ink2}">Keystroke-level estimate of the shortest scripted path, '
            f'in seconds (design-level, not user data). 1440×900 screen.</text>']
     # legend
@@ -172,22 +172,86 @@ def svg_chart(rows: list[dict]) -> str:
     return "\n".join(out)
 
 
+BEFORE = ROOT / "docs" / "task_replay_before.json"
+OUT_CSV_BEFORE = ROOT / "docs" / "task_analysis_before.csv"
+OUT_SVG_BEFORE = ROOT / "docs" / "figures" / "task_time_before.svg"
+OUT_MD = ROOT / "docs" / "task_analysis.md"
+
+
+def write_csv(rows: list[dict], path: Path) -> None:
+    with open(path, "w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def summary_table(before: list[dict] | None, after: list[dict]) -> str:
+    lines = ["| Version | Cases | View | Clicks | Scrolls | Hovers | Screens | Estimated seconds |",
+             "| --- | --- | --- | --- | --- | --- | --- | --- |"]
+    for label, rows in (("0.2 (before)", before), ("0.3 (after)", after)):
+        if not rows:
+            continue
+        for s in summarize(rows):
+            lines.append(f"| {label} | {s['case_type']} | {VIEW_LABEL[s['view']]} | {s['mean_clicks']:.1f} | "
+                         f"{s['mean_scrolls']:.1f} | {s['mean_hovers']:.1f} | {s['mean_screens']:.1f} | "
+                         f"{s['mean_klm_seconds']:.1f} |")
+    return "\n".join(lines)
+
+
+def question_table(rows: list[dict]) -> str:
+    by: dict[str, dict[str, dict]] = {}
+    for r in rows:
+        by.setdefault(r["question_id"], {})[r["view"]] = r
+    lines = ["| Question | Kind | Tabbed: clicks, scrolls, screens | Tabbed path | NurseGlance: scrolls, hovers | "
+             "Seconds (tabbed / NurseGlance) |", "| --- | --- | --- | --- | --- | --- |"]
+    for q, d in by.items():
+        t, g = d["tabbed"], d["glance"]
+        lines.append(f"| {q} | {KIND_LABEL[t['kind']]} | {t['clicks']}, {t['scrolls']}, {t['screens']} | {t['path']} | "
+                     f"{g['scrolls']}, {g['hovers']} | {t['klm_seconds']:.1f} / {g['klm_seconds']:.1f} |")
+    return "\n".join(lines)
+
+
+def write_markdown(before: list[dict] | None, after: list[dict], viewport) -> None:
+    def mean(rows, view):
+        sel = [r["klm_seconds"] for r in rows if r["view"] == view]
+        return sum(sel) / len(sel)
+    a_t, a_g = mean(after, "tabbed"), mean(after, "glance")
+    head = (f"After the redesign, the shortest path to an answer took an estimated **{a_t:.1f} s** in the tabbed "
+            f"view and **{a_g:.1f} s** in NurseGlance, averaged over the 16 questions")
+    if before:
+        b_t, b_g = mean(before, "tabbed"), mean(before, "glance")
+        head += f" (before: {b_t:.1f} s and {b_g:.1f} s)"
+    head += (". NurseGlance needed no clicks, scrolls or hovers for any question on a 1440×900 screen. "
+             "These are design-level estimates of a scripted expert path, not measurements of nurses.")
+    template = (ROOT / "analysis" / "task_analysis_template.md").read_text(encoding="utf-8")
+    text = (template.replace("{{HEADLINE}}", head)
+            .replace("{{VIEWPORT}}", f"{viewport[0]}×{viewport[1]}")
+            .replace("{{SUMMARY}}", summary_table(before, after))
+            .replace("{{QUESTIONS}}", question_table(after)))
+    OUT_MD.write_text(text, encoding="utf-8")
+
+
 def main() -> int:
     replay = json.loads(REPLAY.read_text(encoding="utf-8"))
     if not replay.get("app_log_matches"):
         print("Warning: the replay's counts did not match the app's log:", replay.get("problems"))
     rows = build_rows(replay)
-    with open(OUT_CSV, "w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
-        writer.writeheader()
-        writer.writerows(rows)
+    before = build_rows(json.loads(BEFORE.read_text(encoding="utf-8"))) if BEFORE.exists() else None
+    write_csv(rows, OUT_CSV)
     OUT_SVG.parent.mkdir(parents=True, exist_ok=True)
-    OUT_SVG.write_text(svg_chart(rows), encoding="utf-8")
-    print(f"Wrote {len(rows)} rows to {OUT_CSV} and the chart to {OUT_SVG}")
-    for s in summarize(rows):
-        print(f"  {s['case_type']:8} {VIEW_LABEL[s['view']]:12} clicks {s['mean_clicks']:4} scrolls "
-              f"{s['mean_scrolls']:4} hovers {s['mean_hovers']:4} screens {s['mean_screens']:4} "
-              f"KLM {s['mean_klm_seconds']:5} s")
+    xmax = (int(max(r["klm_seconds"] for r in rows + (before or [])) / 10) + 1) * 10
+    OUT_SVG.write_text(svg_chart(rows, "Estimated time to find each answer (version 0.3)", xmax), encoding="utf-8")
+    if before:
+        write_csv(before, OUT_CSV_BEFORE)
+        OUT_SVG_BEFORE.write_text(svg_chart(before, "Estimated time to find each answer (version 0.2, before "
+                                                    "the redesign)", xmax), encoding="utf-8")
+    write_markdown(before, rows, replay["viewport"])
+    print(f"Wrote {OUT_CSV}, {OUT_SVG} and {OUT_MD}")
+    for label, data_rows in (("before", before), ("after", rows)):
+        for s in summarize(data_rows or []) if data_rows else []:
+            print(f"  {label:6} {s['case_type']:8} {VIEW_LABEL[s['view']]:12} clicks {s['mean_clicks']:4} scrolls "
+                  f"{s['mean_scrolls']:4} hovers {s['mean_hovers']:4} screens {s['mean_screens']:4} "
+                  f"KLM {s['mean_klm_seconds']:5} s")
     return 0
 
 

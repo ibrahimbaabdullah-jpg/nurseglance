@@ -45,6 +45,9 @@ whether the same approach helps bedside and virtual nurses.
 | `etl/value_codes.py` | Rebuilds `docs/value_codes.csv`, which restores text that FHIR carries only as a numeric code |
 | `etl/loinc_mapping.py` | Writes `docs/loinc_mapping.csv`: 50 MIMIC items mapped to LOINC, each name checked at NLM (`--verify`) |
 | `docs/coverage.md` | Research question 1 write-up: coverage by organ system, FHIR vs CSV completeness, gaps and causes |
+| `analysis/` | Task analysis: the shortest path to every study answer in each view (`paths.py`), a Playwright replay that measures it in the running app (`replay.py`), and keystroke-level estimates (`task_analysis.py`) |
+| `docs/task_analysis.md` | Clicks, scrolls, screens and estimated seconds per question, before and after the redesign |
+| `docs/heuristic_evaluation.md` | Draft heuristic evaluation of both views (Nielsen's 10, severity 0 to 4), with what version 0.3 changed |
 | `streamlit_app.py`, `app/` | The dashboard: `glance.py` (NurseGlance view), `tabbed.py` (control view), `timeline.py` (12 h timeline), `data.py` (shared loading) |
 | `app/study.py`, `app/events.py`, `app/scoring.py` | Study mode: seeded randomization, event log, SUS and raw NASA-TLX scoring, CSV export |
 | `app/flags.py` | 8 transparent rule-based flags, each showing its rule, values, times and FHIR IDs (off in study mode) |
@@ -147,6 +150,12 @@ the admission; if you'd rather use a survivor, the next complex candidate
 - **Fall risk and restraints.** The starter item IDs had no rows in the demo. Fall
   risk is now the sum of the six Morse Fall Scale items; restraints use items 227945
   and 227948.
+- **Version 0.3 redesign.** After a heuristic evaluation, NurseGlance got short labels,
+  12-hour ranges under trended values, H/L badges, folded empty rows and a medication
+  strip (running infusions and next doses) at the top. The tabbed control was made
+  closer to a current EHR (newest columns first, scores beside their parts, running
+  infusions and upcoming doses first) so the comparison is fair, and the study question
+  moved to the sidebar. See `docs/heuristic_evaluation.md`.
 - **Thresholds** marked "placeholder" in `docs/data_elements.csv` are yours to set
   and cite. Labs with no threshold use each result's own reference range.
 
@@ -170,7 +179,7 @@ Events: `session_start, question_shown, tab_switch, toggle, answer_submit, surve
 
 ## How it was tested
 
-- 56 tests (`pytest`), including SUS and NASA-TLX scoring against hand-calculated
+- 62 tests (`pytest`), including SUS and NASA-TLX scoring against hand-calculated
   examples, randomization balance over 200 seeds, the answer keys checked against the
   case files, and the flags' evidence. Also: unit and synthetic ETL tests (windows, calculated MAP, GCS,
   urine output per kg, drip titration, line days, lab flags), the FHIR-vs-CSV check,
@@ -179,6 +188,10 @@ Events: `session_start, question_shown, tab_switch, toggle, answer_submit, surve
   PhysioNet (checksums verified). The FHIR-vs-CSV test passes for all 4 cases.
 - Both views were clicked through for all 4 cases in a headless browser with no errors,
   and a full mock study session (16 questions, 2 surveys) exported a clean CSV.
+- `analysis/replay.py` answers all 16 questions in both views through the study mode,
+  checks each answer is on screen, and confirms the app's event log counts the same
+  clicks and screens (`pip install -r requirements-analysis.txt`, then
+  `playwright install chromium`, with the app running).
 
 ## Data
 
