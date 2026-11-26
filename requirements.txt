@@ -1,0 +1,8 @@
+# Day 1 (ETL and tests)
+pandas>=2.1
+pytest>=8
+tzdata          # time-zone data; needed on Windows
+
+# Day 2 onward (the app)
+streamlit>=1.40
+plotly>=5.24

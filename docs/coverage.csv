@@ -1,0 +1,59 @@
+element_id,organ_system,label,source,mappable,S1,S2,C1,C2
+gcs_total,Neuro,GCS total,derived,yes,yes,yes,yes,yes
+rass,Neuro,RASS,chart,yes,yes,yes,yes,yes
+rass_goal,Neuro,RASS goal,chart,yes,yes,yes,yes,yes
+pain,Neuro,Pain level,chart,yes,no,yes,yes,yes
+cam_icu,Neuro,CAM-ICU components,chart,yes,yes,yes,no,yes
+pupils,Neuro,Pupils (size and response),chart,yes,no,yes,yes,yes
+sedation_drips,Neuro,Sedation and analgesia infusions,infusion,yes,no,no,yes,yes
+heart_rate,CV,Heart rate,chart,yes,yes,yes,yes,yes
+heart_rhythm,CV,Heart rhythm,chart,yes,yes,yes,yes,yes
+map,CV,Mean arterial pressure,chart,yes,yes,yes,yes,yes
+sbp,CV,Systolic blood pressure,chart,yes,yes,yes,yes,yes
+cvp,CV,Central venous pressure,chart,yes,no,no,yes,no
+vasoactive_drips,CV,Vasoactive infusions,infusion,yes,no,no,yes,yes
+mcs_devices,CV,Mechanical circulatory support (IABP or Impella),chart,yes,no,no,no,no
+lactate,CV,Lactate,lab,yes,yes,no,yes,yes
+resp_rate,Resp,Respiratory rate,chart,yes,yes,yes,yes,yes
+spo2,Resp,SpO2,chart,yes,yes,yes,yes,yes
+fio2,Resp,FiO2,chart,yes,no,no,yes,yes
+peep,Resp,PEEP set,chart,yes,no,no,yes,yes
+vent_mode,Resp,Ventilator mode,chart,yes,no,no,yes,yes
+o2_device,Resp,O2 delivery device,chart,yes,yes,yes,yes,yes
+ventilation,Resp,Ventilation in place,device,yes,no,no,yes,yes
+ph,Resp,Arterial pH,lab,yes,yes,no,yes,yes
+pco2,Resp,pCO2,lab,yes,yes,no,yes,yes
+po2,Resp,pO2,lab,yes,yes,no,yes,yes
+urine_output_6h,Renal/I&O,Urine output (last 6 h),derived,yes,yes,yes,yes,yes
+urine_rate_6h,Renal/I&O,Urine output rate (last 6 h),derived,yes,yes,yes,yes,yes
+intake_12h,Renal/I&O,Intake (last 12 h),derived,yes,yes,yes,yes,yes
+output_12h,Renal/I&O,Output (last 12 h),derived,yes,yes,yes,yes,yes
+net_12h,Renal/I&O,Net balance (last 12 h),derived,yes,yes,yes,yes,yes
+creatinine,Renal/I&O,Creatinine,lab,yes,yes,yes,yes,yes
+bun,Renal/I&O,BUN,lab,yes,yes,yes,yes,yes
+potassium,Renal/I&O,Potassium,lab,yes,yes,yes,yes,yes
+sodium,Renal/I&O,Sodium,lab,yes,yes,yes,yes,yes
+magnesium,Renal/I&O,Magnesium,lab,yes,yes,yes,yes,yes
+dialysis,Renal/I&O,Dialysis or CRRT,device,yes,no,no,yes,no
+weight,Renal/I&O,Weight,weight,yes,yes,yes,yes,yes
+glucose_poc,GI/Nutrition,Glucose (point of care),chart,yes,yes,yes,yes,yes
+glucose_lab,GI/Nutrition,Glucose (lab),lab,yes,yes,yes,yes,yes
+insulin,GI/Nutrition,Insulin,infusion,yes,no,no,no,no
+enteral_feeds,GI/Nutrition,Enteral nutrition,infusion,yes,no,no,no,no
+diet,GI/Nutrition,Diet type,chart,yes,yes,yes,yes,yes
+stool,GI/Nutrition,Stool output,output,yes,no,no,no,no
+temperature,Heme/ID,Temperature,derived,yes,yes,yes,yes,yes
+wbc,Heme/ID,WBC,lab,yes,yes,yes,yes,yes
+hemoglobin,Heme/ID,Hemoglobin,lab,yes,yes,yes,yes,yes
+platelets,Heme/ID,Platelets,lab,yes,yes,yes,yes,yes
+inr,Heme/ID,INR,lab,yes,no,yes,yes,yes
+antibiotics_iv,Heme/ID,IV antibiotics,infusion,yes,no,no,no,yes
+lines,Skin/Lines/Devices,Lines and catheters,device,yes,yes,yes,yes,yes
+foley,Skin/Lines/Devices,Foley catheter,device,yes,no,yes,yes,yes
+braden_total,Skin/Lines/Devices,Braden score,derived,yes,yes,yes,yes,yes
+skin_condition,Skin/Lines/Devices,Skin condition,chart,yes,yes,yes,yes,yes
+code_status,Safety,Code status,chart,yes,no,no,no,no
+fall_risk,Safety,Risk for falls,chart,yes,no,no,no,no
+restraints,Safety,Restraints,chart,yes,no,no,no,no
+precautions,Safety,Precautions,chart,yes,no,no,no,no
+allergies,Safety,Allergies,none,no,no,no,no,no

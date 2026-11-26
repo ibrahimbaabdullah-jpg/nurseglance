@@ -1,0 +1,59 @@
+element_id,organ_system,label,source,item_ids,unit,display_rule,low,high,threshold_source,lindroth_need,notes
+gcs_total,Neuro,GCS total,derived,GCS_TOTAL,points,trend,9,,"Placeholder: GCS 8 or less = severe impairment; confirm",,Eye + verbal + motor when all three are charted at the same time
+rass,Neuro,RASS,chart,228096,score,trend,-2,1,"Placeholder light-sedation range; compare with the RASS goal",,
+rass_goal,Neuro,RASS goal,chart,228299,score,latest,,,,,
+pain,Neuro,Pain level,chart,223791,,latest,,,,,Charted as text in MIMIC
+cam_icu,Neuro,CAM-ICU components,chart,228300|228301|228302|228303|228334|228335|228336|228337|229324|229325|229326,,latest,,,,,Several item IDs were used over time
+pupils,Neuro,Pupils (size and response),chart,223907|224733|227121|227288,,latest,,,,,
+sedation_drips,Neuro,Sedation and analgesia infusions,infusion,222168|225150|229420|221744|225942|221668,,running,,,,continuous IV medications,
+heart_rate,CV,Heart rate,chart,220045,bpm,trend,50,120,"Placeholder ICU alert range; confirm and cite",hemodynamics,
+heart_rhythm,CV,Heart rhythm,chart,220048,,latest,,,,hemodynamics,
+map,CV,Mean arterial pressure,chart,220052|220181|MAP_CALC,mmHg,trend,65,110,"MAP below 65 from the project brief; upper limit is a placeholder",hemodynamics,"Arterial line first, then cuff, then calculated (SBP + 2 x DBP) / 3"
+sbp,CV,Systolic blood pressure,chart,220050|220179,mmHg,trend,90,180,"Placeholder; confirm",hemodynamics,Arterial line first
+cvp,CV,Central venous pressure,chart,220074,mmHg,latest,,,,hemodynamics,
+vasoactive_drips,CV,Vasoactive infusions,infusion,221906|221289|222315|221749|229630|229632|221662|221653|221986,,running,,,,continuous IV medications,Rate and time of last change
+mcs_devices,CV,Mechanical circulatory support (IABP or Impella),chart,220120|227980|228156|229675,,latest,,,,mechanical circulatory support devices,Charted settings show the device is in use
+lactate,CV,Lactate,lab,50813|52442,mmol/L,trend,,,Each result's own reference range,laboratory results,
+resp_rate,Resp,Respiratory rate,chart,220210,insp/min,trend,8,30,"Placeholder; confirm",,
+spo2,Resp,SpO2,chart,220277,%,trend,92,,"SpO2 below 92% from the project brief",,
+fio2,Resp,FiO2,chart,223835,%,latest,,,,ventilation status,
+peep,Resp,PEEP set,chart,220339,cmH2O,latest,,,,ventilation status,
+vent_mode,Resp,Ventilator mode,chart,223849|229314,,latest,,,,ventilation status,
+o2_device,Resp,O2 delivery device,chart,226732,,latest,,,,ventilation status,
+ventilation,Resp,Ventilation in place,device,225792|225794,,in_place,,,,ventilation status,Day count from the procedure start
+ph,Resp,Arterial pH,lab,50820,,latest,,,Each result's own reference range,laboratory results,
+pco2,Resp,pCO2,lab,50818,mmHg,latest,,,Each result's own reference range,laboratory results,
+po2,Resp,pO2,lab,50821,mmHg,latest,,,Each result's own reference range,laboratory results,
+urine_output_6h,Renal/I&O,Urine output (last 6 h),derived,UO_6H,mL,total,,,,,
+urine_rate_6h,Renal/I&O,Urine output rate (last 6 h),derived,UO_RATE_6H,mL/kg/h,total,0.5,,"Below 0.5 mL/kg/h from the project brief",,Uses the latest weight
+intake_12h,Renal/I&O,Intake (last 12 h),derived,INTAKE_12H,mL,total,,,,,"Approximate: ICU input events in mL, prorated by time"
+output_12h,Renal/I&O,Output (last 12 h),derived,OUTPUT_12H,mL,total,,,,,All output events in mL
+net_12h,Renal/I&O,Net balance (last 12 h),derived,NET_12H,mL,total,,,,,Intake minus output
+creatinine,Renal/I&O,Creatinine,lab,50912,mg/dL,trend,,,Each result's own reference range,laboratory results,
+bun,Renal/I&O,BUN,lab,51006,mg/dL,latest,,,Each result's own reference range,laboratory results,
+potassium,Renal/I&O,Potassium,lab,50971,mEq/L,latest,,,Each result's own reference range,laboratory results,
+sodium,Renal/I&O,Sodium,lab,50983,mEq/L,latest,,,Each result's own reference range,laboratory results,
+magnesium,Renal/I&O,Magnesium,lab,50960,mg/dL,latest,,,Each result's own reference range,laboratory results,
+dialysis,Renal/I&O,Dialysis or CRRT,device,225802|225441|224270,,in_place,,,,,
+weight,Renal/I&O,Weight,weight,224639|226512,kg,latest,,,,,Daily weight first; looks back to hospital admission
+glucose_poc,GI/Nutrition,Glucose (point of care),chart,225664|226537|220621,mg/dL,trend,70,180,"Placeholder ICU glucose range; confirm",,
+glucose_lab,GI/Nutrition,Glucose (lab),lab,50931,mg/dL,latest,,,Each result's own reference range,laboratory results,
+insulin,GI/Nutrition,Insulin,infusion,223258|223262|223259|223260|223257|223261|229299|229619,,running,,,,continuous IV medications,Shows infusions running and doses given in the last 12 h
+enteral_feeds,GI/Nutrition,Enteral nutrition,infusion,cat:Enteral Nutrition,,running,,,,,Matches the input-event category
+diet,GI/Nutrition,Diet type,chart,224001,,latest,,,,,
+stool,GI/Nutrition,Stool output,output,226579|226586,mL,latest,,,,,
+temperature,Heme/ID,Temperature,derived,TEMP_C,deg C,trend,36,38.3,"Placeholder; confirm",,Converted to Celsius when charted in Fahrenheit
+wbc,Heme/ID,WBC,lab,51301,K/uL,trend,,,Each result's own reference range,laboratory results,
+hemoglobin,Heme/ID,Hemoglobin,lab,51222,g/dL,trend,,,Each result's own reference range,laboratory results,
+platelets,Heme/ID,Platelets,lab,51265,K/uL,latest,,,Each result's own reference range,laboratory results,
+inr,Heme/ID,INR,lab,51237,,latest,,,Each result's own reference range,laboratory results,
+antibiotics_iv,Heme/ID,IV antibiotics,infusion,cat:Antibiotics,,running,,,,continuous IV medications,Doses given in the last 12 h
+lines,Skin/Lines/Devices,Lines and catheters,device,225752|224263|224264|224560|224270|224267|224268|225204|224274|224275|224276|224277,,in_place,,,,,Day count from insertion
+foley,Skin/Lines/Devices,Foley catheter,device,229351,,in_place,,,,,
+braden_total,Skin/Lines/Devices,Braden score,derived,BRADEN_TOTAL,points,latest,19,,"Placeholder: 18 or less = at risk; confirm",,Sum of the six subscales when all are charted together
+skin_condition,Skin/Lines/Devices,Skin condition,chart,224860,,latest,,,,,
+code_status,Safety,Code status,chart,223758|228687,,latest,,,,code status,
+fall_risk,Safety,Risk for falls,chart,223754,,latest,,,,,
+restraints,Safety,Restraints,chart,224063|227965,,latest,,,,,
+precautions,Safety,Precautions,chart,223759,,latest,,,,,
+allergies,Safety,Allergies,none,,,,,,,,The FHIR demo has no AllergyIntolerance resource
