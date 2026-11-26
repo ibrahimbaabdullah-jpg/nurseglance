@@ -1,0 +1,16 @@
+{
+  "title": "NurseGlance: a nurse-centered, FHIR-based ICU handoff dashboard",
+  "upload_type": "software",
+  "description": "<p>An open-source research prototype that shows ICU patients from the MIMIC-IV Clinical Database Demo on FHIR in two ways: a tabbed EHR-style control view and an organ-system nurse handoff view. It includes a FHIR R4 pipeline with LOINC mapping, a crossover study mode with event logging, SUS and NASA-TLX, a scripted task analysis, a heuristic evaluation, a technical report, and a proposed crossover usability-study protocol.</p><p>Research prototype, not for clinical use and not clinically validated. Click and time results are design-level estimates from scripted runs, not measurements of nurses. No human-subjects data are included.</p>",
+  "creators": [
+    {"name": "Baabdallah, Ibrahim"}
+  ],
+  "license": "MIT",
+  "keywords": ["HL7 FHIR", "MIMIC-IV", "intensive care unit", "nursing handoff", "clinical dashboard", "EHR usability", "information visualization"],
+  "related_identifiers": [
+    {"identifier": "10.1093/jamia/ocad002", "relation": "references", "scheme": "doi"},
+    {"identifier": "https://physionet.org/content/mimic-iv-fhir-demo/2.1.0/", "relation": "references", "scheme": "url"},
+    {"identifier": "https://ibrahimbaabdullah-jpg-nurseglance-streamlit-app-uvwgbm.streamlit.app/", "relation": "isDocumentedBy", "scheme": "url"}
+  ],
+  "notes": "Code is MIT-licensed. Files derived from MIMIC (data/processed and some docs) are shared under the Open Data Commons Open Database License v1.0; see DATA_LICENSE.md."
+}

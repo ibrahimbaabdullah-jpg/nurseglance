@@ -1,0 +1,69 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below. It is a research prototype, not for clinical use."
+title: "NurseGlance: a nurse-centered, FHIR-based ICU handoff dashboard"
+type: software
+authors:
+  - family-names: Baabdallah
+    given-names: Ibrahim
+version: 1.0.0
+license: MIT
+repository-code: "https://github.com/ibrahimbaabdullah-jpg/nurseglance"
+url: "https://ibrahimbaabdullah-jpg-nurseglance-streamlit-app-uvwgbm.streamlit.app/"
+abstract: >-
+  An open-source research prototype that shows ICU patients from the MIMIC-IV
+  Clinical Database Demo on FHIR in two ways: a tabbed EHR-style control view
+  and an organ-system nurse handoff view. It includes a FHIR R4 pipeline with
+  LOINC mapping, a crossover study mode with event logging, SUS and NASA-TLX,
+  a scripted task analysis, a heuristic evaluation, and a proposed crossover
+  usability-study protocol. Click and time results are design-level estimates,
+  not measurements of nurses.
+keywords:
+  - HL7 FHIR
+  - MIMIC-IV
+  - intensive care unit
+  - nursing handoff
+  - clinical dashboard
+  - EHR usability
+  - information visualization
+references:
+  - type: data
+    title: "MIMIC-IV Clinical Database Demo on FHIR"
+    version: "2.1.0"
+    authors:
+      - family-names: Bennett
+        given-names: Alex
+      - family-names: Ulrich
+        given-names: Hannes
+      - family-names: Wiedekopf
+        given-names: Joshua
+      - family-names: Szul
+        given-names: Piotr
+      - family-names: Grimes
+        given-names: Jason
+      - family-names: Johnson
+        given-names: Alistair
+    publisher:
+      name: PhysioNet
+    url: "https://physionet.org/content/mimic-iv-fhir-demo/2.1.0/"
+    license: ODbL-1.0
+    year: 2025
+  - type: article
+    title: "MIMIC-IV on FHIR: converting a decade of in-patient data into an exchangeable, interoperable format"
+    authors:
+      - family-names: Bennett
+        given-names: Alex M
+      - family-names: Ulrich
+        given-names: Hannes
+      - family-names: van Damme
+        given-names: Philip
+      - family-names: Wiedekopf
+        given-names: Joshua
+      - family-names: Johnson
+        given-names: Alistair E W
+    journal: "Journal of the American Medical Informatics Association"
+    volume: 30
+    issue: 4
+    start: 718
+    end: 725
+    year: 2023
+    doi: "10.1093/jamia/ocad002"

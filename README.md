@@ -196,7 +196,8 @@ Events: `session_start, question_shown, tab_switch, toggle, answer_submit, surve
   the restored text codes, and the app's data helpers, timeline and panels for every case.
 - The full pipeline ran on the official FHIR demo v2.1.0 and CSV demo v2.2 from
   PhysioNet (checksums verified). The FHIR-vs-CSV test passes for all 4 cases.
-- Both views were clicked through for all 4 cases in a headless browser with no errors,
+- Every case, view, tab, Meds section, flowsheet group and mode was clicked through in a
+  headless browser (233 screens) with no errors,
   and a full mock study session (16 questions, 2 surveys) exported a clean CSV.
 - `analysis/replay.py` answers all 16 questions in both views through the study mode,
   checks each answer is on screen, and confirms the app's event log counts the same
@@ -208,3 +209,16 @@ Events: `session_start, question_shown, tab_switch, toggle, answer_submit, surve
 MIMIC data is de-identified and shared under the ODbL v1.0. See
 `DATA_LICENSE.md` for attribution and the share-alike terms. Raw downloads stay
 out of git; the small processed case files are committed so the app can deploy.
+
+## Versions and citing
+
+| Version | Commit | What it holds |
+| --- | --- | --- |
+| v0.1 | `63fdd56` | Both views, 4 cases, README (the minimum viable prototype) |
+| v0.2 | `f582b5a` | Study mode, rule-based flags, virtual-nurse mode |
+| v0.3 | `fd2791a` | Heuristic evaluation and redesign of both views, task analysis |
+| v1.0 | latest `main` | Evaluation protocol, technical report, brief and demo video |
+
+To cite NurseGlance, use `CITATION.cff` (GitHub's "Cite this repository" button reads
+it). A Zenodo DOI will be added here once v1.0 is archived. Code is MIT-licensed; the
+MIMIC-derived data files are ODbL (see `DATA_LICENSE.md`).
