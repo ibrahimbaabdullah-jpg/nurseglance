@@ -1,0 +1,87 @@
+run_id,seed,ts_utc,view,case_id,question_id,event,target,value
+RTEST1,1215,2026-11-26T19:01:57.082Z,,,,session_start,plan,"[{""view"": ""tabbed"", ""cases"": [""S1"", ""C2""]}, {""view"": ""glance"", ""cases"": [""C1"", ""S2""]}]"
+RTEST1,1215,2026-11-26T19:01:57.161Z,tabbed,S1,S1-Q1,question_shown,lookup,What is the most recent potassium?
+RTEST1,1215,2026-11-26T19:01:59.639Z,tabbed,S1,S1-Q1,tab_switch,Labs,
+RTEST1,1215,2026-11-26T19:02:00.670Z,tabbed,S1,S1-Q1,tab_switch,Meds,
+RTEST1,1215,2026-11-26T19:02:02.077Z,tabbed,S1,S1-Q1,answer_submit,submit,3.2
+RTEST1,1215,2026-11-26T19:02:02.139Z,tabbed,S1,S1-Q2,question_shown,trend,How has the heart rate changed over the last 12 hours?
+RTEST1,1215,2026-11-26T19:02:04.333Z,tabbed,S1,S1-Q2,tab_switch,Labs,
+RTEST1,1215,2026-11-26T19:02:05.369Z,tabbed,S1,S1-Q2,tab_switch,Meds,
+RTEST1,1215,2026-11-26T19:02:06.742Z,tabbed,S1,S1-Q2,answer_submit,submit,Falling
+RTEST1,1215,2026-11-26T19:02:06.805Z,tabbed,S1,S1-Q3,question_shown,timing,At what time is the next oxycodone dose given after handoff?
+RTEST1,1215,2026-11-26T19:02:09.000Z,tabbed,S1,S1-Q3,tab_switch,Labs,
+RTEST1,1215,2026-11-26T19:02:10.036Z,tabbed,S1,S1-Q3,tab_switch,Meds,
+RTEST1,1215,2026-11-26T19:02:11.381Z,tabbed,S1,S1-Q3,answer_submit,submit,3.2
+RTEST1,1215,2026-11-26T19:02:11.443Z,tabbed,S1,S1-Q4,question_shown,synthesis,"What is your top safety concern for the next 12 hours, and what data support it?"
+RTEST1,1215,2026-11-26T19:02:13.670Z,tabbed,S1,S1-Q4,tab_switch,Labs,
+RTEST1,1215,2026-11-26T19:02:14.722Z,tabbed,S1,S1-Q4,tab_switch,Meds,
+RTEST1,1215,2026-11-26T19:02:16.091Z,tabbed,S1,S1-Q4,answer_submit,submit,"Bleeding risk, Hgb low"
+RTEST1,1215,2026-11-26T19:02:16.147Z,tabbed,C2,C2-Q1,question_shown,lookup,What is the current heart rate?
+RTEST1,1215,2026-11-26T19:02:18.369Z,tabbed,C2,C2-Q1,tab_switch,Labs,
+RTEST1,1215,2026-11-26T19:02:19.419Z,tabbed,C2,C2-Q1,tab_switch,Meds,
+RTEST1,1215,2026-11-26T19:02:20.759Z,tabbed,C2,C2-Q1,answer_submit,submit,3.2
+RTEST1,1215,2026-11-26T19:02:20.822Z,tabbed,C2,C2-Q2,question_shown,trend,How has the norepinephrine rate changed over the last 12 hours?
+RTEST1,1215,2026-11-26T19:02:23.017Z,tabbed,C2,C2-Q2,tab_switch,Labs,
+RTEST1,1215,2026-11-26T19:02:24.056Z,tabbed,C2,C2-Q2,tab_switch,Meds,
+RTEST1,1215,2026-11-26T19:02:25.412Z,tabbed,C2,C2-Q2,answer_submit,submit,Falling
+RTEST1,1215,2026-11-26T19:02:25.504Z,tabbed,C2,C2-Q3,question_shown,timing,At what time is the next cefepime dose given after handoff?
+RTEST1,1215,2026-11-26T19:02:27.666Z,tabbed,C2,C2-Q3,tab_switch,Labs,
+RTEST1,1215,2026-11-26T19:02:28.701Z,tabbed,C2,C2-Q3,tab_switch,Meds,
+RTEST1,1215,2026-11-26T19:02:30.043Z,tabbed,C2,C2-Q3,answer_submit,submit,3.2
+RTEST1,1215,2026-11-26T19:02:30.105Z,tabbed,C2,C2-Q4,question_shown,synthesis,"What is your top safety concern for the next 12 hours, and what data support it?"
+RTEST1,1215,2026-11-26T19:02:32.299Z,tabbed,C2,C2-Q4,tab_switch,Labs,
+RTEST1,1215,2026-11-26T19:02:33.335Z,tabbed,C2,C2-Q4,tab_switch,Meds,
+RTEST1,1215,2026-11-26T19:02:34.679Z,tabbed,C2,C2-Q4,answer_submit,submit,"Bleeding risk, Hgb low"
+RTEST1,1215,2026-11-26T19:02:38.931Z,tabbed,,,survey_submit,SUS-1,4
+RTEST1,1215,2026-11-26T19:02:38.931Z,tabbed,,,survey_submit,SUS-2,4
+RTEST1,1215,2026-11-26T19:02:38.931Z,tabbed,,,survey_submit,SUS-3,4
+RTEST1,1215,2026-11-26T19:02:38.931Z,tabbed,,,survey_submit,SUS-4,4
+RTEST1,1215,2026-11-26T19:02:38.931Z,tabbed,,,survey_submit,SUS-5,4
+RTEST1,1215,2026-11-26T19:02:38.931Z,tabbed,,,survey_submit,SUS-6,4
+RTEST1,1215,2026-11-26T19:02:38.931Z,tabbed,,,survey_submit,SUS-7,4
+RTEST1,1215,2026-11-26T19:02:38.931Z,tabbed,,,survey_submit,SUS-8,4
+RTEST1,1215,2026-11-26T19:02:38.931Z,tabbed,,,survey_submit,SUS-9,4
+RTEST1,1215,2026-11-26T19:02:38.931Z,tabbed,,,survey_submit,SUS-10,4
+RTEST1,1215,2026-11-26T19:02:38.931Z,tabbed,,,survey_submit,TLX-mental,50
+RTEST1,1215,2026-11-26T19:02:38.931Z,tabbed,,,survey_submit,TLX-physical,50
+RTEST1,1215,2026-11-26T19:02:38.931Z,tabbed,,,survey_submit,TLX-temporal,50
+RTEST1,1215,2026-11-26T19:02:38.931Z,tabbed,,,survey_submit,TLX-performance,50
+RTEST1,1215,2026-11-26T19:02:38.931Z,tabbed,,,survey_submit,TLX-effort,50
+RTEST1,1215,2026-11-26T19:02:38.931Z,tabbed,,,survey_submit,TLX-frustration,50
+RTEST1,1215,2026-11-26T19:02:38.931Z,tabbed,,,survey_submit,SUS_score,50.0
+RTEST1,1215,2026-11-26T19:02:38.931Z,tabbed,,,survey_submit,TLX_raw,50.0
+RTEST1,1215,2026-11-26T19:02:38.991Z,glance,C1,C1-Q1,question_shown,lookup,What is the current norepinephrine rate?
+RTEST1,1215,2026-11-26T19:02:41.792Z,glance,C1,C1-Q1,answer_submit,submit,3.2
+RTEST1,1215,2026-11-26T19:02:41.856Z,glance,C1,C1-Q2,question_shown,trend,How has lactate changed over the last 12 hours?
+RTEST1,1215,2026-11-26T19:02:44.440Z,glance,C1,C1-Q2,answer_submit,submit,Falling
+RTEST1,1215,2026-11-26T19:02:44.502Z,glance,C1,C1-Q3,question_shown,timing,At what time is the next vancomycin dose given after handoff?
+RTEST1,1215,2026-11-26T19:02:47.009Z,glance,C1,C1-Q3,answer_submit,submit,3.2
+RTEST1,1215,2026-11-26T19:02:47.070Z,glance,C1,C1-Q4,question_shown,synthesis,"What is your top safety concern for the next 12 hours, and what data support it?"
+RTEST1,1215,2026-11-26T19:02:49.576Z,glance,C1,C1-Q4,answer_submit,submit,"Bleeding risk, Hgb low"
+RTEST1,1215,2026-11-26T19:02:49.642Z,glance,S2,S2-Q1,question_shown,lookup,What is the most recent GCS total?
+RTEST1,1215,2026-11-26T19:02:52.161Z,glance,S2,S2-Q1,answer_submit,submit,3.2
+RTEST1,1215,2026-11-26T19:02:52.223Z,glance,S2,S2-Q2,question_shown,trend,What was the lowest MAP in the last 12 hours?
+RTEST1,1215,2026-11-26T19:02:54.724Z,glance,S2,S2-Q2,answer_submit,submit,3.2
+RTEST1,1215,2026-11-26T19:02:54.794Z,glance,S2,S2-Q3,question_shown,timing,At what time is the next nimodipine dose given after handoff?
+RTEST1,1215,2026-11-26T19:02:57.290Z,glance,S2,S2-Q3,answer_submit,submit,3.2
+RTEST1,1215,2026-11-26T19:02:57.349Z,glance,S2,S2-Q4,question_shown,synthesis,"What is your top safety concern for the next 12 hours, and what data support it?"
+RTEST1,1215,2026-11-26T19:02:59.858Z,glance,S2,S2-Q4,answer_submit,submit,"Bleeding risk, Hgb low"
+RTEST1,1215,2026-11-26T19:03:04.110Z,glance,,,survey_submit,SUS-1,4
+RTEST1,1215,2026-11-26T19:03:04.111Z,glance,,,survey_submit,SUS-2,4
+RTEST1,1215,2026-11-26T19:03:04.111Z,glance,,,survey_submit,SUS-3,4
+RTEST1,1215,2026-11-26T19:03:04.111Z,glance,,,survey_submit,SUS-4,4
+RTEST1,1215,2026-11-26T19:03:04.111Z,glance,,,survey_submit,SUS-5,4
+RTEST1,1215,2026-11-26T19:03:04.111Z,glance,,,survey_submit,SUS-6,4
+RTEST1,1215,2026-11-26T19:03:04.111Z,glance,,,survey_submit,SUS-7,4
+RTEST1,1215,2026-11-26T19:03:04.111Z,glance,,,survey_submit,SUS-8,4
+RTEST1,1215,2026-11-26T19:03:04.111Z,glance,,,survey_submit,SUS-9,4
+RTEST1,1215,2026-11-26T19:03:04.111Z,glance,,,survey_submit,SUS-10,4
+RTEST1,1215,2026-11-26T19:03:04.111Z,glance,,,survey_submit,TLX-mental,50
+RTEST1,1215,2026-11-26T19:03:04.111Z,glance,,,survey_submit,TLX-physical,50
+RTEST1,1215,2026-11-26T19:03:04.111Z,glance,,,survey_submit,TLX-temporal,50
+RTEST1,1215,2026-11-26T19:03:04.111Z,glance,,,survey_submit,TLX-performance,50
+RTEST1,1215,2026-11-26T19:03:04.111Z,glance,,,survey_submit,TLX-effort,50
+RTEST1,1215,2026-11-26T19:03:04.111Z,glance,,,survey_submit,TLX-frustration,50
+RTEST1,1215,2026-11-26T19:03:04.111Z,glance,,,survey_submit,SUS_score,50.0
+RTEST1,1215,2026-11-26T19:03:04.111Z,glance,,,survey_submit,TLX_raw,50.0
+RTEST1,1215,2026-11-26T19:03:04.173Z,,,,session_end,,

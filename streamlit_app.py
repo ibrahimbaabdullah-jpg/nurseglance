@@ -4,11 +4,12 @@ Run with:  streamlit run streamlit_app.py
 """
 import streamlit as st
 
-from app import data, glance, tabbed
+from app import data, flags, glance, study, tabbed, vn
 
 st.set_page_config(page_title="NurseGlance", page_icon="🩺", layout="wide")
 
 VIEWS = {"NurseGlance (organ systems)": glance.render, "Tabbed EHR view (control)": tabbed.render}
+MODES = ["Explore", "Study session", "Virtual-nurse mode"]
 
 with st.sidebar:
     st.title("NurseGlance")
@@ -16,14 +17,31 @@ with st.sidebar:
     if not cases:
         st.error("No case files in data/processed. Run etl/build_cases.py first.")
         st.stop()
-    labels = {c: f"{c} · {data.patient_line(data.load_case(c))}" for c in cases}
-    case_id = st.selectbox("Patient", cases, format_func=labels.get)
-    view = st.radio("View", list(VIEWS))
+    in_study = bool(st.session_state.get("study"))
+    mode = st.radio("Mode", MODES, index=1 if in_study else 0, disabled=in_study,
+                    help="Finish or abandon the study session to switch modes." if in_study else None)
+    if mode != "Study session":
+        labels = {c: f"{c} · {data.patient_line(data.load_case(c))}" for c in cases}
+        case_id = st.selectbox("Patient", cases, format_func=labels.get)
+    if mode == "Explore":
+        view = st.radio("View", list(VIEWS))
+        show_flags = st.toggle("Rule-based flags", value=False,
+                               help="Transparent rules with their triggering values. Always off in study mode.")
     st.divider()
     st.caption("Research prototype: not for clinical use and not clinically validated. "
                "Data: MIMIC-IV Clinical Database Demo on FHIR v2.1.0 (PhysioNet, ODbL v1.0). "
                "De-identified; dates are shifted into the future.")
 
-case = data.load_case(case_id)
 st.warning("Research prototype · not for clinical use · de-identified MIMIC-IV demo data", icon="⚠️")
-VIEWS[view](case)
+if mode == "Study session":
+    study.render()
+elif mode == "Virtual-nurse mode":
+    if st.session_state.get("log_context", {}).get("run_id") not in (None, "VN"):
+        st.session_state.pop("log_context", None)
+    vn.render(data.load_case(case_id))
+else:
+    st.session_state.pop("log_context", None)
+    case = data.load_case(case_id)
+    if show_flags:
+        flags.render(case)
+    VIEWS[view](case)

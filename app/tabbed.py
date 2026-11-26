@@ -12,6 +12,7 @@ import pandas as pd
 import streamlit as st
 
 from app import data
+from app.events import on_change_logger
 
 TABS = ["Vitals", "Labs", "Meds", "Notes/Problems"]
 
@@ -40,7 +41,9 @@ def vitals_tab(case: dict, df: pd.DataFrame) -> None:
     chart = df[(df["source"] != "labevents") & (df["t"] >= ref - timedelta(hours=24))]
     groups = sorted(chart["category"].dropna().unique())
     default = groups.index("Routine Vital Signs") if "Routine Vital Signs" in groups else 0
-    group = st.selectbox("Flowsheet group", groups, index=default, key=f"fs_{case['case_id']}")
+    key = f"fs_{case['case_id']}"
+    group = st.selectbox("Flowsheet group", groups, index=default, key=key,
+                         on_change=on_change_logger(key, "toggle", "Flowsheet: "))
     st.caption("Flowsheet, last 24 h before handoff. Columns run oldest to newest.")
     st.dataframe(_pivot(chart[chart["category"] == group]), width="stretch", height=420)
 
@@ -58,8 +61,9 @@ def labs_tab(case: dict, df: pd.DataFrame) -> None:
 
 def meds_tab(case: dict) -> None:
     ref = data.handoff(case)
-    section = st.radio("Section", ["MAR", "Infusions", "Active orders"], horizontal=True,
-                       key=f"meds_{case['case_id']}")
+    key = f"meds_{case['case_id']}"
+    section = st.radio("Section", ["MAR", "Infusions", "Active orders"], horizontal=True, key=key,
+                       on_change=on_change_logger(key, "toggle", "Meds: "))
     if section == "MAR":
         mar = pd.DataFrame(case["med_administrations"])
         if mar.empty:
@@ -119,8 +123,9 @@ def render(case: dict) -> None:
     ref = data.handoff(case)
     st.markdown(f"**{data.patient_line(case)}** · {data.weight_text(case)} · "
                 f"handoff {ref:%Y-%m-%d %H:%M}")
-    tab = st.radio("Chart tab", TABS, horizontal=True, key=f"tab_{case['case_id']}",
-                   label_visibility="collapsed")
+    key = f"tab_{case['case_id']}"
+    tab = st.radio("Chart tab", TABS, horizontal=True, key=key, label_visibility="collapsed",
+                   on_change=on_change_logger(key, "tab_switch", ""))
     st.divider()
     df = _obs_frame(case)
     if tab == "Vitals":
