@@ -27,7 +27,8 @@ whether the same approach helps bedside and virtual nurses.
 
 - **No human-subjects data.** No nurse has used this app as a study participant.
   Study mode shows that a session can run end to end and export clean data; a real
-  study needs IRB approval and would run in a research lab.
+  study needs IRB approval and would run in a research lab. The proposed protocol is
+  `docs/protocol.md`.
 - **Click and time results are design-level estimates** from scripted runs, not user
   outcomes. Any feedback from nurse colleagues is informal formative feedback, not
   study data, and no identifiable data is recorded.
@@ -48,6 +49,9 @@ whether the same approach helps bedside and virtual nurses.
 | `analysis/` | Task analysis: the shortest path to every study answer in each view (`paths.py`), a Playwright replay that measures it in the running app (`replay.py`), and keystroke-level estimates (`task_analysis.py`) |
 | `docs/task_analysis.md` | Clicks, scrolls, screens and estimated seconds per question, before and after the redesign |
 | `docs/heuristic_evaluation.md` | Draft heuristic evaluation of both views (Nielsen's 10, severity 0 to 4), with what version 0.3 changed |
+| `docs/protocol.md` ([PDF](docs/pdf/protocol.pdf)) | Proposed crossover usability study with ICU and virtual nurses, modeled on the AWARE trial; not started, needs IRB approval |
+| `analysis/sample_size.py`, `analysis/allocation.py` | The protocol's sample size (34 nurses for d<sub>z</sub> = 0.5, recruit 40) and its balanced allocation list |
+| `tools/build_pdf.py` | Renders a Markdown file in `docs/` to PDF (pandoc and Chromium) |
 | `streamlit_app.py`, `app/` | The dashboard: `glance.py` (NurseGlance view), `tabbed.py` (control view), `timeline.py` (12 h timeline), `data.py` (shared loading) |
 | `app/study.py`, `app/events.py`, `app/scoring.py` | Study mode: seeded randomization, event log, SUS and raw NASA-TLX scoring, CSV export |
 | `app/flags.py` | 8 transparent rule-based flags, each showing its rule, values, times and FHIR IDs (off in study mode) |
@@ -179,9 +183,9 @@ Events: `session_start, question_shown, tab_switch, toggle, answer_submit, surve
 
 ## How it was tested
 
-- 62 tests (`pytest`), including SUS and NASA-TLX scoring against hand-calculated
+- 64 tests (`pytest`), including SUS and NASA-TLX scoring against hand-calculated
   examples, randomization balance over 200 seeds, the answer keys checked against the
-  case files, and the flags' evidence. Also: unit and synthetic ETL tests (windows, calculated MAP, GCS,
+  case files, the flags' evidence, and the protocol's sample size and allocation balance. Also: unit and synthetic ETL tests (windows, calculated MAP, GCS,
   urine output per kg, drip titration, line days, lab flags), the FHIR-vs-CSV check,
   the restored text codes, and the app's data helpers, timeline and panels for every case.
 - The full pipeline ran on the official FHIR demo v2.1.0 and CSV demo v2.2 from
