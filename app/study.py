@@ -128,7 +128,8 @@ def save_local(run_id: str, events_csv: str, summary_csv: str) -> Path | None:
 
 def _reset() -> None:
     for key in list(st.session_state.keys()):
-        if key in ("study", "events", "log_context") or key.startswith(("tab_", "fs_", "meds_", "q_", "sus_", "tlx_")):
+        if key in ("study", "events", "log_context", "seed_default", "seed_input") \
+                or key.startswith(("tab_", "fs_", "meds_", "q_", "sus_", "tlx_")):
             del st.session_state[key]
 
 
@@ -142,8 +143,10 @@ def _start_screen() -> None:
         "needs IRB approval; until then, results from this mode are design-level estimates only.")
     with st.form("study_start"):
         run_id = st.text_input("Run ID", placeholder="R017")
-        seed = st.number_input("Random seed", min_value=0, max_value=10**6,
-                               value=random.SystemRandom().randint(1, 9999),
+        # The default must not change between reruns: a new default makes Streamlit treat the
+        # field as a new widget and silently drop a seed the user typed.
+        default_seed = st.session_state.setdefault("seed_default", random.SystemRandom().randint(1, 9999))
+        seed = st.number_input("Random seed", min_value=0, max_value=10**6, value=default_seed, key="seed_input",
                                help="Logged with every row. Reuse a seed to reproduce a session's order.")
         go = st.form_submit_button("Start session", type="primary")
     if go:

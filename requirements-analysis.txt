@@ -1,0 +1,4 @@
+# Extra packages for the task-analysis replay (analysis/replay.py); the app does not need them.
+# After installing, run:  playwright install chromium
+-r requirements.txt
+playwright>=1.50
