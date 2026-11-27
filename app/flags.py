@@ -105,37 +105,73 @@ def evaluate(case: dict) -> list[Flag]:
     return flags
 
 
+ICONS = {
+    "warn": ('<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#A84A0A" '
+             'stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2.5 20h19z"></path>'
+             '<path d="M12 10v4"></path><path d="M12 17.5v.01"></path></svg>'),
+    "trend": ('<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#A84A0A" '
+              'stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"></path>'
+              '<path d="M21 11v6h-6"></path></svg>'),
+    "clock": ('<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#1C5D86" '
+              'stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle>'
+              '<path d="M12 7v5l3 2"></path></svg>'),
+    "info": ('<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#1C5D86" '
+             'stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle>'
+             '<path d="M12 11v6"></path><path d="M12 7.5v.01"></path></svg>'),
+}
+# Info cards (blue outline) for rules that report something to plan for rather than a value out of range.
+INFO_RULES = {"pressor": "info", "med_due": "clock"}
+
 FLAG_CSS = """<style>
-.ng-flags {display:flex; flex-wrap:wrap; gap:8px; margin:0 0 10px;}
-.ng-flag {border:1px solid #e0a3a3; border-left:4px solid #c62828; border-radius:8px; padding:5px 10px;
-  background:rgba(198,40,40,.05); font-size:.8rem; line-height:1.3; max-width:22rem;}
-.ng-flag b {font-size:.86rem;}
-.ng-flag .ng-rule {color:var(--ng-muted, #5f6b7a);}
-.ng-flag ul {margin:2px 0 0 14px; padding:0;}
+.ng-flags {display:flex; flex-direction:column; gap:10px; font-family:Inter, system-ui, sans-serif;
+  color:var(--ng-text, #16212B);}
+.ng-flags h2 {margin:0; padding:0; font-family:var(--ng-head); font-size:16px; font-weight:600; line-height:1.25;
+  color:var(--ng-text, #16212B);}
+.ng-flags h2 small {font-family:Inter, system-ui, sans-serif; font-size:12px; font-weight:400;
+  color:var(--ng-muted, #5A6671); margin-left:8px;}
+.ng-fgrid {display:grid; grid-template-columns:repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap:12px;}
+.ng-flag {display:flex; gap:12px; align-items:flex-start; background:#FFF8F1; border:1px solid #F0C9A5;
+  border-radius:10px; padding:12px 16px;}
+.ng-flag.ng-flag-info {background:#FFFFFF; border-color:#C7DBE8;}
+.ng-flag img {flex:none; margin-top:1px;}
+.ng-flag div {display:flex; flex-direction:column; gap:3px; min-width:0;}
+.ng-flag strong {font-size:15px; font-weight:600;}
+.ng-flag span {font-size:12px; color:var(--ng-muted2, #4A5560); line-height:1.35;}
+.ng-noflags {font-size:13px; color:var(--ng-muted, #5A6671); margin:0;}
 </style>"""
 
 
-def render(case: dict) -> None:
-    """One card per rule that fired, above the view: what fired, the rule, and the values behind it."""
+def cards_html(case: dict) -> str:
+    """One card per rule that fired: what fired, the rule, and the values behind it with their times."""
     import html
 
+    from app.ui import svg_img
+
+    found = evaluate(case)
+    ref = data.handoff(case)
+    if not found:
+        return FLAG_CSS + ('<p class="ng-noflags" role="note">Rule-based flags: none of the 8 rules fired for this '
+                           'patient at handoff.</p>')
+    cards = []
+    for f in found:
+        shown = "; ".join(
+            f"{e['what']} {e['value']}{(' ' + e['unit']) if e.get('unit') else ''} at {data.fmt_time(e.get('t'), ref)}"
+            for e in f.evidence[:3]) + (f"; and {len(f.evidence) - 3} more" if len(f.evidence) > 3 else "")
+        tip = " · ".join(f"FHIR {e['fhir_id']}" for e in f.evidence if e.get("fhir_id"))
+        icon = INFO_RULES.get(f.rule_id) or ("trend" if "falling" in f.title else "warn")
+        cls = "ng-flag" + (" ng-flag-info" if f.rule_id in INFO_RULES else "")
+        cards.append(f'<div class="{cls}" role="note" data-rule="{f.rule_id}" title="{html.escape(tip)}">'
+                     f'{svg_img(ICONS[icon])}<div><strong>{html.escape(f.title)}</strong>'
+                     f'<span>Rule: {html.escape(f.rule)} · {html.escape(shown)}</span>'
+                     f'<span>Source: {html.escape(f.cite)}</span></div></div>')
+    n = len(found)
+    head = f"{n} flag{'s' if n != 1 else ''} need{'s' if n == 1 else ''} attention"
+    return (FLAG_CSS + f'<section class="ng-flags" aria-label="Rule-based flags"><h2>{head}'
+            f'<small>8 transparent rules · placeholder thresholds, not clinically validated</small></h2>'
+            f'<div class="ng-fgrid">{"".join(cards)}</div></section>')
+
+
+def render(case: dict) -> None:
     import streamlit as st
 
-    flags = evaluate(case)
-    ref = data.handoff(case)
-    if not flags:
-        st.caption("Rule-based flags: none of the 8 rules fired for this patient at handoff.")
-        return
-    cards = []
-    for f in flags:
-        rows = "".join(
-            f"<li>{html.escape(str(e['what']))}: <b>{html.escape(str(e['value']))} "
-            f"{html.escape(e.get('unit') or '')}</b> at {data.fmt_time(e.get('t'), ref)}</li>"
-            for e in f.evidence[:4])
-        more = f"<li>and {len(f.evidence) - 4} more</li>" if len(f.evidence) > 4 else ""
-        tip = " · ".join(f"FHIR {e['fhir_id']}" for e in f.evidence if e.get("fhir_id"))
-        cards.append(f'<div class="ng-flag" role="note" title="{html.escape(tip)}"><b>⚑ {html.escape(f.title)}</b>'
-                     f'<div class="ng-rule">Rule: {html.escape(f.rule)} ({html.escape(f.cite)})</div>'
-                     f'<ul>{rows}{more}</ul></div>')
-    st.markdown(FLAG_CSS + f'<div class="ng-flags" aria-label="Rule-based flags">{"".join(cards)}</div>',
-                unsafe_allow_html=True)
+    st.html(cards_html(case))

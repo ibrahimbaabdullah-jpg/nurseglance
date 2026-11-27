@@ -2,73 +2,128 @@
 
 Run with:  streamlit run streamlit_app.py
 
-Four modes sit in a bar across the top (version 1.1): Handoff view, Study session,
-Virtual nurse and Researcher. While a study session runs, the bar shows only the
-study, so a participant cannot wander into another mode.
+Version 1.2 (the look of the design mockup, docs/design/): a white top bar holds the
+view switch (Glance view or Tabbed EHR view), the mode switch (Handoff or Virtual
+nurse) and a "Start study mode" button. The Researcher page is linked at the foot
+of each page. While a study session runs, the bar shows only the session, so a
+participant cannot wander into another mode.
 """
 import streamlit as st
 
-from app import data, flags, glance, research, study, tabbed, vn
+from app import data, glance, research, study, tabbed, ui, vn
 
-st.set_page_config(page_title="NurseGlance", page_icon="🩺", layout="wide")
+st.set_page_config(page_title="NurseGlance", page_icon="🩺", layout="wide", initial_sidebar_state="expanded")
+ui.inject()
 
-VIEWS = {"NurseGlance": glance.render, "Tabbed EHR (control)": tabbed.render}
-DISCLAIMER = ("Research prototype: not for clinical use and not clinically validated. Data: MIMIC-IV Clinical "
-              "Database Demo on FHIR v2.1.0 (PhysioNet, ODbL v1.0). De-identified; dates are shifted into the future.")
-
-# Less empty space above the page, so more of each view fits on a laptop screen (both views alike).
-st.markdown("<style>[data-testid='stMainBlockContainer']{padding-top:3.2rem}"
-            ".ng-banner{background:#fff4ce;color:#5c4400;border:1px solid #f0d78c;border-radius:6px;"
-            "padding:3px 10px;font-size:.82rem;font-weight:600;margin-bottom:6px}</style>"
-            '<div class="ng-banner" role="note">⚠️ Research prototype · not for clinical use · '
-            "de-identified MIMIC-IV demo data</div>", unsafe_allow_html=True)
+VIEWS = {"glance": "Glance view", "tabbed": "Tabbed EHR view"}
+MODES = {"handoff": "Handoff", "virtual-nurse": "Virtual nurse"}
+KINDS = {"S": "Simple", "C": "Complex"}
 
 if not data.available_cases():
     st.error("No case files in data/processed. Run etl/build_cases.py first.")
     st.stop()
 
 
+def case_label(case_id: str) -> str:
+    return f"{case_id} · {KINDS.get(case_id[:1], '')}".strip(" ·")
+
+
+def eyebrow(case_id: str, case: dict) -> str:
+    cases = data.available_cases()
+    return (f"Case {case_id} · {cases.index(case_id) + 1} of {len(cases)} · {KINDS.get(case_id[:1], '')} · "
+            f"handoff {data.handoff(case):%Y-%m-%d %H:%M}")
+
+
+def patient_view(case_id: str, show_flags: bool) -> None:
+    """The chosen view of one patient, as on the Handoff page (and under the virtual-nurse review)."""
+    case = data.load_case(case_id)
+    if st.session_state.get("ng_view", "glance") == "tabbed":
+        tabbed.render(case, show_flags=show_flags, eyebrow=eyebrow(case_id, case), title=f"Patient {case_id}")
+    else:
+        glance.render(case, show_flags=show_flags, eyebrow=eyebrow(case_id, case), title=f"Patient {case_id}")
+
+
+def context_row(key: str) -> tuple[str, bool]:
+    """Patient picker and the flags switch, under the top bar."""
+    cases = data.available_cases()
+    with st.container(key="ng-ctx", horizontal=True, vertical_alignment="center"):
+        st.html('<span class="ng-ctx-label">Patient</span>', width="content")
+        case_id = st.segmented_control("Patient", cases, format_func=case_label, default=cases[0], required=True,
+                                       key=key, label_visibility="collapsed")
+        st.space("stretch")
+        show = st.toggle("Rule-based flags", key=f"{key}_flags",
+                         help="8 transparent rules, each shown with the values that set it off. "
+                              "Always off in study mode.")
+    return case_id or cases[0], show
+
+
 def handoff_page() -> None:
     st.session_state.pop("log_context", None)
-    cases = data.available_cases()
-    labels = {c: f"{c} · {data.patient_line(data.load_case(c))}" for c in cases}
-    c1, c2, c3 = st.columns([2.4, 2.4, 1.2], vertical_alignment="center")
-    case_id = c1.selectbox("Patient", cases, format_func=labels.get, key="handoff_case", label_visibility="collapsed")
-    view = c2.radio("View", list(VIEWS), horizontal=True, key="handoff_view", label_visibility="collapsed")
-    show_flags = c3.toggle("Rule-based flags", key="handoff_flags",
-                           help="8 transparent rules, each shown with the values that set it off. "
-                                "Always off in study mode.")
-    case = data.load_case(case_id)
-    if show_flags:
-        flags.render(case)
-    VIEWS[view](case)
-    st.caption(DISCLAIMER)
-
-
-def study_page() -> None:
-    study.render()
-    st.caption(DISCLAIMER)
+    with st.container(key="ng-main"):
+        case_id, show = context_row("handoff_case")
+        patient_view(case_id, show)
+        foot()
 
 
 def vn_page() -> None:
-    vn.render()
-    st.caption(DISCLAIMER)
+    vn.render(patient_view, footer=foot)
+
+
+def study_page() -> None:
+    with st.container(key="ng-main"):
+        study.render()
+        foot(research_link=False)
 
 
 def research_page() -> None:
-    research.render()
-    st.caption(DISCLAIMER)
+    with st.container(key="ng-main"):
+        research.render()
+        foot(research_link=False)
 
 
 PAGES = {
-    "handoff": st.Page(handoff_page, title="Handoff view", icon="🩺", url_path="handoff", default=True),
+    "handoff": st.Page(handoff_page, title="Handoff", icon="🩺", url_path="handoff", default=True),
+    "virtual-nurse": st.Page(vn_page, title="Virtual nurse", icon="🖥️", url_path="virtual-nurse"),
     "study": st.Page(study_page, title="Study session", icon="⏱️", url_path="study"),
-    "vn": st.Page(vn_page, title="Virtual nurse", icon="🖥️", url_path="virtual-nurse"),
-    "research": st.Page(research_page, title="Researcher", icon="📊", url_path="researcher"),
+    "researcher": st.Page(research_page, title="Researcher", icon="📊", url_path="researcher"),
 }
-if study.is_running():
+
+
+def foot(research_link: bool = True) -> None:
+    with st.container(horizontal=True, vertical_alignment="center", key="ng-footrow"):
+        ui.footer()
+        if research_link:
+            st.page_link(PAGES["researcher"], label="Researcher page", icon=":material/analytics:")
+
+
+def _keep_view() -> None:
+    st.session_state["ng_view"] = st.session_state.get("ng_view_w") or st.session_state.get("ng_view", "glance")
+
+
+running = study.is_running()
+if running:
     # Locked: only the study page, so the participant cannot leave mid-session.
-    pages = [st.Page(study_page, title="Study session", icon="⏱️", url_path="study", default=True)]
+    page = st.navigation([st.Page(study_page, title="Study session", icon="⏱️", url_path="study", default=True)],
+                         position="hidden")
 else:
-    pages = list(PAGES.values())
-st.navigation(pages, position="top").run()
+    page = st.navigation(list(PAGES.values()), position="hidden")
+current = page.url_path or "handoff"
+
+with st.container(key="ng-topbar", horizontal=True, vertical_alignment="center"):
+    if running:
+        s = st.session_state["study"]
+        st.html(ui.brand(f"<b>Study session</b> · run {s['run_id']} · seed {s['seed']}"), width="stretch")
+    else:
+        st.html(ui.brand(), width="stretch")
+        if current in MODES:
+            st.segmented_control("View", list(VIEWS), format_func=VIEWS.get, required=True, key="ng_view_w",
+                                 default=st.session_state.get("ng_view", "glance"), on_change=_keep_view,
+                                 label_visibility="collapsed")
+        mode = st.segmented_control("Mode", list(MODES), format_func=MODES.get, key=f"ng_mode_{current}",
+                                    default=current if current in MODES else None, label_visibility="collapsed")
+        if current != "study" and st.button("Start study mode", type="primary", key="ng_start_study"):
+            st.switch_page(PAGES["study"])
+        if mode and mode != current:
+            st.switch_page(PAGES[mode])
+
+page.run()

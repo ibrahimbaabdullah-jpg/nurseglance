@@ -4,7 +4,8 @@ Tabs are Summary, Flowsheet, Labs, MAR, Problems and Lines & drains, like a typi
 ICU EHR (version 1.1; before that: Vitals, Labs, Meds, Notes/Problems). The demo
 has no nursing notes, so there is no Notes tab. A patient banner carries code
 status, allergies and isolation, as an EHR's header does, so both views show the
-same safety facts and the comparison stays about layout.
+same safety facts and the comparison stays about layout (version 1.2: the very same
+patient card as NurseGlance).
 The tab bar is a radio control rather than st.tabs so that each tab change is a
 real interaction the study mode can count as a click and a screen visit.
 
@@ -247,33 +248,32 @@ def lines_tab(case: dict) -> None:
         st.dataframe(procs, width="stretch", hide_index=True)
 
 
-def banner(case: dict) -> None:
-    """The patient banner an EHR keeps above every tab."""
+def render(case: dict, show_flags: bool = False, eyebrow: str | None = None, title: str | None = None) -> None:
+    """The same patient card as NurseGlance (so both views carry the same safety facts), then the tabs.
+
+    Version 1.2 draws the tab bar as the mockup's segmented control, on a white card.
+    """
+    from app import flags, glance
+
     ref = data.handoff(case)
-    code, allergy, iso = data.code_status(case), data.allergies(case), data.isolation(case)
-    code_text = code["text"] + (" (diagnosis code)" if code["text"] == "DNR" and
-                                code["source"].startswith("Not charted") else "")
-    st.markdown(f"**{data.patient_line(case)}** · {data.weight_text(case)} · handoff {ref:%Y-%m-%d %H:%M}  \n"
-                f"<span style='font-size:.86rem'>Code status: <b>{code_text}</b> · Allergies: <b>{allergy['text']}"
-                f"</b> · Isolation: <b>{iso['text']}</b></span>", unsafe_allow_html=True)
-
-
-def render(case: dict) -> None:
-    banner(case)
+    st.html(glance.CSS + glance.patient_card(case, ref, eyebrow, title))
+    if show_flags:
+        st.html(flags.cards_html(case))
     key = f"tab_{case['case_id']}"
-    tab = st.radio("Chart tab", TABS, horizontal=True, key=key, label_visibility="collapsed",
-                   on_change=on_change_logger(key, "tab_switch", ""))
-    st.divider()
-    df = _obs_frame(case)
-    if tab == "Summary":
-        summary_tab(case)
-    elif tab == "Flowsheet":
-        vitals_tab(case, df)
-    elif tab == "Labs":
-        labs_tab(case, df)
-    elif tab == "MAR":
-        meds_tab(case)
-    elif tab == "Problems":
-        problems_tab(case)
-    else:
-        lines_tab(case)
+    with st.container(key="ng-card-tabbed"):
+        with st.container(key="ng-tabbar"):
+            tab = st.radio("Chart tab", TABS, horizontal=True, key=key, label_visibility="collapsed",
+                           on_change=on_change_logger(key, "tab_switch", ""))
+        df = _obs_frame(case)
+        if tab == "Summary":
+            summary_tab(case)
+        elif tab == "Flowsheet":
+            vitals_tab(case, df)
+        elif tab == "Labs":
+            labs_tab(case, df)
+        elif tab == "MAR":
+            meds_tab(case)
+        elif tab == "Problems":
+            problems_tab(case)
+        else:
+            lines_tab(case)

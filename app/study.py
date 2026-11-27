@@ -264,7 +264,7 @@ def _question_step(study: dict, step: dict, slot) -> None:
         study["shown"].add(i)
         events.log("practice_shown" if practice else "question_shown", target=q["kind"], value=q["text"])
     label, frac = progress_text(study, i)
-    with slot.container(border=True):   # in the sidebar, so it stays in view while the participant scrolls
+    with slot.container(border=True, key="ng-qcard"):   # in the sidebar, so it stays in view while scrolling
         st.caption(label)
         st.progress(frac)
         with st.form(f"q_{q['id']}_{i}", clear_on_submit=True):

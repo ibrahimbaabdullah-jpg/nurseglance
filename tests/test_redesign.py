@@ -47,20 +47,31 @@ def test_tasks_done_skip_care_that_was_not_done():
     assert turn["t"] == "2150-01-03T20:00:00" and not turn["overdue"]
 
 
-def test_header_and_strip_render_for_every_case():
+def test_patient_card_and_tasks_render_for_every_case():
     for cid in data.available_cases():
         case = data.load_case(cid)
         ref = data.handoff(case)
-        head = glance.header_html(case, ref)
-        for chip in ("Code status", "Allergies", "Isolation", "VTE prophylaxis"):
+        head = glance.patient_card(case, ref, infusions=True)
+        for chip in ("Code status", "Allergies", "Isolation", "VTE prophylaxis", "Fall risk", "Restraints"):
             assert chip in head
-        strip = glance.meds_strip(case, ref)
-        assert "Running now" in strip and "Done, last 12 h" in strip and "Due, next 12 h" in strip
+        tasks = glance.tasks_html(case, ref)
+        assert "Done · last 12 h" in tasks and "Due · next 12 h" in tasks and "Handoff" in tasks
 
 
 def test_running_drips_show_their_titration():
-    strip = glance.meds_strip(data.load_case("C2"), data.handoff(data.load_case("C2")))
-    assert "Norepinephrine</b> 0.04 mcg/kg/min <small>↓ from 0.2</small>" in strip
+    import re
+    case = data.load_case("C2")
+    card = glance.card_html(case, "CV", data.handoff(case))
+    row = next(li for li in re.findall(r"<li .*?</li>", card) if ">Norepinephrine<" in li)
+    assert "0.04<small>mcg/kg/min</small>" in row and "↓ from 0.2" in row
+
+
+def test_drips_in_cards_are_not_repeated_under_other_infusions():
+    for cid in data.available_cases():
+        case = data.load_case(cid)
+        other = glance.infusions_row(case, data.handoff(case))
+        for label in glance._in_cards(case):
+            assert f"<b>{label}</b>" not in other, (cid, label)
 
 
 def test_control_has_six_tabs_and_no_notes_tab():
