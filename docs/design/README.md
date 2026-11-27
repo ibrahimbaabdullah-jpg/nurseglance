@@ -5,6 +5,8 @@ Virtual-nurse screens. These two screenshots of the mockup are kept for referenc
 
 - `mockup_handoff.png`: Glance view, Handoff mode, at 1440×900.
 - `mockup_virtual_nurse.png`: Glance view, Virtual-nurse mode, with the session band.
+- `compare_handoff.png`, `compare_virtual_nurse.png`: the mockup beside version 1.2
+  showing case C2, both at 1440×900.
 
 The mockup holds made-up demo values ("Demo patient B"). The app fills the same
 layout with the MIMIC-IV demo cases and changes it where the data or the study
