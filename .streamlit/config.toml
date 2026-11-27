@@ -1,0 +1,7 @@
+[browser]
+# No usage statistics leave the app; it may run study sessions.
+gatherUsageStats = false
+
+[client]
+# Hide developer options such as "Deploy" in the toolbar, as viewers see the app.
+toolbarMode = "viewer"

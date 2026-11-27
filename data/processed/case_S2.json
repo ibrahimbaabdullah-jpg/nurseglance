@@ -15,7 +15,10 @@
    "MimicMedicationAdministration.ndjson.gz",
    "MimicObservationOutputevents.ndjson.gz",
    "MimicObservationLabevents.ndjson.gz",
-   "MimicObservationChartevents.ndjson.gz"
+   "MimicObservationChartevents.ndjson.gz",
+   "MimicEncounterED.ndjson.gz",
+   "MimicObservationED.ndjson.gz",
+   "MimicMedicationStatementED.ndjson.gz"
   ]
  },
  "time_note": "Times are MIMIC's date-shifted local (Boston) wall-clock times.",
@@ -21517,6 +21520,16 @@
    "fhir_id": "64cb6449-bd59-5907-93a5-5b5f1c79f25f"
   }
  ],
+ "admission": {
+  "ed_encounter_fhir_id": "9ab1a0cc-23f3-526d-961f-9e3f4e22d464",
+  "chief_complaint": {
+   "text": "Headache, SAH, Transfer",
+   "t": "2169-01-14T23:26:00",
+   "loinc": "8661-1",
+   "fhir_id": "8c1feaea-2856-55ed-853f-83ffad466a53"
+  },
+  "home_meds": []
+ },
  "counts": {
   "observations": 1669,
   "infusions": 30,

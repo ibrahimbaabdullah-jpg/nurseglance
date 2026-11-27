@@ -15,7 +15,10 @@
    "MimicMedicationAdministration.ndjson.gz",
    "MimicObservationOutputevents.ndjson.gz",
    "MimicObservationLabevents.ndjson.gz",
-   "MimicObservationChartevents.ndjson.gz"
+   "MimicObservationChartevents.ndjson.gz",
+   "MimicEncounterED.ndjson.gz",
+   "MimicObservationED.ndjson.gz",
+   "MimicMedicationStatementED.ndjson.gz"
   ]
  },
  "time_note": "Times are MIMIC's date-shifted local (Boston) wall-clock times.",
@@ -38516,6 +38519,11 @@
    "fhir_id": "1fc17c57-3c16-5932-aed8-ba568e6509c7"
   }
  ],
+ "admission": {
+  "ed_encounter_fhir_id": null,
+  "chief_complaint": null,
+  "home_meds": []
+ },
  "counts": {
   "observations": 2793,
   "infusions": 153,

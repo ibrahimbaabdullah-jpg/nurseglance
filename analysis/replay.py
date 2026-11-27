@@ -10,7 +10,8 @@ S2 and C2 in NurseGlance and S1 and C1 in the tabbed view; seed 6 the reverse), 
 each of the 16 questions is answered once in each view, in study order. For each
 question the script follows the path in analysis/paths.py and counts:
 
-  clicks   tab, Meds section and flowsheet group changes (a group change is 2 clicks)
+  clicks   tab, MAR section and Flowsheet section changes (a Flowsheet section change
+           is 2 clicks: open the list, pick the section)
   scrolls  scroll gestures of the page, a table or a dropdown list. One gesture moves
            up to 87.5% of the visible height (65% of the width for tables, whose
            pinned label column does not move), like Page Down. A jump to the top or
@@ -21,7 +22,10 @@ question the script follows the path in analysis/paths.py and counts:
 For tables it tries scrolling from where the table is, and jumping to either end
 first, and keeps whichever needs fewer gestures. It checks that every value the
 path names is on screen (or in the tooltip) at the end, submits the answer key,
-and finally compares its click counts with the app's own event log.
+and finally compares its click counts with the app's own event log. Practice
+questions get the practice key and are not measured; the break is skipped.
+The study page shows the question in the sidebar, so the view is measured at the
+width a participant sees.
 
 These counts are design-level estimates of a scripted expert path, not user data.
 """
@@ -43,6 +47,10 @@ from analysis.paths import PATHS, SYNTHESIS_ANSWERS  # noqa: E402
 from app import data, study, tabbed  # noqa: E402
 
 SEEDS = (2, 6)
+GROUP_LABEL = "Flowsheet section"   # the Flowsheet tab's selectbox
+TAB_ANCHOR = "Lines & drains"       # text only the tab bar has
+SECTION_ANCHOR = "Active orders"    # text only the MAR section radio has
+FAIL_SHOT = Path("/tmp/replay_fail.png")
 PAGE_STEP, GRID_V_STEP, GRID_H_STEP, LIST_STEP = 0.875, 0.875, 0.65, 0.875
 SETTLE_MS = 1400
 
@@ -58,8 +66,9 @@ HELPERS = r"""
     if (r.bottom > bot) return r.bottom - bot + 8;
     return 0;
   };
-  ta.grid = () => { const g = [...document.querySelectorAll('[data-testid="stDataFrame"]')];
-                    return g.length ? g[0] : null; };
+  ta.grid = () => { const g = [...document.querySelectorAll('[data-testid="stMain"] [data-testid="stDataFrame"]')];
+                    return g.length ? (g[window.__ta_frame || 0] || null) : null; };
+  ta.grids = () => [...document.querySelectorAll('[data-testid="stMain"] [data-testid="stDataFrame"]')];
   ta.sc = () => ta.grid().querySelector('.dvn-scroller');
   ta.geom = () => { const s = ta.sc(), t = ta.grid().querySelector('table');
     const n = +t.getAttribute('aria-rowcount'); const rh = s.scrollHeight / n;
@@ -137,14 +146,19 @@ class Replay:
         self.p.wait_for_timeout(80)
 
     def reset_view(self):
-        self.js("() => { __ta.main().scrollTo(0, 0); }")
-        if self.js("() => !!__ta.grid()"):
-            self.js("() => { const s = __ta.sc(); s.scrollTop = 0; s.scrollLeft = 0; }")
+        self.js("""() => { window.__ta_frame = 0; __ta.main().scrollTo(0, 0);
+            for (const g of __ta.grids()) { const s = g.querySelector('.dvn-scroller');
+                                            if (s) { s.scrollTop = 0; s.scrollLeft = 0; } } }""")
         self.p.wait_for_timeout(300)
+
+    def use_frame(self, n: int):
+        self.js(f"() => {{ window.__ta_frame = {int(n)}; }}")
+        if not self.js("() => !!__ta.grid()"):
+            raise PathError(f"no table number {n} on this tab")
 
     # ------------------------------------------------------------- tabbed controls
     def current_group(self):
-        box = self.p.locator('[data-testid="stSelectbox"]').filter(has_text="Flowsheet group")
+        box = self.p.locator('[data-testid="stSelectbox"]').filter(has_text=GROUP_LABEL)
         for _ in range(30):
             if box.count():
                 value = box.first.locator('input[role="combobox"]').input_value()
@@ -168,7 +182,7 @@ class Replay:
         self.settle()
 
     def choose_group(self, name, case, rec):
-        box = self.p.locator('[data-testid="stSelectbox"]').filter(has_text="Flowsheet group").first
+        box = self.p.locator('[data-testid="stSelectbox"]').filter(has_text=GROUP_LABEL).first
         if self.current_group() == name:
             raise PathError(f"flowsheet group '{name}' is already selected")
         rec["scroll_page"] += self.page_fit(box)
@@ -281,8 +295,10 @@ class Replay:
         raise PathError(f"{row}: expected values at {cols}, saw {shown}")
 
     def do_grid(self, step, case, rec):
-        grid_loc = self.p.locator('[data-testid="stDataFrame"]').first
+        frame = step.get("frame") or 0
+        grid_loc = self.p.locator('[data-testid="stMain"] [data-testid="stDataFrame"]').nth(frame)
         rec["scroll_page"] += self.page_fit(grid_loc)
+        self.use_frame(frame)
         labels = [r for r in step["rows"] if isinstance(r, str)]
         rec["targets"] += len(step["rows"])
         for row in step["rows"]:
@@ -361,19 +377,19 @@ class Replay:
                "scroll_list": 0, "hovers": 0, "targets": 0, "think": 0, "think_why": [],
                "seen": [], "log": []}
         if view == "tabbed":
-            box = self.p.locator('[data-testid="stSelectbox"]').filter(has_text="Flowsheet group")
+            box = self.p.locator('[data-testid="stSelectbox"]').filter(has_text=GROUP_LABEL)
             rec["vitals_group"] = self.current_group() if box.count() else None
         for step in PATHS[qid][view]:
             kind = step["do"]
             if kind == "tab":
-                self.click_radio("Notes/Problems", step["name"], rec)
+                self.click_radio(TAB_ANCHOR, step["name"], rec)
                 rec["clicks"] += 1
                 rec["app_interactions_expected"] += 1
                 rec["tabs"].append(step["name"])
-                if step["name"] == "Vitals":
+                if step["name"] == "Flowsheet":
                     rec["vitals_group"] = self.current_group()
             elif kind == "section":
-                self.click_radio("Active orders", step["name"], rec)
+                self.click_radio(SECTION_ANCHOR, step["name"], rec)
                 rec["clicks"] += 1
                 rec["app_interactions_expected"] += 1
             elif kind == "group":
@@ -441,76 +457,97 @@ def answer_for(q) -> str:
 
 # ------------------------------------------------------------- session driver
 
-def run_session(page, seed: int, shots: Path | None, url: str) -> tuple[list[dict], list[dict]]:
-    r = Replay(page, shots)
-    page.goto(url)
-    page.wait_for_timeout(4000)
-    page.get_by_text("Study session", exact=True).click()
-    page.wait_for_timeout(2000)
-    steps = study.make_steps(study.make_plan(seed), study.load_questions())
-    first = steps[0]
-    expect = f"{study.VIEW_NAMES[first['view']]} · patient {first['case_id']}"
+def answer_form(page):
+    return page.locator('[data-testid="stSidebar"] [data-testid="stForm"]').first
+
+
+def type_answer(form, q, answer):
+    if q["answer_type"] == "choice":
+        form.get_by_text(answer, exact=True).click()
+    elif q["answer_type"] == "text":
+        form.locator("textarea").fill(answer)
+    else:
+        form.locator('input[type="text"]').first.fill(answer)
+    form.page.wait_for_timeout(300)
+    form.get_by_role("button", name="Submit answer").click()
+    form.page.wait_for_timeout(SETTLE_MS + 600)
+
+
+def start_session(page, seed: int, url: str, first_view: str):
+    expect = f"Practice 1 of 2 · not scored · {study.VIEW_NAMES[first_view]}"
     for _attempt in range(4):
-        page.get_by_label("Run ID").fill(f"TA{seed}")
+        page.goto(url.rstrip("/") + "/study")
+        page.get_by_role("button", name="Start session").wait_for(timeout=15000)
+        page.wait_for_timeout(800)
+        page.get_by_test_id("stTextInputField").first.fill(f"TA{seed}")
         field = page.get_by_test_id("stNumberInputField")
         field.fill(str(seed))
         field.press("Tab")
         page.wait_for_timeout(800)
         page.get_by_role("button", name="Start session").click()
         page.wait_for_timeout(3000)
-        if expect in page.get_by_text("Question 1 of 16").first.inner_text():
-            break
-        page.get_by_role("button", name="Abandon session").click()   # the seed did not take; start again
-        page.wait_for_timeout(2500)
-        page.get_by_text("Study session", exact=True).click()
-        page.wait_for_timeout(2000)
-    else:
-        raise SystemExit(f"could not start a session with seed {seed}")
+        shown = page.get_by_text("Practice 1 of 2").first
+        if shown.count() and expect in shown.inner_text():
+            return
+        if page.get_by_role("button", name="Abandon").count():   # the seed did not take; start again
+            page.get_by_role("button", name="Abandon").click()
+            page.wait_for_timeout(2500)
+    raise SystemExit(f"could not start a session with seed {seed}")
+
+
+def run_session(page, seed: int, shots: Path | None, url: str,
+                logs: Path | None = None) -> tuple[list[dict], list[dict]]:
+    r = Replay(page, shots)
+    steps = study.make_steps(study.make_plan(seed), study.load_questions(), study.load_practice())
+    start_session(page, seed, url, steps[0]["view"])
     records = []
     for step in steps:
-        if step["kind"] == "question":
+        if step["kind"] in ("question", "practice"):
             q, view = step["question"], step["view"]
-            form = page.locator('[data-testid="stForm"]').first
+            form = answer_form(page)
             try:
                 form.get_by_text(q["text"], exact=True).wait_for(timeout=10000)
             except Exception:
-                page.screenshot(path="/tmp/claude-0/replay_fail.png", full_page=True)
+                page.screenshot(path=str(FAIL_SHOT), full_page=True)
                 raise
+            if step["kind"] == "practice":   # not measured; the participant is learning the view
+                type_answer(form, q, answer_for(q))
+                continue
             r.reset_view()
             case = data.load_case(step["case_id"])
             try:
                 rec = r.run_path(q["id"], view, case)
             except PathError as err:
-                page.screenshot(path="/tmp/claude-0/replay_fail.png")
+                page.screenshot(path=str(FAIL_SHOT))
                 raise SystemExit(f"{q['id']} {view}: {err}")
             rec["seed"] = seed
             records.append(rec)
             print(f"seed {seed} {q['id']:6} {view:7} clicks {rec['clicks']} scrolls "
                   f"{rec['scroll_page'] + rec['scroll_grid'] + rec['scroll_list']} hovers {rec['hovers']}")
             r.js("() => __ta.main().scrollTo(0, 0)")
-            answer = answer_for(q)
-            if q["answer_type"] == "choice":
-                form.get_by_text(answer, exact=True).click()
-            elif q["answer_type"] == "text":
-                form.locator("textarea").fill(answer)
-            else:
-                form.locator('input[type="text"]').first.fill(answer)
-            page.wait_for_timeout(300)
-            form.get_by_role("button", name="Submit answer").click()
-            page.wait_for_timeout(SETTLE_MS + 600)
+            type_answer(form, q, answer_for(q))
         elif step["kind"] == "survey":
-            page.get_by_text("System Usability Scale").wait_for(timeout=10000)
-            items = page.locator('[data-testid="stForm"] [data-testid="stRadio"]')
+            page.get_by_text("System Usability Scale").first.wait_for(timeout=10000)
+            items = page.locator('[data-testid="stMain"] [data-testid="stForm"] [data-testid="stRadio"]')
             for i in range(items.count()):
                 items.nth(i).get_by_text("3", exact=True).click()
                 page.wait_for_timeout(120)
-            page.get_by_role("button", name="Submit ratings").click()
+            page.get_by_role("button", name="Submit and continue").click()
+            page.wait_for_timeout(SETTLE_MS + 600)
+        elif step["kind"] == "break":
+            page.get_by_role("button", name="Start the second view").click()
             page.wait_for_timeout(SETTLE_MS + 600)
     page.get_by_text("Session complete").wait_for(timeout=10000)
     with page.expect_download() as dl:
         page.get_by_role("button", name="Download summary (CSV)").click()
-    summary = list(csv.DictReader(io.StringIO(Path(dl.value.path()).read_text(encoding="utf-8"))))
-    return records, summary
+    summary_text = Path(dl.value.path()).read_text(encoding="utf-8")
+    if logs:
+        (logs / f"TA{seed}_summary.csv").write_text(summary_text, encoding="utf-8")
+        with page.expect_download() as dl_events:
+            page.get_by_role("button", name="Download event log (CSV)").click()
+        (logs / f"TA{seed}_events.csv").write_text(Path(dl_events.value.path()).read_text(encoding="utf-8"),
+                                                   encoding="utf-8")
+    return records, list(csv.DictReader(io.StringIO(summary_text)))
 
 
 def main(argv=None) -> int:
@@ -522,9 +559,12 @@ def main(argv=None) -> int:
     ap.add_argument("--height", type=int, default=900)
     ap.add_argument("--out", type=Path, default=ROOT / "docs" / "task_replay.json")
     ap.add_argument("--shots", type=Path, default=None, help="folder for an end-of-path screenshot per question")
+    ap.add_argument("--save-logs", type=Path, default=None,
+                    help="folder for each session's event log and summary CSVs (the Researcher page's example)")
     args = ap.parse_args(argv)
-    if args.shots:
-        args.shots.mkdir(parents=True, exist_ok=True)
+    for folder in (args.shots, args.save_logs):
+        if folder:
+            folder.mkdir(parents=True, exist_ok=True)
 
     all_records, problems = [], []
     with sync_playwright() as pw:
@@ -532,7 +572,7 @@ def main(argv=None) -> int:
         for seed in SEEDS:
             ctx = browser.new_context(viewport={"width": args.width, "height": args.height}, accept_downloads=True)
             page = ctx.new_page()
-            records, summary = run_session(page, seed, args.shots, args.url)
+            records, summary = run_session(page, seed, args.shots, args.url, args.save_logs)
             by_q = {row["question_id"]: row for row in summary}
             for rec in records:
                 app = by_q.get(rec["question_id"], {})

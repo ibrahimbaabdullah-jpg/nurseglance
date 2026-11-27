@@ -32,7 +32,7 @@
    "think_why": [],
    "seen": [
     {
-     "vasoactive_drips": "Norepinephrine 0.2 mcg/kg/min (↓ from 0.4) since 17:19"
+     "Norepinephrine": "Norepinephrine 0.2 mcg/kg/min ↓ from 0.4"
     }
    ],
    "log": [
@@ -48,11 +48,9 @@
    "question_id": "C1-Q1",
    "view": "tabbed",
    "case_id": "C1",
-   "clicks": 2,
-   "app_interactions_expected": 2,
-   "tabs": [
-    "Meds"
-   ],
+   "clicks": 0,
+   "app_interactions_expected": 0,
+   "tabs": [],
    "scroll_page": 0,
    "scroll_grid": 0,
    "scroll_list": 0,
@@ -62,18 +60,16 @@
    "think_why": [],
    "seen": [
     {
-     "Norepinephrine + True": "06-23 17:19 | 06-23 19:01 | Norepinephrine | 01-Drips | 0.2 mcg/kg/min | 1.79 mg | true"
+     "Norepinephrine + 0.2": "Norepinephrine | 0.2 mcg/kg/min | 17:19"
     }
    ],
    "log": [
-    "tab: Meds",
-    "section: Infusions",
     "grid:"
    ],
-   "screens": 2,
+   "screens": 1,
    "seed": 2,
-   "app_interactions": 2,
-   "app_screens": 2,
+   "app_interactions": 0,
+   "app_screens": 1,
    "app_correct": "1"
   },
   {
@@ -177,7 +173,7 @@
    "clicks": 1,
    "app_interactions_expected": 1,
    "tabs": [
-    "Meds"
+    "MAR"
    ],
    "scroll_page": 0,
    "scroll_grid": 0,
@@ -192,7 +188,7 @@
     }
    ],
    "log": [
-    "tab: Meds",
+    "tab: MAR",
     "grid:"
    ],
    "screens": 2,
@@ -220,10 +216,10 @@
      "map": "MAP64 mmHgL ↓12 h 60–94"
     },
     {
-     "vasoactive_drips": "Norepinephrine 0.2 mcg/kg/min (↓ from 0.4) since 17:19"
+     "Norepinephrine": "Norepinephrine 0.2 mcg/kg/min ↓ from 0.4"
     },
     {
-     "vasoactive_drips": "Vasopressin 2.41 units/hour since 03:15"
+     "Vasopressin": "Vasopressin 2.41 units/hour"
     },
     {
      "lactate": "Lactate4.3 mmol/LH ↓12 h 4.3–9"
@@ -245,14 +241,14 @@
    "question_id": "C1-Q4",
    "view": "tabbed",
    "case_id": "C1",
-   "clicks": 3,
-   "app_interactions_expected": 3,
+   "clicks": 2,
+   "app_interactions_expected": 2,
    "tabs": [
-    "Labs",
-    "Vitals"
+    "Summary",
+    "Labs"
    ],
    "scroll_page": 0,
-   "scroll_grid": 5,
+   "scroll_grid": 4,
    "scroll_list": 0,
    "hovers": 0,
    "targets": 4,
@@ -260,35 +256,31 @@
    "think_why": [],
    "seen": [
     {
-     "Norepinephrine + True": "06-23 17:19 | 06-23 19:01 | Norepinephrine | 01-Drips | 0.2 mcg/kg/min | 1.79 mg | true"
+     "Mean arterial pressure + 64": "Mean arterial pressure | 64 mmHg | 19:00"
     },
     {
-     "Vasopressin + True": "06-23 03:15 | 06-23 19:52 | Vasopressin | 01-Drips | 2.41 units/hour | 40 units | true"
+     "Norepinephrine + 0.2": "Norepinephrine | 0.2 mcg/kg/min | 17:19"
+    },
+    {
+     "Vasopressin + units": "Vasopressin | 2.41 units/hour | 03:15"
     },
     {
      "Lactate": {
       "06-23 17:41": "4.3 (H)"
      }
-    },
-    {
-     "Arterial Blood Pressure mean": {
-      "06-23 19:00": "64"
-     }
     }
    ],
    "log": [
-    "section: Infusions",
-    "table rows ['Vasopressin', 'True']: 1 gesture(s) (down)",
+    "tab: Summary",
+    "grid:",
     "grid:",
     "tab: Labs",
     "table rows 'Lactate': 4 gesture(s) (down)",
-    "grid:",
-    "tab: Vitals",
     "grid:"
    ],
    "screens": 3,
    "seed": 2,
-   "app_interactions": 3,
+   "app_interactions": 2,
    "app_screens": 3,
    "app_correct": ""
   },
@@ -336,9 +328,7 @@
    "think_why": [],
    "seen": [
     {
-     "Heart Rate": {
-      "03-26 19:00": "130"
-     }
+     "Heart rate + 130": "Heart rate | 130 bpm | 19:00"
     }
    ],
    "log": [
@@ -366,7 +356,7 @@
    "think_why": [],
    "seen": [
     {
-     "vasoactive_drips": "Norepinephrine 0.04 mcg/kg/min (↓ from 0.2) since 18:24"
+     "Norepinephrine": "Norepinephrine 0.04 mcg/kg/min ↓ from 0.2"
     }
    ],
    "log": [
@@ -385,7 +375,7 @@
    "clicks": 2,
    "app_interactions_expected": 2,
    "tabs": [
-    "Meds"
+    "MAR"
    ],
    "scroll_page": 0,
    "scroll_grid": 6,
@@ -405,7 +395,7 @@
     }
    ],
    "log": [
-    "tab: Meds",
+    "tab: MAR",
     "section: Infusions",
     "table rows ['Norepinephrine', '03-26 06:30']: 5 gesture(s) (down)",
     "table rows ['Norepinephrine', 'True']: 1 gesture(s) (home_down)",
@@ -466,7 +456,7 @@
     }
    ],
    "log": [
-    "section: MAR",
+    "section: Doses",
     "grid:"
    ],
    "screens": 1,
@@ -649,7 +639,7 @@
    "clicks": 1,
    "app_interactions_expected": 1,
    "tabs": [
-    "Vitals"
+    "Flowsheet"
    ],
    "scroll_page": 0,
    "scroll_grid": 1,
@@ -668,7 +658,7 @@
     }
    ],
    "log": [
-    "tab: Vitals",
+    "tab: Flowsheet",
     "table columns ['10-31 07:00', '10-31 19:00']: 1 gesture(s) (right)",
     "grid:",
     "think:"
@@ -714,7 +704,7 @@
    "clicks": 1,
    "app_interactions_expected": 1,
    "tabs": [
-    "Meds"
+    "MAR"
    ],
    "scroll_page": 0,
    "scroll_grid": 0,
@@ -729,7 +719,7 @@
     }
    ],
    "log": [
-    "tab: Meds",
+    "tab: MAR",
     "grid:"
    ],
    "screens": 2,
@@ -777,6 +767,7 @@
    "clicks": 2,
    "app_interactions_expected": 2,
    "tabs": [
+    "Summary",
     "Labs"
    ],
    "scroll_page": 0,
@@ -788,7 +779,7 @@
    "think_why": [],
    "seen": [
     {
-     "Heparin + True": "10-31 14:10 | 10-31 19:41 | Heparin Sodium | 01-Drips | 1401 units/hour | 7726 units | true"
+     "Heparin": "Heparin Sodium | 1401 units/hour | 14:10"
     },
     {
      "Hemoglobin": {
@@ -797,16 +788,16 @@
     }
    ],
    "log": [
-    "section: Infusions",
+    "tab: Summary",
     "grid:",
     "tab: Labs",
     "table rows 'Hemoglobin': 1 gesture(s) (down)",
     "grid:"
    ],
-   "screens": 2,
+   "screens": 3,
    "seed": 2,
    "app_interactions": 2,
-   "app_screens": 2,
+   "app_screens": 3,
    "app_correct": ""
   },
   {
@@ -841,9 +832,11 @@
    "question_id": "S2-Q1",
    "view": "tabbed",
    "case_id": "S2",
-   "clicks": 2,
-   "app_interactions_expected": 1,
-   "tabs": [],
+   "clicks": 3,
+   "app_interactions_expected": 2,
+   "tabs": [
+    "Flowsheet"
+   ],
    "scroll_page": 0,
    "scroll_grid": 0,
    "scroll_list": 1,
@@ -859,13 +852,14 @@
     }
    ],
    "log": [
+    "tab: Flowsheet",
     "group: Neurological",
     "grid:"
    ],
-   "screens": 1,
+   "screens": 2,
    "seed": 6,
-   "app_interactions": 1,
-   "app_screens": 1,
+   "app_interactions": 2,
+   "app_screens": 2,
    "app_correct": "1"
   },
   {
@@ -972,7 +966,7 @@
    "clicks": 1,
    "app_interactions_expected": 1,
    "tabs": [
-    "Meds"
+    "MAR"
    ],
    "scroll_page": 0,
    "scroll_grid": 0,
@@ -987,7 +981,7 @@
     }
    ],
    "log": [
-    "tab: Meds",
+    "tab: MAR",
     "grid:"
    ],
    "screens": 2,
@@ -1035,7 +1029,7 @@
    "clicks": 3,
    "app_interactions_expected": 2,
    "tabs": [
-    "Vitals"
+    "Flowsheet"
    ],
    "scroll_page": 0,
    "scroll_grid": 0,
@@ -1066,7 +1060,7 @@
     }
    ],
    "log": [
-    "tab: Vitals",
+    "tab: Flowsheet",
     "grid:",
     "think:",
     "group: Neurological",

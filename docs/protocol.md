@@ -21,7 +21,7 @@ workload?
   search and fatigue.
 
 The design-level task analysis (`docs/task_analysis.md`) estimates 3.2 s per question for
-NurseGlance and 12.9 s for the tabbed view, for an expert who knows where every value is.
+NurseGlance and 12.4 s for the tabbed view, for an expert who knows where every value is.
 It leaves out search, reading and judgment. Only a study with nurses can show whether the
 difference holds.
 
@@ -63,12 +63,17 @@ comparison tests the layout only.
   complex) and 16 questions, 4 per case: a lookup, a trend, a timing and a synthesis
   question (`docs/case_questions.md`). Before the study, 2 ICU nurses outside the study
   team review the questions, answer keys and rubric, and the questions are revised.
-- **Practice case:** a fifth demo stay with 2 practice questions per view, not scored. It
-  still has to be chosen and built.
-- **Software:** the app's study mode. It shows the question beside the view, logs every
-  click and screen with a timestamp, gives the SUS and raw NASA-TLX after each view, and
-  exports CSV files. Scrolls are not logged yet; a scroll logger or a screen recording
-  will be added before the pilot.
+- **Practice case:** a fifth demo stay (stay 35024147, a 32-year-old woman in the
+  MICU/SICU with diabetic ketoacidosis) with 2 practice questions per view
+  (`docs/practice_questions.json`). Practice answers are logged but never scored or
+  analyzed. The 2 reviewing nurses check these questions too.
+- **Software:** the app's study mode. It shows the question beside the view with a
+  progress bar, logs every click and screen with a timestamp, runs the practice questions
+  and the break, gives the SUS and raw NASA-TLX after each view, takes the facilitator's
+  debrief notes, and exports CSV files. A Pause button hides the view and stops the
+  clock for interruptions; paused time is logged and left out of the question's time.
+  Scrolls are not logged yet; a scroll logger or a screen recording will be added before
+  the pilot.
 
 ## 5. Procedure (about 60 minutes)
 
@@ -177,7 +182,7 @@ where most lookups are expected to be correct in both views.
 
 ## 11. Timeline, if a lab runs it
 
-Months 1 and 2: question review, practice case, scroll logging and IRB submission. Month
+Months 1 and 2: question and practice-question review, scroll logging and IRB submission. Month
 3: a pilot with 3 nurses under the approved protocol. Months 4 to 6: sessions. Months 7
 and 8: analysis and write-up.
 

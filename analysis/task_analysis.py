@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Turn the replayed paths into keystroke-level time estimates, a table and a chart.
 
-    python analysis/task_analysis.py      # reads docs/task_replay.json
-                                          # -> docs/task_analysis.csv, docs/figures/task_time.svg
+    python analysis/task_analysis.py      # reads docs/task_replay.json (current version) and the
+                                          # earlier versions' docs/task_replay_v*.json
+                                          # -> docs/task_analysis*.csv, docs/figures/task_time*.svg,
+                                          #    docs/task_analysis.md
 
 Keystroke-Level Model (Card, Moran & Newell 1980; operator times as in Kieras 2001):
   P  point with the mouse          1.10 s
@@ -59,7 +61,7 @@ def readable(line: str) -> str:
     if kind in ("tab", "section"):
         return f"{rest} {kind}"
     if kind == "group":
-        return f"{rest} flowsheet group"
+        return f"{rest} Flowsheet section"
     m = re.match(r"table (rows|columns) (.+): (\d+) gesture", line)
     if not m:
         return line
@@ -172,10 +174,21 @@ def svg_chart(rows: list[dict], title: str, xmax: int | None = None) -> str:
     return "\n".join(out)
 
 
-BEFORE = ROOT / "docs" / "task_replay_before.json"
-OUT_CSV_BEFORE = ROOT / "docs" / "task_analysis_before.csv"
-OUT_SVG_BEFORE = ROOT / "docs" / "figures" / "task_time_before.svg"
+CURRENT = "1.1"
+# Earlier versions, kept so the report can show what each redesign changed (oldest first).
+EARLIER = {
+    "0.2": "before the heuristic-evaluation fixes",
+    "0.3": "after the heuristic-evaluation fixes",
+}
 OUT_MD = ROOT / "docs" / "task_analysis.md"
+SENSITIVITY = ROOT / "docs" / "sensitivity" / "task_replay_1920x1080.json"
+
+
+def version_files(version: str) -> tuple[Path, Path, Path]:
+    """Replay JSON, per-question CSV and chart for a version (the current one has no suffix)."""
+    suffix = "" if version == CURRENT else f"_v{version}"
+    return (ROOT / "docs" / f"task_replay{suffix}.json", ROOT / "docs" / f"task_analysis{suffix}.csv",
+            ROOT / "docs" / "figures" / f"task_time{suffix}.svg")
 
 
 def write_csv(rows: list[dict], path: Path) -> None:
@@ -185,12 +198,15 @@ def write_csv(rows: list[dict], path: Path) -> None:
         writer.writerows(rows)
 
 
-def summary_table(before: list[dict] | None, after: list[dict]) -> str:
+def mean_seconds(rows: list[dict], view: str) -> float:
+    sel = [r["klm_seconds"] for r in rows if r["view"] == view]
+    return sum(sel) / len(sel)
+
+
+def summary_table(versions: dict[str, list[dict]]) -> str:
     lines = ["| Version | Cases | View | Clicks | Scrolls | Hovers | Screens | Estimated seconds |",
              "| --- | --- | --- | --- | --- | --- | --- | --- |"]
-    for label, rows in (("0.2 (before)", before), ("0.3 (after)", after)):
-        if not rows:
-            continue
+    for label, rows in versions.items():
         for s in summarize(rows):
             lines.append(f"| {label} | {s['case_type']} | {VIEW_LABEL[s['view']]} | {s['mean_clicks']:.1f} | "
                          f"{s['mean_scrolls']:.1f} | {s['mean_hovers']:.1f} | {s['mean_screens']:.1f} | "
@@ -211,45 +227,70 @@ def question_table(rows: list[dict]) -> str:
     return "\n".join(lines)
 
 
-def write_markdown(before: list[dict] | None, after: list[dict], viewport) -> None:
-    def mean(rows, view):
-        sel = [r["klm_seconds"] for r in rows if r["view"] == view]
-        return sum(sel) / len(sel)
-    a_t, a_g = mean(after, "tabbed"), mean(after, "glance")
-    head = (f"After the redesign, the shortest path to an answer took an estimated **{a_t:.1f} s** in the tabbed "
-            f"view and **{a_g:.1f} s** in NurseGlance, averaged over the 16 questions")
-    if before:
-        b_t, b_g = mean(before, "tabbed"), mean(before, "glance")
-        head += f" (before: {b_t:.1f} s and {b_g:.1f} s)"
-    head += (". NurseGlance needed no clicks, scrolls or hovers for any question on a 1440×900 screen. "
+def glance_effort(rows: list[dict]) -> str:
+    g = [r for r in rows if r["view"] == "glance"]
+    if not any(r["clicks"] or r["scrolls"] or r["hovers"] for r in g):
+        return "NurseGlance needed no clicks, scrolls or hovers for any question"
+    busy = sum(1 for r in g if r["clicks"] or r["scrolls"] or r["hovers"])
+    return f"NurseGlance needed a scroll or hover for {busy} of {len(g)} questions"
+
+
+def sensitivity_text() -> str:
+    if not SENSITIVITY.exists():
+        return "No 1920×1080 replay has been run for this version."
+    rows = build_rows(json.loads(SENSITIVITY.read_text(encoding="utf-8")))
+    return (f"On a 1920×1080 screen (`docs/sensitivity/task_replay_1920x1080.json`), version {CURRENT} gave "
+            f"{mean_seconds(rows, 'tabbed'):.1f} s for the tabbed view and {mean_seconds(rows, 'glance'):.1f} s "
+            f"for NurseGlance. {glance_effort(rows)}.")
+
+
+def write_markdown(versions: dict[str, list[dict]], viewport) -> None:
+    now = versions[CURRENT]
+    head = (f"In version {CURRENT}, the shortest path to an answer took an estimated "
+            f"**{mean_seconds(now, 'tabbed'):.1f} s** in the tabbed view and **{mean_seconds(now, 'glance'):.1f} s** "
+            f"in NurseGlance, averaged over the 16 questions")
+    earlier = [f"version {v}: {mean_seconds(r, 'tabbed'):.1f} s and {mean_seconds(r, 'glance'):.1f} s"
+               for v, r in versions.items() if v != CURRENT]
+    if earlier:
+        head += " (" + "; ".join(reversed(earlier)) + ")"
+    head += (f". {glance_effort(now)} on a {viewport[0]}×{viewport[1]} screen. "
              "These are design-level estimates of a scripted expert path, not measurements of nurses.")
     template = (ROOT / "analysis" / "task_analysis_template.md").read_text(encoding="utf-8")
     text = (template.replace("{{HEADLINE}}", head)
             .replace("{{VIEWPORT}}", f"{viewport[0]}×{viewport[1]}")
-            .replace("{{SUMMARY}}", summary_table(before, after))
-            .replace("{{QUESTIONS}}", question_table(after)))
+            .replace("{{SUMMARY}}", summary_table(versions))
+            .replace("{{SENSITIVITY}}", sensitivity_text())
+            .replace("{{QUESTIONS}}", question_table(now)))
     OUT_MD.write_text(text, encoding="utf-8")
 
 
 def main() -> int:
-    replay = json.loads(REPLAY.read_text(encoding="utf-8"))
-    if not replay.get("app_log_matches"):
-        print("Warning: the replay's counts did not match the app's log:", replay.get("problems"))
-    rows = build_rows(replay)
-    before = build_rows(json.loads(BEFORE.read_text(encoding="utf-8"))) if BEFORE.exists() else None
-    write_csv(rows, OUT_CSV)
-    OUT_SVG.parent.mkdir(parents=True, exist_ok=True)
-    xmax = (int(max(r["klm_seconds"] for r in rows + (before or [])) / 10) + 1) * 10
-    OUT_SVG.write_text(svg_chart(rows, "Estimated time to find each answer (version 0.3)", xmax), encoding="utf-8")
-    if before:
-        write_csv(before, OUT_CSV_BEFORE)
-        OUT_SVG_BEFORE.write_text(svg_chart(before, "Estimated time to find each answer (version 0.2, before "
-                                                    "the redesign)", xmax), encoding="utf-8")
-    write_markdown(before, rows, replay["viewport"])
-    print(f"Wrote {OUT_CSV}, {OUT_SVG} and {OUT_MD}")
-    for label, data_rows in (("before", before), ("after", rows)):
-        for s in summarize(data_rows or []) if data_rows else []:
-            print(f"  {label:6} {s['case_type']:8} {VIEW_LABEL[s['view']]:12} clicks {s['mean_clicks']:4} scrolls "
+    versions: dict[str, list[dict]] = {}
+    for version in [*EARLIER, CURRENT]:
+        replay_path, _, _ = version_files(version)
+        if not replay_path.exists():
+            continue
+        replay = json.loads(replay_path.read_text(encoding="utf-8"))
+        if not replay.get("app_log_matches"):
+            print(f"Warning: version {version}: the replay's counts did not match the app's log:",
+                  replay.get("problems"))
+        versions[version] = build_rows(replay)
+    if CURRENT not in versions:
+        raise SystemExit(f"{version_files(CURRENT)[0]} is missing: run analysis/replay.py first")
+    xmax = (int(max(r["klm_seconds"] for rows in versions.values() for r in rows) / 10) + 1) * 10
+    # Earlier versions' CSVs and charts stay as their own runs wrote them; only the current one is rebuilt.
+    # The x axis spans every version, so all the charts share one scale.
+    _, out_csv, out_svg = version_files(CURRENT)
+    write_csv(versions[CURRENT], out_csv)
+    out_svg.parent.mkdir(parents=True, exist_ok=True)
+    out_svg.write_text(svg_chart(versions[CURRENT], f"Estimated time to find each answer (version {CURRENT})", xmax),
+                       encoding="utf-8")
+    replay = json.loads(version_files(CURRENT)[0].read_text(encoding="utf-8"))
+    write_markdown(versions, replay["viewport"])
+    print(f"Wrote the CSVs, charts and {OUT_MD}")
+    for label, data_rows in versions.items():
+        for s in summarize(data_rows):
+            print(f"  {label:4} {s['case_type']:8} {VIEW_LABEL[s['view']]:12} clicks {s['mean_clicks']:4} scrolls "
                   f"{s['mean_scrolls']:4} hovers {s['mean_hovers']:4} screens {s['mean_screens']:4} "
                   f"KLM {s['mean_klm_seconds']:5} s")
     return 0

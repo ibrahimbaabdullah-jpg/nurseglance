@@ -57,7 +57,7 @@ def test_every_organ_panel_builds(case_id):
 @needs_cases
 @pytest.mark.parametrize("case_id", CASES)
 def test_every_element_is_shown_once(case_id):
-    """Each element appears as a row, or by name in a panel's none / not charted line."""
+    """Each element appears as a row, by name in a panel's none / not charted line, or as a header chip."""
     import re
 
     from app import glance
@@ -66,8 +66,14 @@ def test_every_element_is_shown_once(case_id):
     page = "".join(glance.panel_html(case, s, ref) for s in data.ORGAN_SYSTEMS)
     rows = set(re.findall(r'data-eid="([a-z0-9_]+)"', page))
     empty = " ".join(re.findall(r'<div class="ng-empty">(.*?)</div>', page)).replace("&amp;", "&")
+    header = glance.header_html(case, ref)
+    chips = {"code_status": "Code status", "allergies": "Allergies", "precautions": "Isolation"}
     for eid, el in case["elements"].items():
-        assert eid in rows or glance.short(el["label"]) in empty, eid
+        if eid in glance.HEADER_EIDS:
+            assert chips[eid] in header, eid
+            assert eid not in rows, f"{eid} is shown twice"
+        else:
+            assert eid in rows or glance.short(el["label"]) in empty, eid
 
 
 @needs_cases
@@ -76,6 +82,7 @@ def test_meds_strip_lists_running_drips_and_next_doses():
     case = data.load_case("S1")
     strip = glance.meds_strip(case, data.handoff(case))
     assert "Heparin Sodium" in strip and "21:37" in strip and "OxyCODONE" in strip
+    assert "Done, last 12 h" in strip and "Turned" in strip and "placeholder rule" in strip
 
 
 def test_diagnoses_sorted_puts_external_causes_last():

@@ -1,7 +1,7 @@
 {
   "title": "NurseGlance: a nurse-centered, FHIR-based ICU handoff dashboard",
   "upload_type": "software",
-  "description": "<p>An open-source research prototype that shows ICU patients from the MIMIC-IV Clinical Database Demo on FHIR in two ways: a tabbed EHR-style control view and an organ-system nurse handoff view. It includes a FHIR R4 pipeline with LOINC mapping, a crossover study mode with event logging, SUS and NASA-TLX, a scripted task analysis, a heuristic evaluation, a technical report, and a proposed crossover usability-study protocol.</p><p>Research prototype, not for clinical use and not clinically validated. Click and time results are design-level estimates from scripted runs, not measurements of nurses. No human-subjects data are included.</p>",
+  "description": "<p>An open-source research prototype that shows ICU patients from the MIMIC-IV Clinical Database Demo on FHIR in two ways: a tabbed EHR-style control view and an organ-system nurse handoff view. It includes a FHIR R4 pipeline with LOINC mapping, a crossover study mode with practice questions, event logging, SUS and NASA-TLX, a researcher page, a scripted task analysis, a heuristic evaluation, a technical report, and a proposed crossover usability-study protocol.</p><p>Research prototype, not for clinical use and not clinically validated. Click and time results are design-level estimates from scripted runs, not measurements of nurses. No human-subjects data are included.</p>",
   "creators": [
     {"name": "Baabdallah, Ibrahim"}
   ],

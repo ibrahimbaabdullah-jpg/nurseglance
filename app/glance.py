@@ -9,6 +9,14 @@ short labels on one line, the 12-hour range printed under each trended value,
 H and L beside abnormal values so color is not the only cue, empty elements folded
 into one line per panel, a medication strip at the top (infusions running now and
 the next dose of each drug, with times), and all diagnoses with disease codes first.
+
+Version 1.1 changes, from the screen design review against Dr. Khairat's work and
+the Lindroth 2022 nurse survey: a header with the reason for admission and chips
+for code status, allergies, isolation and VTE prophylaxis (each naming its source,
+and saying so when the FHIR demo has no value); and a task strip that runs from
+what was done in the last 12 h to what is due next, since 61% of surveyed ICU
+nurses wanted tasks and the schedule on screen. The demo has no task schedule, so
+"due" uses the eMAR stand-in and a turning interval that is labeled a placeholder.
 """
 from __future__ import annotations
 
@@ -63,16 +71,30 @@ CSS = """
 .ng-empty {font-size:.74rem; color:var(--ng-muted); border-top:1px dashed var(--ng-border); padding:2px 0 0;}
 .ng-empty b {font-weight:600;}
 .ng-spark {width:54px; height:18px;}
-.ng-legend {font-size:.75rem; color:var(--ng-muted); margin:-4px 0 6px;}
+.ng-legend {font-size:.75rem; color:var(--ng-muted); margin:2px 0 10px;}
 .ng-meds {border:1px solid var(--ng-border); border-left:4px solid #1565c0; border-radius:8px;
   padding:5px 10px; margin:2px 0 10px; font-size:.84rem; line-height:1.45; background:var(--ng-bg);}
-.ng-mh {font-weight:700; margin-right:6px; white-space:nowrap;}
+.ng-srow {display:grid; grid-template-columns:8.4em minmax(0,1fr); column-gap:6px;}
+.ng-mh {font-weight:700; white-space:nowrap;}
+.ng-grid {display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); column-gap:12px; align-items:start;}
 .ng-head {font-size:1.25rem; font-weight:700; margin:0 0 2px;}
 .ng-dx {font-size:.8rem; color:var(--ng-muted); margin:0 0 6px;}
 .ng-dx details {display:inline;} .ng-dx summary {display:inline; cursor:pointer; text-decoration:underline dotted;}
 .ng-dx ul {margin:4px 0 0 18px; padding:0;}
-.ng-item {white-space:nowrap;}
-.ng-item + .ng-item::before {content:"·"; color:var(--ng-muted); margin:0 .35em 0 .25em;}
+.ng-item, .ng-done, .ng-turn {white-space:nowrap;}
+.ng-sitems span + span::before {content:"·"; color:var(--ng-muted); margin:0 .35em 0 .25em;}
+.ng-meds small {color:var(--ng-muted);}
+.ng-ho {float:right; font-size:.86rem; font-weight:600; color:var(--ng-muted); padding-top:.3rem;}
+.ng-src {color:var(--ng-muted); font-size:.74rem;}
+.ng-chips {display:flex; flex-wrap:wrap; gap:6px; margin:0 0 8px;}
+.ng-chip {border:1px solid var(--ng-border); border-radius:999px; padding:1px 10px; font-size:.8rem;
+  background:var(--ng-bg); white-space:nowrap;}
+.ng-chip b {font-weight:600; color:var(--ng-muted); margin-right:4px;}
+.ng-chip small {color:var(--ng-muted);}
+.ng-chip-alert {border-color:#c62828; color:#c62828; background:rgba(198,40,40,.07);}
+.ng-chip-alert b {color:#c62828;}
+.ng-chip-empty {color:var(--ng-muted); border-style:dashed;}
+.ng-due-over {color:#c62828; font-weight:700;}
 :root {--ng-border:#d9dde3; --ng-bg:#ffffff; --ng-muted:#5f6b7a;}
 @media (prefers-color-scheme: dark) {:root {--ng-border:#3a3f47; --ng-bg:#16191e; --ng-muted:#a3adba;}}
 </style>
@@ -123,7 +145,7 @@ def _hl(el: dict) -> str:
     return ""
 
 
-DNR_CODES = {"Z66", "V4986"}   # ICD-10 / ICD-9 "Do not resuscitate status"
+HEADER_EIDS = {"code_status", "allergies", "precautions"}   # shown as header chips, not in the Safety panel
 
 
 def value_row(case: dict, eid: str, el: dict, ref: datetime) -> tuple[str, bool, str | None]:
@@ -131,13 +153,6 @@ def value_row(case: dict, eid: str, el: dict, ref: datetime) -> tuple[str, bool,
     spec = data.element_specs().get(eid, {})
     full = el["label"]
     label = html.escape(short(full))
-    if eid == "code_status" and not el.get("has_data"):
-        dnr = next((d for d in case["diagnoses"] if (d.get("code") or "").replace(".", "") in DNR_CODES), None)
-        if dnr:
-            tip = html.escape(f"{full}. Not charted at the bedside. From the hospital diagnosis code "
-                              f"{dnr['code']} ({dnr['display']}), FHIR Condition {dnr.get('fhir_id')}")
-            return (f'<div class="ng-row ng-abn" data-eid="{eid}" title="{tip}"><span class="ng-label">{label}'
-                    f'</span><span class="ng-val">DNR <small>dx code</small></span><span></span></div>', False, None)
     if not el.get("has_data"):
         return "", False, ("not charted" if el.get("mappable") else "not in FHIR demo")
     latest = el.get("latest") or {}
@@ -225,7 +240,7 @@ def panel_html(case: dict, system: str, ref: datetime) -> str:
     rows, n_abn = [], 0
     empty: dict[str, list[str]] = {}
     for eid, el in case["elements"].items():
-        if el.get("organ_system") != system:
+        if el.get("organ_system") != system or eid in HEADER_EIDS:
             continue
         if el.get("display_rule") in ("running", "in_place"):
             row, kind = list_row(eid, el, ref)
@@ -244,50 +259,118 @@ def panel_html(case: dict, system: str, ref: datetime) -> str:
     return f'<div class="ng-panel"><div class="ng-h">{html.escape(system)}{count}</div>{"".join(rows)}</div>'
 
 
+def _chip(name: str, fact: dict, short_src: str = "") -> str:
+    cls = "ng-chip" + (" ng-chip-alert" if fact.get("alert") else "") + (" ng-chip-empty" if fact.get("empty") else "")
+    src = f" <small>{html.escape(short_src)}</small>" if short_src else ""
+    return (f'<span class="{cls}" title="{html.escape(fact.get("source", ""))}"><b>{html.escape(name)}</b>'
+            f'{html.escape(fact["text"])}{src}</span>')
+
+
+LEGEND = ('<div class="ng-legend">Red with <b>H</b>/<b>L</b> = latest value outside its threshold (placeholder '
+          'thresholds, not clinically validated) · <span style="color:#ef6c00">•</span> = abnormal earlier in the '
+          'last 12 h · grey = 12 h range · ↑↓ = change over 12 h · sparklines 12 h (labs 72 h) · hover a row for '
+          'time, LOINC code and FHIR id</div>')
+
+
+def _titration(case: dict) -> dict[str, float]:
+    """Drip label -> its rate 12 h before handoff, from the running-infusion elements."""
+    out = {}
+    for el in case["elements"].values():
+        for drip in el.get("running", []) if el.get("display_rule") == "running" else []:
+            if isinstance(drip.get("rate_12h_ago"), (int, float)):
+                out[drip["label"]] = drip["rate_12h_ago"]
+    return out
+
+
+def header_html(case: dict, ref: datetime) -> str:
+    """Patient line, reason for admission, all diagnoses on demand, and the safety chips."""
+    reason = data.reason_for_admission(case)
+    dx = data.diagnoses_sorted(case)
+    items = "".join(f"<li>{html.escape(data.dx_text(d))}</li>" for d in dx)
+    more = (f' · <details><summary>all {len(dx)} diagnoses</summary><ul>{items}</ul></details>' if dx else "")
+    label = "Reason for admission" if reason["kind"] == "chief_complaint" else "Diagnoses"
+    src = "ED chief complaint" if reason["kind"] == "chief_complaint" else "first 3 billing codes, no priority in FHIR"
+    code = data.code_status(case)
+    code_src = "dx code" if code["text"] == "DNR" and code["source"].startswith("Not charted") else ""
+    chips = "".join([
+        _chip("Code status", {**code, "empty": code["text"] == "Not charted"}, code_src),
+        _chip("Allergies", data.allergies(case)),
+        _chip("Isolation", data.isolation(case)),
+        _chip("VTE prophylaxis", data.vte_prophylaxis(case)),
+    ])
+    return (f'<div class="ng-head">{html.escape(data.patient_line(case))} · {html.escape(data.weight_text(case))}'
+            f'<span class="ng-ho">Handoff {ref:%Y-%m-%d %H:%M}</span></div>'
+            f'<div class="ng-dx"><b>{label}:</b> <span title="{html.escape(reason["source"])}">'
+            f'{html.escape(reason["text"])}</span> <span class="ng-src">({src})</span>{more}</div>'
+            f'<div class="ng-chips">{chips}</div>')
+
+
 def meds_strip(case: dict, ref: datetime) -> str:
-    """Running infusions (with rates) and the next dose of each drug in the next 12 h."""
+    """The shift's task strip: infusions running now, what was done in the last 12 h, and what is due next.
+
+    Due doses are the eMAR doses given in the next 12 h (the demo has no schedule);
+    the turn is due a placeholder interval after the last charted turn.
+    """
     doses, running = timeline_rows(case)
     drips = sorted(running, key=lambda r: (not str(r.get("category", "")).startswith("01"), r["label"]))
+    before = _titration(case)
     run_items = []
     for d in drips:
         rate = f"{data.fmt_num(d.get('rate'))} {d.get('rate_unit') or ''}".strip()
-        run_items.append(f'<span class="ng-item"><b>{html.escape(d["label"])}</b> {html.escape(rate)}</span>')
+        trend, was = "", before.get(d["label"])
+        if was is not None and isinstance(d.get("rate"), (int, float)) and abs(d["rate"] - was) > 1e-6:
+            trend = f' <small>{"↑" if d["rate"] > was else "↓"} from {data.fmt_num(was)}</small>'
+        run_items.append(f'<span class="ng-item"><b>{html.escape(d["label"])}</b> {html.escape(rate)}{trend}</span>')
+    done_items = []
+    for t in data.tasks_done(case):
+        if t["count"] == 0:
+            done_items.append(f'<span class="ng-done">{html.escape(t["name"])} <small>{html.escape(t["note"])}'
+                              f'</small></span>')
+            continue
+        if t["name"] == "Labs drawn":
+            text = f'Labs drawn {html.escape(t["detail"])}'
+        elif t["name"] == "Doses given":
+            text = f'{t["count"]} doses given <small>(eMAR)</small>'
+        else:
+            times = f'×{t["count"]}, last ' if t["count"] > 1 else ""
+            text = f'{html.escape(t["name"])} <small>{times}{data.fmt_time(t["t"], ref)}</small>'
+        done_items.append(f'<span class="ng-done">{text}</span>')
     first: dict[str, list[datetime]] = {}
     for m in doses:
         first.setdefault(m["name"].split(" + ")[0], []).append(data.ts(m["t"]))
-    nxt = sorted(first.items(), key=lambda kv: min(kv[1]))
-    next_items = [f'<span class="ng-item"><b>{data.fmt_time(min(ts), ref)}</b> {html.escape(name)}'
-                  f'{f" <small>×{len(ts)}</small>" if len(ts) > 1 else ""}</span>' for name, ts in nxt]
+    due = [(min(times), f'<span class="ng-item"><b>{data.fmt_time(min(times), ref)}</b> {html.escape(name)}'
+                        f'{f" <small>×{len(times)}</small>" if len(times) > 1 else ""}</span>')
+           for name, times in first.items()]
+    turn = data.turn_due(case)
+    if turn:
+        when = "now" if turn["overdue"] else data.fmt_time(turn["t"], ref)
+        cls = ' class="ng-due-over"' if turn["overdue"] else ""
+        due.append((data.ts(turn["t"]), f'<span class="ng-turn"><b{cls}>{when}</b> Turn <small>(every '
+                                        f'{data.TURN_EVERY_H} h, placeholder rule)</small></span>'))
+    due.sort(key=lambda d: d[0])
     run_html = "".join(run_items) or '<span class="ng-sub">none</span>'
-    next_html = "".join(next_items) or '<span class="ng-sub">no doses in the eMAR for the next 12 h</span>'
-    return (f'<div class="ng-meds"><div><span class="ng-mh">Running now</span>{run_html}</div>'
-            f'<div><span class="ng-mh">Next 12 h</span>{next_html}</div></div>')
+    done_html = "".join(done_items) or '<span class="ng-sub">no care charted in the last 12 h</span>'
+    next_html = "".join(h for _, h in due) or '<span class="ng-sub">no doses in the eMAR for the next 12 h</span>'
+    return (f'<div class="ng-meds">'
+            f'<div class="ng-srow"><span class="ng-mh">Running now</span><div class="ng-sitems">{run_html}</div></div>'
+            f'<div class="ng-srow"><span class="ng-mh">Done, last 12 h</span><div class="ng-sitems">{done_html}</div></div>'
+            f'<div class="ng-srow"><span class="ng-mh">Due, next 12 h</span><div class="ng-sitems">{next_html}</div>'
+            f'</div></div>')
 
 
 def render(case: dict) -> None:
     ref = data.handoff(case)
     st.markdown(CSS, unsafe_allow_html=True)
-    dx = data.diagnoses_sorted(case)
-    shown = "; ".join(html.escape(data.dx_text(d)) for d in dx[:DX_INLINE])
-    more = ""
-    if len(dx) > DX_INLINE:
-        items = "".join(f"<li>{html.escape(data.dx_text(d))}</li>" for d in dx)
-        more = f' <details><summary>all {len(dx)}</summary><ul>{items}</ul></details>'
-    st.markdown(f'<div class="ng-head">{html.escape(data.patient_line(case))} · {html.escape(data.weight_text(case))}'
-                f'</div><div class="ng-dx">Handoff {ref:%Y-%m-%d %H:%M} · <b>Diagnoses</b> ({len(dx)}; billing codes '
-                f'carry no priority in FHIR, so disease codes come first): {shown}{more}</div>',
-                unsafe_allow_html=True)
+    st.markdown(header_html(case, ref), unsafe_allow_html=True)
     st.markdown(meds_strip(case, ref), unsafe_allow_html=True)
-    st.markdown('<div class="ng-legend">Red with <b>H</b>/<b>L</b> = latest value outside its threshold '
-                '(placeholder thresholds, not clinically validated) · <span style="color:#ef6c00">•</span> = '
-                'abnormal earlier in the last 12 h · grey = 12 h range · sparklines 12 h (labs 72 h) · hover a '
-                'row for time, LOINC code and FHIR id</div>', unsafe_allow_html=True)
+    # Four columns; the first four systems head each column and the next four sit right under them,
+    # with no gap where a short panel sits beside a long one.
     systems = data.ORGAN_SYSTEMS
-    for start in range(0, len(systems), 4):
-        cols = st.columns(4, gap="small")
-        for col, system in zip(cols, systems[start:start + 4]):
-            with col:
-                st.markdown(panel_html(case, system, ref), unsafe_allow_html=True)
+    cols = "".join(f'<div class="ng-col">{panel_html(case, systems[i], ref)}'
+                   f'{panel_html(case, systems[i + 4], ref) if i + 4 < len(systems) else ""}</div>'
+                   for i in range(4))
+    st.markdown(f'<div class="ng-grid">{cols}</div>', unsafe_allow_html=True)
+    st.markdown(LEGEND, unsafe_allow_html=True)
     st.markdown("##### Next 12 hours: medications and running infusions")
     st.plotly_chart(timeline_figure(case), width="stretch",
                     config={"displayModeBar": False})

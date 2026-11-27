@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 608" width="760" height="608" font-family="Source Sans Pro, Helvetica, Arial, sans-serif" role="img" aria-label="Estimated seconds to answer each question in the tabbed EHR view and in NurseGlance">
+<rect width="760" height="608" fill="#ffffff"/>
+<line x1="210.0" y1="70" x2="210.0" y2="556" stroke="#e6e6e6" stroke-width="1"/><text x="210.0" y="572" font-size="11" fill="#666666" text-anchor="middle">0</text>
+<line x1="306.0" y1="70" x2="306.0" y2="556" stroke="#e6e6e6" stroke-width="1"/><text x="306.0" y="572" font-size="11" fill="#666666" text-anchor="middle">10</text>
+<line x1="402.0" y1="70" x2="402.0" y2="556" stroke="#e6e6e6" stroke-width="1"/><text x="402.0" y="572" font-size="11" fill="#666666" text-anchor="middle">20</text>
+<line x1="498.0" y1="70" x2="498.0" y2="556" stroke="#e6e6e6" stroke-width="1"/><text x="498.0" y="572" font-size="11" fill="#666666" text-anchor="middle">30</text>
+<line x1="594.0" y1="70" x2="594.0" y2="556" stroke="#e6e6e6" stroke-width="1"/><text x="594.0" y="572" font-size="11" fill="#666666" text-anchor="middle">40</text>
+<line x1="690.0" y1="70" x2="690.0" y2="556" stroke="#e6e6e6" stroke-width="1"/><text x="690.0" y="572" font-size="11" fill="#666666" text-anchor="middle">50</text>
+<text x="450.0" y="590" font-size="12" fill="#666666" text-anchor="middle">seconds</text>
+<text x="16" y="26" font-size="16" font-weight="600" fill="#191919">Estimated time to find each answer (version 0.3)</text>
+<text x="16" y="46" font-size="12" fill="#666666">Keystroke-level estimate of the shortest scripted path, in seconds (design-level, not user data). 1440×900 screen.</text>
+<circle cx="510" cy="22" r="5" fill="#f47230"/><text x="520" y="26" font-size="12" fill="#191919">Tabbed EHR view</text><circle cx="630" cy="22" r="5" fill="#257de0"/><text x="640" y="26" font-size="12" fill="#191919">NurseGlance</text>
+<text x="16" y="82" font-size="12" font-weight="600" fill="#191919">Standard cases</text>
+<text x="16" y="117.0" font-size="12" fill="#191919">S1-Q1</text><text x="64" y="117.0" font-size="12" fill="#666666">Lookup</text>
+<line x1="235.9" y1="113.0" x2="284.9" y2="113.0" stroke="#b3b3b3" stroke-width="2"/>
+<circle cx="284.9" cy="113.0" r="5" fill="#f47230" stroke="#ffffff" stroke-width="2"><title>S1-Q1 Tabbed EHR: 7.8 s · 1 clicks · 1 scrolls · 0 hovers</title></circle>
+<circle cx="235.9" cy="113.0" r="5" fill="#257de0" stroke="#ffffff" stroke-width="2"><title>S1-Q1 NurseGlance: 2.7 s · 0 clicks · 0 scrolls · 0 hovers</title></circle>
+<text x="293.9" y="117.0" font-size="11" fill="#666666">8</text>
+<text x="226.9" y="117.0" font-size="11" fill="#666666" text-anchor="end">3</text>
+<text x="16" y="143.0" font-size="12" fill="#191919">S1-Q2</text><text x="64" y="143.0" font-size="12" fill="#666666">Trend</text>
+<line x1="235.9" y1="139.0" x2="321.4" y2="139.0" stroke="#b3b3b3" stroke-width="2"/>
+<circle cx="321.4" cy="139.0" r="5" fill="#f47230" stroke="#ffffff" stroke-width="2"><title>S1-Q2 Tabbed EHR: 11.6 s · 1 clicks · 2 scrolls · 0 hovers</title></circle>
+<circle cx="235.9" cy="139.0" r="5" fill="#257de0" stroke="#ffffff" stroke-width="2"><title>S1-Q2 NurseGlance: 2.7 s · 0 clicks · 0 scrolls · 0 hovers</title></circle>
+<text x="330.4" y="143.0" font-size="11" fill="#666666">12</text>
+<text x="226.9" y="143.0" font-size="11" fill="#666666" text-anchor="end">3</text>
+<text x="16" y="169.0" font-size="12" fill="#191919">S1-Q3</text><text x="64" y="169.0" font-size="12" fill="#666666">Timing</text>
+<line x1="235.9" y1="165.0" x2="261.4" y2="165.0" stroke="#b3b3b3" stroke-width="2"/>
+<circle cx="261.4" cy="165.0" r="5" fill="#f47230" stroke="#ffffff" stroke-width="2"><title>S1-Q3 Tabbed EHR: 5.3 s · 1 clicks · 0 scrolls · 0 hovers</title></circle>
+<circle cx="235.9" cy="165.0" r="5" fill="#257de0" stroke="#ffffff" stroke-width="2"><title>S1-Q3 NurseGlance: 2.7 s · 0 clicks · 0 scrolls · 0 hovers</title></circle>
+<text x="270.4" y="169.0" font-size="11" fill="#666666">5</text>
+<text x="226.9" y="169.0" font-size="11" fill="#666666" text-anchor="end">3</text>
+<text x="16" y="195.0" font-size="12" fill="#191919">S1-Q4</text><text x="64" y="195.0" font-size="12" fill="#666666">Synthesis</text>
+<line x1="248.9" y1="191.0" x2="323.3" y2="191.0" stroke="#b3b3b3" stroke-width="2"/>
+<circle cx="323.3" cy="191.0" r="5" fill="#f47230" stroke="#ffffff" stroke-width="2"><title>S1-Q4 Tabbed EHR: 11.8 s · 2 clicks · 1 scrolls · 0 hovers</title></circle>
+<circle cx="248.9" cy="191.0" r="5" fill="#257de0" stroke="#ffffff" stroke-width="2"><title>S1-Q4 NurseGlance: 4.0 s · 0 clicks · 0 scrolls · 0 hovers</title></circle>
+<text x="332.3" y="195.0" font-size="11" fill="#666666">12</text>
+<text x="239.9" y="195.0" font-size="11" fill="#666666" text-anchor="end">4</text>
+<text x="16" y="221.0" font-size="12" fill="#191919">S2-Q1</text><text x="64" y="221.0" font-size="12" fill="#666666">Lookup</text>
+<line x1="235.9" y1="217.0" x2="310.3" y2="217.0" stroke="#b3b3b3" stroke-width="2"/>
+<circle cx="310.3" cy="217.0" r="5" fill="#f47230" stroke="#ffffff" stroke-width="2"><title>S2-Q1 Tabbed EHR: 10.4 s · 2 clicks · 1 scrolls · 0 hovers</title></circle>
+<circle cx="235.9" cy="217.0" r="5" fill="#257de0" stroke="#ffffff" stroke-width="2"><title>S2-Q1 NurseGlance: 2.7 s · 0 clicks · 0 scrolls · 0 hovers</title></circle>
+<text x="319.3" y="221.0" font-size="11" fill="#666666">10</text>
+<text x="226.9" y="221.0" font-size="11" fill="#666666" text-anchor="end">3</text>
+<text x="16" y="247.0" font-size="12" fill="#191919">S2-Q2</text><text x="64" y="247.0" font-size="12" fill="#666666">Trend</text>
+<line x1="235.9" y1="243.0" x2="396.2" y2="243.0" stroke="#b3b3b3" stroke-width="2"/>
+<circle cx="396.2" cy="243.0" r="5" fill="#f47230" stroke="#ffffff" stroke-width="2"><title>S2-Q2 Tabbed EHR: 19.4 s · 2 clicks · 3 scrolls · 0 hovers</title></circle>
+<circle cx="235.9" cy="243.0" r="5" fill="#257de0" stroke="#ffffff" stroke-width="2"><title>S2-Q2 NurseGlance: 2.7 s · 0 clicks · 0 scrolls · 0 hovers</title></circle>
+<text x="405.2" y="247.0" font-size="11" fill="#666666">19</text>
+<text x="226.9" y="247.0" font-size="11" fill="#666666" text-anchor="end">3</text>
+<text x="16" y="273.0" font-size="12" fill="#191919">S2-Q3</text><text x="64" y="273.0" font-size="12" fill="#666666">Timing</text>
+<line x1="235.9" y1="269.0" x2="261.4" y2="269.0" stroke="#b3b3b3" stroke-width="2"/>
+<circle cx="261.4" cy="269.0" r="5" fill="#f47230" stroke="#ffffff" stroke-width="2"><title>S2-Q3 Tabbed EHR: 5.3 s · 1 clicks · 0 scrolls · 0 hovers</title></circle>
+<circle cx="235.9" cy="269.0" r="5" fill="#257de0" stroke="#ffffff" stroke-width="2"><title>S2-Q3 NurseGlance: 2.7 s · 0 clicks · 0 scrolls · 0 hovers</title></circle>
+<text x="270.4" y="273.0" font-size="11" fill="#666666">5</text>
+<text x="226.9" y="273.0" font-size="11" fill="#666666" text-anchor="end">3</text>
+<text x="16" y="299.0" font-size="12" fill="#191919">S2-Q4</text><text x="64" y="299.0" font-size="12" fill="#666666">Synthesis</text>
+<line x1="248.9" y1="295.0" x2="434.6" y2="295.0" stroke="#b3b3b3" stroke-width="2"/>
+<circle cx="434.6" cy="295.0" r="5" fill="#f47230" stroke="#ffffff" stroke-width="2"><title>S2-Q4 Tabbed EHR: 23.4 s · 3 clicks · 3 scrolls · 0 hovers</title></circle>
+<circle cx="248.9" cy="295.0" r="5" fill="#257de0" stroke="#ffffff" stroke-width="2"><title>S2-Q4 NurseGlance: 4.0 s · 0 clicks · 0 scrolls · 0 hovers</title></circle>
+<text x="443.6" y="299.0" font-size="11" fill="#666666">23</text>
+<text x="239.9" y="299.0" font-size="11" fill="#666666" text-anchor="end">4</text>
+<text x="16" y="324" font-size="12" font-weight="600" fill="#191919">Complex cases</text>
+<text x="16" y="359.0" font-size="12" fill="#191919">C1-Q1</text><text x="64" y="359.0" font-size="12" fill="#666666">Lookup</text>
+<line x1="235.9" y1="355.0" x2="286.8" y2="355.0" stroke="#b3b3b3" stroke-width="2"/>
+<circle cx="286.8" cy="355.0" r="5" fill="#f47230" stroke="#ffffff" stroke-width="2"><title>C1-Q1 Tabbed EHR: 8.0 s · 2 clicks · 0 scrolls · 0 hovers</title></circle>
+<circle cx="235.9" cy="355.0" r="5" fill="#257de0" stroke="#ffffff" stroke-width="2"><title>C1-Q1 NurseGlance: 2.7 s · 0 clicks · 0 scrolls · 0 hovers</title></circle>
+<text x="295.8" y="359.0" font-size="11" fill="#666666">8</text>
+<text x="226.9" y="359.0" font-size="11" fill="#666666" text-anchor="end">3</text>
+<text x="16" y="385.0" font-size="12" fill="#191919">C1-Q2</text><text x="64" y="385.0" font-size="12" fill="#666666">Trend</text>
+<line x1="235.9" y1="381.0" x2="368.4" y2="381.0" stroke="#b3b3b3" stroke-width="2"/>
+<circle cx="368.4" cy="381.0" r="5" fill="#f47230" stroke="#ffffff" stroke-width="2"><title>C1-Q2 Tabbed EHR: 16.5 s · 1 clicks · 4 scrolls · 0 hovers</title></circle>
+<circle cx="235.9" cy="381.0" r="5" fill="#257de0" stroke="#ffffff" stroke-width="2"><title>C1-Q2 NurseGlance: 2.7 s · 0 clicks · 0 scrolls · 0 hovers</title></circle>
+<text x="377.4" y="385.0" font-size="11" fill="#666666">16</text>
+<text x="226.9" y="385.0" font-size="11" fill="#666666" text-anchor="end">3</text>
+<text x="16" y="411.0" font-size="12" fill="#191919">C1-Q3</text><text x="64" y="411.0" font-size="12" fill="#666666">Timing</text>
+<line x1="235.9" y1="407.0" x2="261.4" y2="407.0" stroke="#b3b3b3" stroke-width="2"/>
+<circle cx="261.4" cy="407.0" r="5" fill="#f47230" stroke="#ffffff" stroke-width="2"><title>C1-Q3 Tabbed EHR: 5.3 s · 1 clicks · 0 scrolls · 0 hovers</title></circle>
+<circle cx="235.9" cy="407.0" r="5" fill="#257de0" stroke="#ffffff" stroke-width="2"><title>C1-Q3 NurseGlance: 2.7 s · 0 clicks · 0 scrolls · 0 hovers</title></circle>
+<text x="270.4" y="411.0" font-size="11" fill="#666666">5</text>
+<text x="226.9" y="411.0" font-size="11" fill="#666666" text-anchor="end">3</text>
+<text x="16" y="437.0" font-size="12" fill="#191919">C1-Q4</text><text x="64" y="437.0" font-size="12" fill="#666666">Synthesis</text>
+<line x1="274.8" y1="433.0" x2="468.7" y2="433.0" stroke="#b3b3b3" stroke-width="2"/>
+<circle cx="468.7" cy="433.0" r="5" fill="#f47230" stroke="#ffffff" stroke-width="2"><title>C1-Q4 Tabbed EHR: 26.9 s · 3 clicks · 5 scrolls · 0 hovers</title></circle>
+<circle cx="274.8" cy="433.0" r="5" fill="#257de0" stroke="#ffffff" stroke-width="2"><title>C1-Q4 NurseGlance: 6.8 s · 0 clicks · 0 scrolls · 0 hovers</title></circle>
+<text x="477.7" y="437.0" font-size="11" fill="#666666">27</text>
+<text x="265.8" y="437.0" font-size="11" fill="#666666" text-anchor="end">7</text>
+<text x="16" y="463.0" font-size="12" fill="#191919">C2-Q1</text><text x="64" y="463.0" font-size="12" fill="#666666">Lookup</text>
+<line x1="235.9" y1="459.0" x2="235.9" y2="459.0" stroke="#b3b3b3" stroke-width="2"/>
+<circle cx="235.9" cy="459.0" r="5" fill="#f47230" stroke="#ffffff" stroke-width="2"><title>C2-Q1 Tabbed EHR: 2.7 s · 0 clicks · 0 scrolls · 0 hovers</title></circle>
+<circle cx="235.9" cy="459.0" r="5" fill="#257de0" stroke="#ffffff" stroke-width="2"><title>C2-Q1 NurseGlance: 2.7 s · 0 clicks · 0 scrolls · 0 hovers</title></circle>
+<text x="244.9" y="463.0" font-size="11" fill="#666666">3</text>
+<text x="226.9" y="463.0" font-size="11" fill="#666666" text-anchor="end">3</text>
+<text x="16" y="489.0" font-size="12" fill="#191919">C2-Q2</text><text x="64" y="489.0" font-size="12" fill="#666666">Trend</text>
+<line x1="235.9" y1="485.0" x2="453.8" y2="485.0" stroke="#b3b3b3" stroke-width="2"/>
+<circle cx="453.8" cy="485.0" r="5" fill="#f47230" stroke="#ffffff" stroke-width="2"><title>C2-Q2 Tabbed EHR: 25.4 s · 2 clicks · 6 scrolls · 0 hovers</title></circle>
+<circle cx="235.9" cy="485.0" r="5" fill="#257de0" stroke="#ffffff" stroke-width="2"><title>C2-Q2 NurseGlance: 2.7 s · 0 clicks · 0 scrolls · 0 hovers</title></circle>
+<text x="462.8" y="489.0" font-size="11" fill="#666666">25</text>
+<text x="226.9" y="489.0" font-size="11" fill="#666666" text-anchor="end">3</text>
+<text x="16" y="515.0" font-size="12" fill="#191919">C2-Q3</text><text x="64" y="515.0" font-size="12" fill="#666666">Timing</text>
+<line x1="235.9" y1="511.0" x2="261.4" y2="511.0" stroke="#b3b3b3" stroke-width="2"/>
+<circle cx="261.4" cy="511.0" r="5" fill="#f47230" stroke="#ffffff" stroke-width="2"><title>C2-Q3 Tabbed EHR: 5.3 s · 1 clicks · 0 scrolls · 0 hovers</title></circle>
+<circle cx="235.9" cy="511.0" r="5" fill="#257de0" stroke="#ffffff" stroke-width="2"><title>C2-Q3 NurseGlance: 2.7 s · 0 clicks · 0 scrolls · 0 hovers</title></circle>
+<text x="270.4" y="515.0" font-size="11" fill="#666666">5</text>
+<text x="226.9" y="515.0" font-size="11" fill="#666666" text-anchor="end">3</text>
+<text x="16" y="541.0" font-size="12" fill="#191919">C2-Q4</text><text x="64" y="541.0" font-size="12" fill="#666666">Synthesis</text>
+<line x1="248.9" y1="537.0" x2="404.9" y2="537.0" stroke="#b3b3b3" stroke-width="2"/>
+<circle cx="404.9" cy="537.0" r="5" fill="#f47230" stroke="#ffffff" stroke-width="2"><title>C2-Q4 Tabbed EHR: 20.3 s · 1 clicks · 5 scrolls · 0 hovers</title></circle>
+<circle cx="248.9" cy="537.0" r="5" fill="#257de0" stroke="#ffffff" stroke-width="2"><title>C2-Q4 NurseGlance: 4.0 s · 0 clicks · 0 scrolls · 0 hovers</title></circle>
+<text x="413.9" y="541.0" font-size="11" fill="#666666">20</text>
+<text x="239.9" y="541.0" font-size="11" fill="#666666" text-anchor="end">4</text>
+</svg>

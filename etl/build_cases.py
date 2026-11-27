@@ -71,6 +71,7 @@ class Case:
     med_orders: list = field(default_factory=list)
     devices: list = field(default_factory=list)
     diagnoses: list = field(default_factory=list)
+    admission: dict = field(default_factory=dict)
 
     @property
     def case_id(self) -> str:
@@ -310,6 +311,57 @@ def read_conditions(path: Path, cases: list[Case]) -> None:
                 "seq": seq, "code": coding.get("code"), "display": coding.get("display"),
                 "version": "ICD-10" if "icd10" in system else ("ICD-9" if "icd9" in system else None),
                 "fhir_id": res.get("id")})
+
+
+CHIEF_COMPLAINT_LOINC = "8661-1"
+
+
+def read_ed(fhir_dir: Path, cases: list[Case]) -> list[str]:
+    """Chief complaint and home medications from the ED visit that led to this admission.
+
+    MIMIC-IV-ED is linked to the hospital admission through EncounterED.partOf. The
+    chief complaint is an ObservationED coded LOINC 8661-1; home medications are the
+    ED medication reconciliation (MedicationStatementED). Admissions that did not
+    come through the ED have neither. Returns the file names read.
+    """
+    enc_path = resource_path(fhir_dir, "encounter_ed", required=False)
+    if enc_path is None:
+        return []
+    by_hospital = defaultdict(list)
+    for case in cases:
+        case.admission = {"ed_encounter_fhir_id": None, "chief_complaint": None, "home_meds": []}
+        if case.hospital_id:
+            by_hospital[case.hospital_id].append(case)
+    by_ed: dict[str, list[Case]] = defaultdict(list)
+    for res in iter_ndjson(enc_path, contains=list(by_hospital)):
+        for case in by_hospital.get(ref_id(res.get("partOf")), []):
+            case.admission["ed_encounter_fhir_id"] = res.get("id")
+            by_ed[res.get("id")].append(case)
+    used = [enc_path.name]
+    if not by_ed:
+        return used
+    obs_path = resource_path(fhir_dir, "observation_ed", required=False)
+    if obs_path is not None:
+        used.append(obs_path.name)
+        for res in iter_ndjson(obs_path, contains=list(by_ed)):
+            if first_coding(res.get("code")).get("code") != CHIEF_COMPLAINT_LOINC or not res.get("valueString"):
+                continue
+            for case in by_ed.get(ref_id(res.get("encounter")), []):
+                case.admission["chief_complaint"] = {
+                    "text": res["valueString"], "t": iso(parse_time(res.get("effectiveDateTime"))),
+                    "loinc": CHIEF_COMPLAINT_LOINC, "fhir_id": res.get("id")}
+    med_path = resource_path(fhir_dir, "med_statement_ed", required=False)
+    if med_path is not None:
+        used.append(med_path.name)
+        for res in iter_ndjson(med_path, contains=list(by_ed)):
+            name = (res.get("medicationCodeableConcept") or {}).get("text")
+            for case in by_ed.get(ref_id(res.get("context")), []):
+                if name:
+                    case.admission["home_meds"].append({
+                        "name": name, "t": iso(parse_time(res.get("dateAsserted"))), "fhir_id": res.get("id")})
+    for case in cases:
+        case.admission["home_meds"].sort(key=lambda m: (m["name"].lower(), m["t"] or ""))
+    return used
 
 
 def medication_name(res: dict) -> str | None:
@@ -637,6 +689,7 @@ def build_payload(case: Case, elements: list[dict], available: set[str], files_u
         "med_orders_active": active_orders,
         "devices": case.devices,
         "diagnoses": case.diagnoses,
+        "admission": case.admission or {"ed_encounter_fhir_id": None, "chief_complaint": None, "home_meds": []},
         "counts": {"observations": len(case.observations), "infusions": len(case.infusions),
                    "med_administrations": len(case.med_admins), "med_orders_active": len(active_orders),
                    "devices": len(case.devices), "diagnoses": len(case.diagnoses)},
@@ -696,6 +749,10 @@ def main(argv=None) -> int:
         reader(path)
         available.add(key)
         files_used.append(path.name)
+
+    for name in read_ed(args.fhir_dir, ready):
+        print(f"  read {name}", flush=True)
+        files_used.append(name)
 
     # Medication names for orders, then eMAR names through their orders.
     med_ids = {o["medication_ref"] for c in ready for o in c.med_orders if o["medication_ref"]}
