@@ -159,3 +159,25 @@ def test_summary_times_and_counts():
                  value=str(q.get("answer", "")))]
     out = study.summarize(rows, steps)[0]
     assert out["time_s"] == 12.5 and out["interactions"] == 2 and out["screens_visited"] == 3
+
+
+def test_returning_to_a_finished_study_restores_its_log_context():
+    done = {"run_id": "R017", "seed": 6}
+    assert study.context_for(done, None) == {"run_id": "R017", "seed": 6}            # Handoff page cleared it
+    assert study.context_for(done, {"run_id": "VN", "seed": ""})["run_id"] == "R017"  # virtual-nurse page replaced it
+    assert study.context_for(done, {"run_id": "R017", "seed": 6, "view": ""}) is None
+
+
+def test_study_export_leaves_out_other_pages_events():
+    rows = [{"run_id": "R017", "event": "session_end"}, {"run_id": "VN", "event": "toggle"}]
+    assert study.study_rows({"run_id": "R017"}, rows) == rows[:1]
+
+
+def test_saving_again_with_the_same_stamp_overwrites(tmp_path, monkeypatch):
+    monkeypatch.setattr(study, "LOG_DIR", tmp_path)
+    study.save_local("R017", "a\n", "s\n", "20261127-010000")
+    study.save_local("R017", "a\nnote\n", "s\n", "20261127-010000")
+    files = sorted(p.name for p in tmp_path.iterdir())
+    assert files == ["R017_20261127-010000_events.csv", "R017_20261127-010000_summary.csv"]
+    assert "note" in (tmp_path / files[0]).read_text()
+

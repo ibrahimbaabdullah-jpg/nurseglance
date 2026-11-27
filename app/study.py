@@ -152,11 +152,15 @@ def to_csv(rows: list[dict], columns: list[str]) -> str:
     return buf.getvalue()
 
 
-def save_local(run_id: str, events_csv: str, summary_csv: str) -> Path | None:
-    """Also write the CSVs to logs/ when the disk is writable (it does not survive a cloud restart)."""
+def save_local(run_id: str, events_csv: str, summary_csv: str, stamp: str | None = None) -> Path | None:
+    """Also write the CSVs to logs/ when the disk is writable (it does not survive a cloud restart).
+
+    Saving again with the same stamp overwrites that run's files, so a later debrief note
+    reaches the saved copy instead of a second file.
+    """
     try:
         LOG_DIR.mkdir(exist_ok=True)
-        stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+        stamp = stamp or datetime.now().strftime("%Y%m%d-%H%M%S")
         (LOG_DIR / f"{run_id}_{stamp}_events.csv").write_text(events_csv, encoding="utf-8")
         (LOG_DIR / f"{run_id}_{stamp}_summary.csv").write_text(summary_csv, encoding="utf-8")
         return LOG_DIR
@@ -210,6 +214,22 @@ def _start_screen() -> None:
 def _set_context(**kw) -> None:
     ctx = st.session_state["log_context"]
     ctx.update(kw)
+
+
+def context_for(study: dict, ctx: dict | None) -> dict | None:
+    """The log context to restore for a study, or None when the current one is already the study's.
+
+    Once a session has ended the other pages come back, and the Handoff page clears the
+    context while the virtual-nurse page replaces it, so returning to the study restores it.
+    """
+    if ctx and ctx.get("run_id") == study["run_id"]:
+        return None
+    return {"run_id": study["run_id"], "seed": study["seed"]}
+
+
+def study_rows(study: dict, rows: list[dict]) -> list[dict]:
+    """Only this session's events (the virtual-nurse page logs to the same list once a study has ended)."""
+    return [r for r in rows if r.get("run_id") == study["run_id"]]
 
 
 def _advance() -> None:
@@ -324,13 +344,14 @@ def _done_step(study: dict) -> None:
     if "ended" not in study:
         study["ended"] = True
         events.log("session_end")
-    rows = st.session_state["events"]
+    rows = study_rows(study, st.session_state.get("events", []))
     summary = summarize(rows, study["steps"])
     summary_cols = ["run_id", "seed", "view", "case_id", "question_id", "kind", "time_s", "interactions",
                     "screens_visited", "answer", "correct", "sus", "tlx_raw"]
     events_csv, summary_csv = to_csv(rows, events.COLUMNS), to_csv(summary, summary_cols)
+    stamp = study.setdefault("stamp", datetime.now().strftime("%Y%m%d-%H%M%S"))
     if "saved" not in study:
-        study["saved"] = str(save_local(study["run_id"], events_csv, summary_csv) or "")
+        study["saved"] = str(save_local(study["run_id"], events_csv, summary_csv, stamp) or "")
     st.header("Session complete")
     st.success(f"Run {study['run_id']} · seed {study['seed']} · {len(rows)} events logged.")
     with st.form("debrief"):
@@ -339,6 +360,7 @@ def _done_step(study: dict) -> None:
                             key="debrief", height=110)
         if st.form_submit_button("Save notes to the log"):
             events.log("debrief_note", value=note)
+            study.pop("saved", None)   # save again, so the note reaches the saved copy
             st.rerun()
     st.dataframe(summary, hide_index=True, width="stretch")
     c1, c2, c3 = st.columns(3)
@@ -373,6 +395,9 @@ def render(question_slot=None) -> None:
     if not study:
         _start_screen()
         return
+    restored = context_for(study, st.session_state.get("log_context"))
+    if restored:
+        st.session_state["log_context"] = restored
     step = study["steps"][study["i"]]
     with st.sidebar:
         st.markdown(f"**Study session** · run {study['run_id']} · seed {study['seed']}")
