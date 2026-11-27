@@ -10,8 +10,10 @@
 A nurse-centered ICU handoff dashboard built on HL7 FHIR data from the open
 MIMIC-IV Clinical Database Demo on FHIR. It shows the same four ICU patients in two
 ways: a conventional tabbed EHR-style view (the control) and the NurseGlance view,
-one screen organized by organ system with sparklines, abnormal highlighting and a
-12-hour medication and infusion timeline.
+one screen with a patient header and safety facts, a task strip (infusions running
+now, care done in the last 12 hours, doses and turns due next), eight organ-system
+panels with sparklines and abnormal highlighting, and a 12-hour medication and
+infusion timeline.
 
 ## Why this project: alignment with Dr. Saif Khairat's work
 
@@ -43,26 +45,28 @@ whether the same approach helps bedside and virtual nurses.
 | File | What it does |
 | --- | --- |
 | `etl/select_cases.py` | Ranks ICU stays in the MIMIC-IV demo (CSV) and suggests 2 standard and 2 complex handoff cases |
-| `etl/build_cases.py` | Reads the FHIR demo and writes `data/processed/case_<id>.json` for each case |
+| `etl/build_cases.py` | Reads the FHIR demo and writes `data/processed/case_<id>.json` for each case (and the practice stay, from `etl/practice_case.json`, into `data/processed/practice/`) |
 | `etl/coverage.py` | Reports how many handoff data elements FHIR can fill (research question 1) |
 | `etl/config.py` | Item IDs, time windows and file paths, all in one place |
 | `etl/value_codes.py` | Rebuilds `docs/value_codes.csv`, which restores text that FHIR carries only as a numeric code |
 | `etl/loinc_mapping.py` | Writes `docs/loinc_mapping.csv`: 50 MIMIC items mapped to LOINC, each name checked at NLM (`--verify`) |
 | `docs/coverage.md` | Research question 1 write-up: coverage by organ system, FHIR vs CSV completeness, gaps and causes |
 | `analysis/` | Task analysis: the shortest path to every study answer in each view (`paths.py`), a Playwright replay that measures it in the running app (`replay.py`), and keystroke-level estimates (`task_analysis.py`) |
-| `docs/task_analysis.md` | Clicks, scrolls, screens and estimated seconds per question, before and after the redesign |
-| `docs/heuristic_evaluation.md` | Draft heuristic evaluation of both views (Nielsen's 10, severity 0 to 4), with what version 0.3 changed |
+| `docs/task_analysis.md` | Clicks, scrolls, screens and estimated seconds per question, for versions 0.2, 0.3 and 1.1 |
+| `docs/heuristic_evaluation.md` | Draft heuristic evaluation of both views (Nielsen's 10, severity 0 to 4), with what versions 0.3 and 1.1 changed |
 | `docs/brief.md` ([PDF](docs/pdf/brief.pdf)) | One-page summary of the project, its results and the proposed study |
 | `docs/technical_report.md` ([PDF](docs/pdf/technical_report.pdf)) | Six-page technical report: background, methods, results for the three research questions, limitations, equity and responsible use |
 | `docs/protocol.md` ([PDF](docs/pdf/protocol.pdf)) | Proposed crossover usability study with ICU and virtual nurses, modeled on the AWARE trial; not started, needs IRB approval |
 | `analysis/sample_size.py`, `analysis/allocation.py` | The protocol's sample size (34 nurses for d<sub>z</sub> = 0.5, recruit 40) and its balanced allocation list |
 | `tools/build_pdf.py` | Renders a Markdown file in `docs/` to PDF (pandoc and Chromium) |
 | `tools/record_demo.py`, `docs/video/` | Records the captioned demo video from the running app, with subtitles (`.srt`) and a narration script |
-| `streamlit_app.py`, `app/` | The dashboard: `glance.py` (NurseGlance view), `tabbed.py` (control view), `timeline.py` (12 h timeline), `data.py` (shared loading) |
-| `app/study.py`, `app/events.py`, `app/scoring.py` | Study mode: seeded randomization, event log, SUS and raw NASA-TLX scoring, CSV export |
+| `streamlit_app.py`, `app/` | The dashboard, with four pages in a top bar: `glance.py` (NurseGlance view), `tabbed.py` (control view), `timeline.py` (12 h timeline), `data.py` (shared loading) |
+| `app/study.py`, `app/events.py`, `app/scoring.py` | Study mode: seeded randomization, practice questions, break, pause, event log, SUS and raw NASA-TLX scoring, debrief notes, CSV export |
+| `app/research.py` | Researcher page: the allocation list from a private master seed, a check of uploaded session files, and the planned analysis |
 | `app/flags.py` | 8 transparent rule-based flags, each showing its rule, values, times and FHIR IDs (off in study mode) |
 | `app/vn.py` | Virtual-nurse mode: admission and discharge checklists, session timer, 10-minute break prompt |
 | `docs/case_questions.json` | The 16 handoff questions (4 per case) with answer keys and the synthesis rubric |
+| `docs/practice_questions.json` | 4 practice questions on a fifth stay (2 before each view), logged but never scored |
 | `docs/data_elements.csv` | Starter list of 58 handoff data elements by organ system, for you to edit |
 | `tests/` | Unit tests, a synthetic end-to-end test, and a FHIR-vs-CSV check |
 | `download_data.sh` | Downloads both datasets from PhysioNet and checks their checksums |
@@ -149,10 +153,18 @@ the admission; if you'd rather use a survivor, the next complex candidate
   top 10 standard candidates have none). Cases were checked for eMAR data so every
   case has a 12-hour medication timeline.
 - **Code status** is rarely charted in the demo. When a hospital diagnosis code for
-  DNR status (Z66 or V49.86) exists, the NurseGlance view shows "DNR (dx code)" and
-  says where it came from; the tabbed view shows the same code in the problem list.
+  DNR status (Z66 or V49.86) exists, both views show DNR and say it came from a
+  diagnosis code.
+- **Reason for admission.** When the patient came through the emergency department,
+  the ED chief complaint (FHIR Observation, LOINC 8661-1) is shown as the reason for
+  admission, and the ED's medication reconciliation as the home medication list.
+  Otherwise the first 3 disease diagnoses are shown, and the screen says that FHIR
+  carries no diagnosis priority.
+- **Same safety facts in both views.** Code status, allergies and isolation sit in
+  the control's patient banner and in NurseGlance's header chips, so the comparison
+  is about layout, not about which view has more data.
 - **Control view tabs** are a radio control, not `st.tabs`, so each tab change is a
-  real interaction that study mode (Day 3) can log as a click and a screen visit.
+  real interaction that study mode can log as a click and a screen visit.
 - **Standard codes.** MIMIC-IV on FHIR codes chart and lab items in MIMIC's own code
   systems. `docs/loinc_mapping.csv` maps each item NurseGlance shows to LOINC; hovering
   a value shows its LOINC code and name. Five codes from MIMIC-IV v1.0 were replaced
@@ -166,39 +178,61 @@ the admission; if you'd rather use a survivor, the next complex candidate
   closer to a current EHR (newest columns first, scores beside their parts, running
   infusions and upcoming doses first) so the comparison is fair, and the study question
   moved to the sidebar. See `docs/heuristic_evaluation.md`.
+- **Version 1.1 screen review.** The screens were reviewed against the AWARE trial,
+  the virtual-nursing fatigue study and the ICU nurse survey. The control gained a
+  Summary tab (which it opens on), a patient banner, Problems and Lines & drains tabs
+  and a MAR with home medications. NurseGlance gained the patient header with safety
+  chips and the three-row task strip. Study mode gained practice questions, a break, a
+  pause that stops the clock and debrief notes; virtual-nurse mode gained a review
+  note for the bedside nurse; a Researcher page was added. The turn interval in the
+  task strip (every 2 hours) is a placeholder rule.
 - **Thresholds** marked "placeholder" in `docs/data_elements.csv` are yours to set
   and cite. Labs with no threshold use each result's own reference range.
 
 ## Modes
 
-- **Explore:** pick a patient and a view; switch on the rule-based flags if you like.
-- **Study session:** anonymous run ID, then the first view with 2 cases (4 questions
-  each), SUS and NASA-TLX, the second view with the other 2 cases, SUS and NASA-TLX,
-  and a CSV download. View order, which standard and complex case go with which
-  view, and case order within each view are randomized with a logged seed. Each
-  participant sees each case once. Streamlit cannot see raw mouse clicks or
-  scrolling, so "interactions" are logged interface actions (tab switches, toggles,
-  selects). Files saved on Streamlit Community Cloud do not survive a restart, so
-  download the CSVs at the end; a real study would run locally or log to a database.
-- **Virtual-nurse mode:** an admission or discharge checklist built from the same
-  case data, with a session timer, a completeness counter and an optional break
-  prompt after 10 minutes.
+The four pages sit in a bar at the top.
+
+- **Handoff view:** pick a patient and a view; switch on the rule-based flags if you like.
+- **Study session:** anonymous run ID and seed, then 2 practice questions and the
+  first view with 2 cases (4 questions each), SUS and NASA-TLX, a 2-minute break, 2
+  practice questions and the second view with the other 2 cases, SUS and NASA-TLX,
+  debrief notes and a CSV download. View order, which standard and complex case go
+  with which view, and case order within each view are randomized with a logged seed.
+  Each participant sees each case once. The question sits in the sidebar with a
+  progress bar; Pause hides the view and stops the clock. While a session runs, the
+  other pages are hidden. Streamlit cannot see raw mouse clicks or scrolling, so
+  "interactions" are logged interface actions (tab switches, toggles, selects). Files
+  saved on Streamlit Community Cloud do not survive a restart, so download the CSVs
+  at the end; a real study would run locally or log to a database.
+- **Virtual nurse:** an admission or discharge review built from the same case data:
+  what is already in the chart, a grouped checklist that marks which items the chart
+  already shows, a session timer, a break prompt after 10 minutes (take a break or
+  snooze 2 minutes), and a review note to hand to the bedside nurse.
+- **Researcher:** the allocation list built from a private master seed, a check of
+  uploaded session files (complete, answered, surveys, pauses) with medians by view,
+  and the planned analysis.
 
 Event log columns: `run_id, seed, ts_utc, view, case_id, question_id, event, target, value`.
-Events: `session_start, question_shown, tab_switch, toggle, answer_submit, survey_submit, session_end`.
+Events: `session_start, practice_shown, practice_submit, question_shown, tab_switch,
+toggle, answer_submit, survey_submit, break_start, break_end, pause, resume,
+debrief_note, session_abandoned, session_end`.
 
 ## How it was tested
 
-- 64 tests (`pytest`), including SUS and NASA-TLX scoring against hand-calculated
+- 81 tests (`pytest`), including SUS and NASA-TLX scoring against hand-calculated
   examples, randomization balance over 200 seeds, the answer keys checked against the
   case files, the flags' evidence, and the protocol's sample size and allocation balance. Also: unit and synthetic ETL tests (windows, calculated MAP, GCS,
   urine output per kg, drip titration, line days, lab flags), the FHIR-vs-CSV check,
   the restored text codes, and the app's data helpers, timeline and panels for every case.
 - The full pipeline ran on the official FHIR demo v2.1.0 and CSV demo v2.2 from
   PhysioNet (checksums verified). The FHIR-vs-CSV test passes for all 4 cases.
-- Every case, view, tab, Meds section, flowsheet group and mode was clicked through in a
-  headless browser (233 screens) with no errors,
-  and a full mock study session (16 questions, 2 surveys) exported a clean CSV.
+- Every page, case, view, tab, MAR section and Flowsheet section was clicked through in
+  a headless browser at 1440×900 (154 screens, version 1.1) with no errors and no
+  sideways page scroll, and the study session's pause, resume and abandon were checked.
+- Two full scripted study sessions (16 questions, 4 practice questions, 2 surveys and a
+  break each) exported clean CSVs; one is the Researcher page's example run
+  (`docs/mock_session_events.csv`).
 - `analysis/replay.py` answers all 16 questions in both views through the study mode,
   checks each answer is on screen, and confirms the app's event log counts the same
   clicks and screens (`pip install -r requirements-analysis.txt`, then
@@ -217,8 +251,9 @@ out of git; the small processed case files are committed so the app can deploy.
 | v0.1 | `63fdd56` | Both views, 4 cases, README (the minimum viable prototype) |
 | v0.2 | `f582b5a` | Study mode, rule-based flags, virtual-nurse mode |
 | v0.3 | `fd2791a` | Heuristic evaluation and redesign of both views, task analysis |
-| v1.0 | latest `main` | Evaluation protocol, technical report, brief and demo video |
+| v1.0 | `501957c` | Evaluation protocol, technical report, brief and demo video |
+| v1.1 | latest `main` | Screen review: Summary tab and patient banner in the control, header chips and task strip in NurseGlance, practice questions, break and pause in study mode, Researcher page |
 
 To cite NurseGlance, use `CITATION.cff` (GitHub's "Cite this repository" button reads
-it). A Zenodo DOI will be added here once v1.0 is archived. Code is MIT-licensed; the
+it). A Zenodo DOI will be added here once v1.1 is archived. Code is MIT-licensed; the
 MIMIC-derived data files are ODbL (see `DATA_LICENSE.md`).

@@ -180,14 +180,25 @@ def write_narration(cues: list[list], path: Path, offset: float, video: Path, se
     path.write_text("\n".join(lines), encoding="utf-8")
 
 
-def sidebar_pick(demo: Demo, label: str) -> None:
-    sb = demo.page.locator('[data-testid="stSidebar"]')
-    demo.point(sb.get_by_text(label, exact=True), click=True)
+ROOT = Path(__file__).resolve().parent.parent
+
+
+def klm_means() -> tuple[float, float]:
+    """Mean estimated seconds per question (tabbed, NurseGlance) from the current task analysis."""
+    import csv
+    rows = list(csv.DictReader(open(ROOT / "docs" / "task_analysis.csv", encoding="utf-8")))
+    mean = lambda v: sum(float(r["klm_seconds"]) for r in rows if r["view"] == v) / sum(r["view"] == v for r in rows)
+    return mean("tabbed"), mean("glance")
+
+
+def nav(demo: Demo, title: str) -> None:
+    """Click a page in the top bar."""
+    demo.point(demo.page.get_by_role("link", name=title), click=True)
 
 
 def pick_patient(demo: Demo, prefix: str) -> None:
     page = demo.page
-    box = page.locator('[data-testid="stSidebar"] [data-testid="stSelectbox"]').first
+    box = page.locator('[data-testid="stMain"] [data-testid="stSelectbox"]').first
     demo.point(box)
     box.locator("input").click()
     opts = page.locator('[role="option"]')
@@ -199,7 +210,16 @@ def pick_patient(demo: Demo, prefix: str) -> None:
     raise SystemExit(f"no patient option starting with {prefix}")
 
 
+def answer(demo: Demo, text: str) -> None:
+    page = demo.page
+    form = page.locator('[data-testid="stSidebar"] [data-testid="stForm"]').first
+    form.locator('input[type="text"]').first.click()
+    page.keyboard.type(text, delay=110)
+    demo.point(form.get_by_role("button", name="Submit answer"), click=True)
+
+
 def run(url: str, out: Path) -> None:
+    tabbed_s, glance_s = klm_means()
     tmp = Path(tempfile.mkdtemp(prefix="ngvideo-"))
     with sync_playwright() as pw:
         browser = pw.chromium.launch()
@@ -208,7 +228,7 @@ def run(url: str, out: Path) -> None:
         page = ctx.new_page()
         demo = Demo(page)
         page.goto(url)
-        page.wait_for_selector('[data-testid="stSidebar"]')
+        page.wait_for_selector('[data-testid="stMain"] [data-testid="stSelectbox"]')
         demo.settle()
         pick_patient(demo, "C1")
         demo.page.mouse.move(W - 40, H - 40)
@@ -220,71 +240,76 @@ def run(url: str, out: Path) -> None:
                   "dates shifted</p>",
                   "NurseGlance: a nurse-centered ICU handoff dashboard built on HL7 FHIR data. "
                   "Research prototype, not for clinical use.", 7)
+        main = page.locator('[data-testid="stMain"]')
 
         # The control view
         demo.cap("The control: a tabbed EHR-style view of the same FHIR data, here for a ventilated "
                  "patient on two vasopressors.")
-        sidebar_pick(demo, "Tabbed EHR view (control)")
-        main = page.locator('[data-testid="stMain"]')
-        demo.wait(4)
-        demo.hl('[data-testid="stDataFrame"]')
-        demo.cap("Vitals sit in flowsheet groups, one table per group, newest column first.", 5)
+        demo.point(main.get_by_text("Tabbed EHR (control)", exact=True).first, click=True)
+        demo.wait(2)
+        tabbar = '[data-testid="stMain"] [data-testid="stRadio"]'
+        demo.hl(tabbar, 1)
+        demo.cap("Like a current EHR, it opens on a Summary tab: latest vital signs, running infusions, "
+                 "and intake and output. A banner keeps code status, allergies and isolation in view.", 6)
         demo.hl(None)
+        demo.cap("The flowsheet has sections, one table per section, newest column first.")
+        demo.point(main.get_by_text("Flowsheet", exact=True).first, click=True)
+        demo.wait(4)
         demo.cap("Labs are one long table: 94 results for this patient in the last 72 hours.")
         demo.point(main.get_by_text("Labs", exact=True).first, click=True)
-        demo.wait(4.5)
-        demo.cap("Drips and doses are under another tab, in sections. Answering one handoff question "
-                 "can mean several tabs and scrolls.")
-        demo.point(main.get_by_text("Meds", exact=True).first, click=True)
+        demo.wait(4)
+        demo.cap("Drips and doses are in the MAR, in sections. A trend or a synthesis question can mean "
+                 "several tabs and scrolls.")
+        demo.point(main.get_by_text("MAR", exact=True).first, click=True)
         demo.point(main.get_by_text("Infusions", exact=True).first, click=True)
-        demo.wait(5)
+        demo.wait(4)
+        demo.point(main.get_by_text("Summary", exact=True).first, click=True)
 
         # NurseGlance
         demo.cap("NurseGlance shows the same patient on one screen, organized by organ system.")
-        sidebar_pick(demo, "NurseGlance (organ systems)")
-        demo.wait(4.5)
+        demo.point(main.get_by_text("NurseGlance", exact=True).first, click=True)
+        demo.wait(4)
+        demo.hl(".ng-chips")
+        demo.cap("The header gives the reason for admission and the safety facts: code status, allergies, "
+                 "isolation and VTE prophylaxis, each with its source.", 7)
         demo.hl(".ng-meds")
-        demo.cap("At the top: every infusion running now with its rate, and the next dose of each drug "
-                 "in the 12 hours after handoff.", 8)
+        demo.cap("The task strip: every infusion running now with its titration, care done in the last "
+                 "12 hours, and the doses and turns due next.", 8)
         demo.hl('.ng-row[data-eid="map"]')
         demo.point(page.locator('.ng-row[data-eid="map"]'))
         demo.cap("Each value shows the latest reading, a trend arrow, the 12-hour range and a sparkline. "
-                 "An H or L badge marks a value outside its threshold.", 8)
-        demo.hl('.ng-row[data-eid="vasoactive_drips"]')
-        demo.point(page.locator('.ng-row[data-eid="vasoactive_drips"]'))
-        demo.cap("Drips show their rate, the last titration and when they started.", 6)
+                 "An H or L badge marks a value outside its threshold.", 7)
         demo.hl(".ng-empty", 0)
         demo.cap("\"None\", \"not charted\" and \"not in FHIR demo\" stay separate, so a true negative "
-                 "is never mistaken for missing data.", 7)
+                 "is never mistaken for missing data.", 6)
         demo.hl(None)
         demo.cap("")
         plot = page.locator(".js-plotly-plot").first
         plot.scroll_into_view_if_needed()
         demo.settle()
-        demo.cap("Below the panels, a 12-hour timeline shows each dose and infusion after handoff. "
-                 "Pointing at a dose shows its name and time.", 3)
+        demo.cap("Below the panels, a 12-hour timeline shows each dose and infusion after handoff.", 2)
         pts = page.locator(".js-plotly-plot .scatterlayer .points path")
         if pts.count():
             target = pts.nth(min(3, pts.count() - 1))
             box = target.bounding_box()
             if box:
                 page.mouse.move(box["x"] + box["width"] / 2, box["y"] + box["height"] / 2, steps=20)
-        demo.wait(5)
+        demo.wait(4)
         demo.scroll_main(0)
 
         # Flags
-        flag_box = page.locator('[data-testid="stSidebar"] [data-testid="stCheckbox"]').get_by_text("Rule-based flags")
+        flag_box = main.get_by_text("Rule-based flags", exact=True)
         demo.cap("Optional rule-based flags. Each one shows its rule, the values, their times and FHIR ids. "
                  "Thresholds are placeholders, and flags are off in study mode.")
         demo.point(flag_box, click=True)
-        demo.wait(8)
+        demo.wait(7)
         demo.point(flag_box, click=True)
 
         # Study mode
         demo.cap("Study mode runs an AWARE-style crossover session, start to finish.")
-        sidebar_pick(demo, "Study session")
-        demo.wait(3)
-        page.get_by_label("Run ID").click()
+        nav(demo, "Study session")
+        demo.wait(2)
+        page.get_by_test_id("stTextInputField").first.click()
         page.keyboard.type("DEMO1", delay=90)
         field = page.get_by_test_id("stNumberInputField")
         field.click()
@@ -293,44 +318,68 @@ def run(url: str, out: Path) -> None:
         field.press("Tab")
         demo.cap("A logged seed sets the view order and which patients go with each view.", 3)
         demo.point(page.get_by_role("button", name="Start session"), click=True)
-        demo.wait(1.5)
+        demo.wait(1)
+        demo.hl('[data-testid="stSidebar"] [data-testid="stVerticalBlockBorderWrapper"]')
+        demo.cap("Two practice questions on a fifth patient come first. They are logged but never scored.", 3)
+        answer(demo, "121")
+        answer(demo, "22:15")
         demo.hl('[data-testid="stSidebar"] [data-testid="stForm"]')
-        demo.cap("The question stays beside the view. Every click, screen and answer is logged with its time.", 6)
+        demo.cap("Then the timed questions. The question stays beside the view, and every click, screen and "
+                 "answer is logged with its time.", 5)
         demo.hl('.ng-meds')
-        demo.cap("Here the answer is in the infusion strip: norepinephrine 0.2 mcg/kg/min.", 5)
+        demo.cap("Here the answer is in the task strip: norepinephrine 0.2 mcg/kg/min.", 4)
         demo.hl(None)
-        form = page.locator('[data-testid="stForm"]').first
-        form.locator('input[type="text"]').first.click()
-        page.keyboard.type("0.2", delay=120)
-        demo.point(form.get_by_role("button", name="Submit answer"), click=True)
-        demo.cap("After each view come the System Usability Scale and NASA-TLX, and the session exports "
-                 "CSV files for analysis.", 7)
-        abandon = page.get_by_role("button", name="Abandon session")
+        demo.cap("Pause hides the view and stops the clock if the nurse is interrupted.")
+        demo.point(page.get_by_role("button", name="Pause"), click=True)
+        demo.wait(3)
+        demo.point(page.get_by_role("button", name="Resume"), click=True)
+        answer(demo, "0.2")
+        demo.cap("After each view come the System Usability Scale and NASA-TLX, then a break, debrief "
+                 "notes and CSV files for analysis.", 6)
+        abandon = page.get_by_role("button", name="Abandon")
         if abandon.count():
             abandon.click()
             demo.settle()
 
-        # Virtual-nurse mode
-        demo.cap("Virtual-nurse mode: admission and discharge checklists, a session timer, and a break "
-                 "prompt at 10 minutes.")
-        sidebar_pick(demo, "Virtual-nurse mode")
-        demo.wait(4)
+        # Virtual nurse
+        demo.cap("Virtual-nurse mode: an admission or discharge review with what is already in the chart, "
+                 "a checklist, a session timer and a break prompt at 10 minutes.")
+        nav(demo, "Virtual nurse")
+        demo.wait(3)
         boxes = page.locator('[data-testid="stMain"] [data-testid="stCheckbox"]')
         for i in range(min(3, boxes.count())):
             demo.point(boxes.nth(i), click=True)
         demo.cap("Virtual nurses showed cognitive fatigue within about 10 to 12 minutes of an encounter "
-                 "in a 2025 eye-tracking study.", 7)
+                 "in a 2025 eye-tracking study.", 6)
+        note = page.get_by_text("Virtual admission review").first
+        if note.count():
+            note.scroll_into_view_if_needed()
+            demo.settle()
+            demo.cap("The review ends with a note for the bedside nurse: what was reviewed and what is "
+                     "still to confirm.", 5)
+        demo.scroll_main(0)
+
+        # Researcher
+        demo.cap("The researcher page builds the balanced allocation list from a private seed and checks "
+                 "each session's files.")
+        nav(demo, "Researcher")
+        demo.wait(3)
+        demo.point(page.get_by_role("tab", name="Session files"), click=True)
+        demo.wait(4)
         demo.cap("")
 
         demo.card("<h1>What the prototype shows so far</h1><ul>"
                   "<li>FHIR can supply 57 of 58 nurse handoff data elements (98%).</li>"
-                  "<li>Scripted expert paths: 3.2 s per question in NurseGlance against 12.9 s in the tabbed "
-                  "view, with no clicks or scrolls. These are design-level estimates, not nurse data.</li>"
-                  "<li>A heuristic evaluation found 10 major usability problems; version 0.3 fixed them.</li>"
+                  f"<li>Scripted expert paths: {glance_s:.1f} s per question in NurseGlance against "
+                  f"{tabbed_s:.1f} s in the tabbed view, with no clicks or scrolls. These are design-level "
+                  "estimates, not nurse data.</li>"
+                  "<li>A heuristic evaluation found 10 major usability problems, all fixed; a later review "
+                  "gave both views the same safety facts.</li>"
                   "<li>Next: a crossover study with 40 ICU and virtual nurses, after IRB approval.</li></ul>",
-                  "So far: FHIR can supply 57 of 58 handoff elements. Scripted expert paths take 3.2 s per "
-                  "question in NurseGlance against 12.9 s in the tabbed view (design-level estimates, not "
-                  "nurse data). Next: a crossover study with ICU and virtual nurses, after IRB approval.", 16)
+                  f"So far: FHIR can supply 57 of 58 handoff elements. Scripted expert paths take "
+                  f"{glance_s:.1f} s per question in NurseGlance against {tabbed_s:.1f} s in the tabbed view "
+                  "(design-level estimates, not nurse data). Next: a crossover study with ICU and virtual "
+                  "nurses, after IRB approval.", 16)
         demo.card("<h1>NurseGlance</h1>"
                   "<p>Code, reports and protocol: github.com/ibrahimbaabdullah-jpg/nurseglance</p>"
                   "<p>Ibrahim Baabdallah · 2026</p>"

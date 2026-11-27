@@ -1,0 +1,1081 @@
+{
+ "viewport": [
+  1440,
+  900
+ ],
+ "seeds": [
+  2,
+  6
+ ],
+ "steps": {
+  "page": 0.875,
+  "table_vertical": 0.875,
+  "table_horizontal": 0.65,
+  "list": 0.875
+ },
+ "app_log_matches": true,
+ "problems": [],
+ "records": [
+  {
+   "question_id": "C1-Q1",
+   "view": "glance",
+   "case_id": "C1",
+   "clicks": 0,
+   "app_interactions_expected": 0,
+   "tabs": [],
+   "scroll_page": 0,
+   "scroll_grid": 0,
+   "scroll_list": 0,
+   "hovers": 0,
+   "targets": 1,
+   "think": 0,
+   "think_why": [],
+   "seen": [
+    {
+     "vasoactive_drips": "Norepinephrine 0.2 mcg/kg/min (↓ from 0.4) since 17:19"
+    }
+   ],
+   "log": [
+    "see: Norepinephrine"
+   ],
+   "screens": 1,
+   "seed": 6,
+   "app_interactions": 0,
+   "app_screens": 1,
+   "app_correct": "1"
+  },
+  {
+   "question_id": "C1-Q1",
+   "view": "tabbed",
+   "case_id": "C1",
+   "clicks": 2,
+   "app_interactions_expected": 2,
+   "tabs": [
+    "Meds"
+   ],
+   "scroll_page": 0,
+   "scroll_grid": 0,
+   "scroll_list": 0,
+   "hovers": 0,
+   "targets": 1,
+   "think": 0,
+   "think_why": [],
+   "seen": [
+    {
+     "Norepinephrine + True": "06-23 17:19 | 06-23 19:01 | Norepinephrine | 01-Drips | 0.2 mcg/kg/min | 1.79 mg | true"
+    }
+   ],
+   "log": [
+    "tab: Meds",
+    "section: Infusions",
+    "grid:"
+   ],
+   "screens": 2,
+   "seed": 2,
+   "app_interactions": 2,
+   "app_screens": 2,
+   "app_correct": "1"
+  },
+  {
+   "question_id": "C1-Q2",
+   "view": "glance",
+   "case_id": "C1",
+   "clicks": 0,
+   "app_interactions_expected": 0,
+   "tabs": [],
+   "scroll_page": 0,
+   "scroll_grid": 0,
+   "scroll_list": 0,
+   "hovers": 0,
+   "targets": 1,
+   "think": 0,
+   "think_why": [],
+   "seen": [
+    {
+     "lactate": "Lactate4.3 mmol/LH ↓12 h 4.3–9"
+    }
+   ],
+   "log": [
+    "see:"
+   ],
+   "screens": 1,
+   "seed": 6,
+   "app_interactions": 0,
+   "app_screens": 1,
+   "app_correct": "1"
+  },
+  {
+   "question_id": "C1-Q2",
+   "view": "tabbed",
+   "case_id": "C1",
+   "clicks": 1,
+   "app_interactions_expected": 1,
+   "tabs": [
+    "Labs"
+   ],
+   "scroll_page": 0,
+   "scroll_grid": 4,
+   "scroll_list": 0,
+   "hovers": 0,
+   "targets": 1,
+   "think": 1,
+   "think_why": [
+    "compare the first and last lactates of the 12 h window"
+   ],
+   "seen": [
+    {
+     "Lactate": {
+      "06-23 09:22": "9 (H)",
+      "06-23 17:41": "4.3 (H)"
+     }
+    }
+   ],
+   "log": [
+    "tab: Labs",
+    "table rows 'Lactate': 4 gesture(s) (down)",
+    "grid:",
+    "think:"
+   ],
+   "screens": 2,
+   "seed": 2,
+   "app_interactions": 1,
+   "app_screens": 2,
+   "app_correct": "1"
+  },
+  {
+   "question_id": "C1-Q3",
+   "view": "glance",
+   "case_id": "C1",
+   "clicks": 0,
+   "app_interactions_expected": 0,
+   "tabs": [],
+   "scroll_page": 0,
+   "scroll_grid": 0,
+   "scroll_list": 0,
+   "hovers": 0,
+   "targets": 1,
+   "think": 0,
+   "think_why": [],
+   "seen": [
+    {
+     "Vancomycin": "01:01 (+1d) Vancomycin"
+    }
+   ],
+   "log": [
+    "see: Vancomycin"
+   ],
+   "screens": 1,
+   "seed": 6,
+   "app_interactions": 0,
+   "app_screens": 1,
+   "app_correct": "1"
+  },
+  {
+   "question_id": "C1-Q3",
+   "view": "tabbed",
+   "case_id": "C1",
+   "clicks": 1,
+   "app_interactions_expected": 1,
+   "tabs": [
+    "Meds"
+   ],
+   "scroll_page": 0,
+   "scroll_grid": 0,
+   "scroll_list": 0,
+   "hovers": 0,
+   "targets": 1,
+   "think": 0,
+   "think_why": [],
+   "seen": [
+    {
+     "vancomycin + 01:01": "06-24 01:01 | Next 12 h | Vancomycin + Iso-Osmotic Dextrose | 1000 mg | Administered | completed"
+    }
+   ],
+   "log": [
+    "tab: Meds",
+    "grid:"
+   ],
+   "screens": 2,
+   "seed": 2,
+   "app_interactions": 1,
+   "app_screens": 2,
+   "app_correct": "1"
+  },
+  {
+   "question_id": "C1-Q4",
+   "view": "glance",
+   "case_id": "C1",
+   "clicks": 0,
+   "app_interactions_expected": 0,
+   "tabs": [],
+   "scroll_page": 0,
+   "scroll_grid": 0,
+   "scroll_list": 0,
+   "hovers": 0,
+   "targets": 4,
+   "think": 0,
+   "think_why": [],
+   "seen": [
+    {
+     "map": "MAP64 mmHgL ↓12 h 60–94"
+    },
+    {
+     "vasoactive_drips": "Norepinephrine 0.2 mcg/kg/min (↓ from 0.4) since 17:19"
+    },
+    {
+     "vasoactive_drips": "Vasopressin 2.41 units/hour since 03:15"
+    },
+    {
+     "lactate": "Lactate4.3 mmol/LH ↓12 h 4.3–9"
+    }
+   ],
+   "log": [
+    "see:",
+    "see: Norepinephrine",
+    "see: Vasopressin",
+    "see:"
+   ],
+   "screens": 1,
+   "seed": 6,
+   "app_interactions": 0,
+   "app_screens": 1,
+   "app_correct": ""
+  },
+  {
+   "question_id": "C1-Q4",
+   "view": "tabbed",
+   "case_id": "C1",
+   "clicks": 3,
+   "app_interactions_expected": 3,
+   "tabs": [
+    "Labs",
+    "Vitals"
+   ],
+   "scroll_page": 0,
+   "scroll_grid": 5,
+   "scroll_list": 0,
+   "hovers": 0,
+   "targets": 4,
+   "think": 0,
+   "think_why": [],
+   "seen": [
+    {
+     "Norepinephrine + True": "06-23 17:19 | 06-23 19:01 | Norepinephrine | 01-Drips | 0.2 mcg/kg/min | 1.79 mg | true"
+    },
+    {
+     "Vasopressin + True": "06-23 03:15 | 06-23 19:52 | Vasopressin | 01-Drips | 2.41 units/hour | 40 units | true"
+    },
+    {
+     "Lactate": {
+      "06-23 17:41": "4.3 (H)"
+     }
+    },
+    {
+     "Arterial Blood Pressure mean": {
+      "06-23 19:00": "64"
+     }
+    }
+   ],
+   "log": [
+    "section: Infusions",
+    "table rows ['Vasopressin', 'True']: 1 gesture(s) (down)",
+    "grid:",
+    "tab: Labs",
+    "table rows 'Lactate': 4 gesture(s) (down)",
+    "grid:",
+    "tab: Vitals",
+    "grid:"
+   ],
+   "screens": 3,
+   "seed": 2,
+   "app_interactions": 3,
+   "app_screens": 3,
+   "app_correct": ""
+  },
+  {
+   "question_id": "C2-Q1",
+   "view": "glance",
+   "case_id": "C2",
+   "clicks": 0,
+   "app_interactions_expected": 0,
+   "tabs": [],
+   "scroll_page": 0,
+   "scroll_grid": 0,
+   "scroll_list": 0,
+   "hovers": 0,
+   "targets": 1,
+   "think": 0,
+   "think_why": [],
+   "seen": [
+    {
+     "heart_rate": "Heart rate130 bpmH ↓12 h 126–143"
+    }
+   ],
+   "log": [
+    "see:"
+   ],
+   "screens": 1,
+   "seed": 2,
+   "app_interactions": 0,
+   "app_screens": 1,
+   "app_correct": "1"
+  },
+  {
+   "question_id": "C2-Q1",
+   "view": "tabbed",
+   "case_id": "C2",
+   "clicks": 0,
+   "app_interactions_expected": 0,
+   "tabs": [],
+   "scroll_page": 0,
+   "scroll_grid": 0,
+   "scroll_list": 0,
+   "hovers": 0,
+   "targets": 1,
+   "think": 0,
+   "think_why": [],
+   "seen": [
+    {
+     "Heart Rate": {
+      "03-26 19:00": "130"
+     }
+    }
+   ],
+   "log": [
+    "grid:"
+   ],
+   "screens": 1,
+   "seed": 6,
+   "app_interactions": 0,
+   "app_screens": 1,
+   "app_correct": "1"
+  },
+  {
+   "question_id": "C2-Q2",
+   "view": "glance",
+   "case_id": "C2",
+   "clicks": 0,
+   "app_interactions_expected": 0,
+   "tabs": [],
+   "scroll_page": 0,
+   "scroll_grid": 0,
+   "scroll_list": 0,
+   "hovers": 0,
+   "targets": 1,
+   "think": 0,
+   "think_why": [],
+   "seen": [
+    {
+     "vasoactive_drips": "Norepinephrine 0.04 mcg/kg/min (↓ from 0.2) since 18:24"
+    }
+   ],
+   "log": [
+    "see: Norepinephrine"
+   ],
+   "screens": 1,
+   "seed": 2,
+   "app_interactions": 0,
+   "app_screens": 1,
+   "app_correct": "1"
+  },
+  {
+   "question_id": "C2-Q2",
+   "view": "tabbed",
+   "case_id": "C2",
+   "clicks": 2,
+   "app_interactions_expected": 2,
+   "tabs": [
+    "Meds"
+   ],
+   "scroll_page": 0,
+   "scroll_grid": 6,
+   "scroll_list": 0,
+   "hovers": 0,
+   "targets": 2,
+   "think": 1,
+   "think_why": [
+    "compare the rate in effect 12 h before handoff with the current rate"
+   ],
+   "seen": [
+    {
+     "Norepinephrine + 03-26 06:30": "03-26 06:30 | 03-26 07:46 | Norepinephrine | 01-Drips | 0.2 mcg/kg/min | 0.91 mg | false"
+    },
+    {
+     "Norepinephrine + True": "03-26 18:24 | 03-26 20:22 | Norepinephrine | 01-Drips | 0.04 mcg/kg/min | 0.28 mg | true"
+    }
+   ],
+   "log": [
+    "tab: Meds",
+    "section: Infusions",
+    "table rows ['Norepinephrine', '03-26 06:30']: 5 gesture(s) (down)",
+    "table rows ['Norepinephrine', 'True']: 1 gesture(s) (home_down)",
+    "grid:",
+    "think:"
+   ],
+   "screens": 2,
+   "seed": 6,
+   "app_interactions": 2,
+   "app_screens": 2,
+   "app_correct": "1"
+  },
+  {
+   "question_id": "C2-Q3",
+   "view": "glance",
+   "case_id": "C2",
+   "clicks": 0,
+   "app_interactions_expected": 0,
+   "tabs": [],
+   "scroll_page": 0,
+   "scroll_grid": 0,
+   "scroll_list": 0,
+   "hovers": 0,
+   "targets": 1,
+   "think": 0,
+   "think_why": [],
+   "seen": [
+    {
+     "CefePIME": "01:41 (+1d) CefePIME"
+    }
+   ],
+   "log": [
+    "see: CefePIME"
+   ],
+   "screens": 1,
+   "seed": 2,
+   "app_interactions": 0,
+   "app_screens": 1,
+   "app_correct": "1"
+  },
+  {
+   "question_id": "C2-Q3",
+   "view": "tabbed",
+   "case_id": "C2",
+   "clicks": 1,
+   "app_interactions_expected": 1,
+   "tabs": [],
+   "scroll_page": 0,
+   "scroll_grid": 0,
+   "scroll_list": 0,
+   "hovers": 0,
+   "targets": 1,
+   "think": 0,
+   "think_why": [],
+   "seen": [
+    {
+     "cefepime + 01:41": "03-27 01:41 | Next 12 h | CefePIME + 0.9% Sodium Chloride (Mini Bag Plus) | 1 g | Administered | completed"
+    }
+   ],
+   "log": [
+    "section: MAR",
+    "grid:"
+   ],
+   "screens": 1,
+   "seed": 6,
+   "app_interactions": 1,
+   "app_screens": 1,
+   "app_correct": "1"
+  },
+  {
+   "question_id": "C2-Q4",
+   "view": "glance",
+   "case_id": "C2",
+   "clicks": 0,
+   "app_interactions_expected": 0,
+   "tabs": [],
+   "scroll_page": 0,
+   "scroll_grid": 0,
+   "scroll_list": 0,
+   "hovers": 0,
+   "targets": 2,
+   "think": 0,
+   "think_why": [],
+   "seen": [
+    {
+     "hemoglobin": "Hemoglobin7.9 g/dLL ↓12 h 7.9–9.6"
+    },
+    {
+     "platelets": "Platelets68 K/uLL"
+    }
+   ],
+   "log": [
+    "see:",
+    "see:"
+   ],
+   "screens": 1,
+   "seed": 2,
+   "app_interactions": 0,
+   "app_screens": 1,
+   "app_correct": ""
+  },
+  {
+   "question_id": "C2-Q4",
+   "view": "tabbed",
+   "case_id": "C2",
+   "clicks": 1,
+   "app_interactions_expected": 1,
+   "tabs": [
+    "Labs"
+   ],
+   "scroll_page": 0,
+   "scroll_grid": 5,
+   "scroll_list": 0,
+   "hovers": 0,
+   "targets": 2,
+   "think": 1,
+   "think_why": [
+    "compare the earlier and latest hemoglobin"
+   ],
+   "seen": [
+    {
+     "Hemoglobin": {
+      "03-26 09:41": "9.6 (L)",
+      "03-26 17:54": "7.9 (L)"
+     }
+    },
+    {
+     "Platelet Count": {
+      "03-26 17:54": "68 (L)"
+     }
+    }
+   ],
+   "log": [
+    "tab: Labs",
+    "table rows 'Hemoglobin': 3 gesture(s) (down)",
+    "grid:",
+    "think:",
+    "table rows 'Platelet Count': 2 gesture(s) (down)",
+    "grid:"
+   ],
+   "screens": 2,
+   "seed": 6,
+   "app_interactions": 1,
+   "app_screens": 2,
+   "app_correct": ""
+  },
+  {
+   "question_id": "S1-Q1",
+   "view": "glance",
+   "case_id": "S1",
+   "clicks": 0,
+   "app_interactions_expected": 0,
+   "tabs": [],
+   "scroll_page": 0,
+   "scroll_grid": 0,
+   "scroll_list": 0,
+   "hovers": 0,
+   "targets": 1,
+   "think": 0,
+   "think_why": [],
+   "seen": [
+    {
+     "potassium": "Potassium3.2 mEq/LL 17h ago"
+    }
+   ],
+   "log": [
+    "see:"
+   ],
+   "screens": 1,
+   "seed": 6,
+   "app_interactions": 0,
+   "app_screens": 1,
+   "app_correct": "1"
+  },
+  {
+   "question_id": "S1-Q1",
+   "view": "tabbed",
+   "case_id": "S1",
+   "clicks": 1,
+   "app_interactions_expected": 1,
+   "tabs": [
+    "Labs"
+   ],
+   "scroll_page": 0,
+   "scroll_grid": 1,
+   "scroll_list": 0,
+   "hovers": 0,
+   "targets": 1,
+   "think": 0,
+   "think_why": [],
+   "seen": [
+    {
+     "Potassium": {
+      "10-31 02:15": "3.2 (L)"
+     }
+    }
+   ],
+   "log": [
+    "tab: Labs",
+    "table rows 'Potassium': 1 gesture(s) (end_up)",
+    "grid:"
+   ],
+   "screens": 2,
+   "seed": 2,
+   "app_interactions": 1,
+   "app_screens": 2,
+   "app_correct": "1"
+  },
+  {
+   "question_id": "S1-Q2",
+   "view": "glance",
+   "case_id": "S1",
+   "clicks": 0,
+   "app_interactions_expected": 0,
+   "tabs": [],
+   "scroll_page": 0,
+   "scroll_grid": 0,
+   "scroll_list": 0,
+   "hovers": 0,
+   "targets": 1,
+   "think": 0,
+   "think_why": [],
+   "seen": [
+    {
+     "heart_rate": "Heart rate81 bpm ↓12 h 71–98"
+    }
+   ],
+   "log": [
+    "see:"
+   ],
+   "screens": 1,
+   "seed": 6,
+   "app_interactions": 0,
+   "app_screens": 1,
+   "app_correct": "1"
+  },
+  {
+   "question_id": "S1-Q2",
+   "view": "tabbed",
+   "case_id": "S1",
+   "clicks": 1,
+   "app_interactions_expected": 1,
+   "tabs": [
+    "Vitals"
+   ],
+   "scroll_page": 0,
+   "scroll_grid": 2,
+   "scroll_list": 0,
+   "hovers": 0,
+   "targets": 1,
+   "think": 1,
+   "think_why": [
+    "compare the first and last heart rates of the 12 h window"
+   ],
+   "seen": [
+    {
+     "Heart Rate": {
+      "10-31 07:00": "97"
+     }
+    }
+   ],
+   "log": [
+    "tab: Vitals",
+    "table columns ['10-31 07:00', '10-31 19:00']: 2 gesture(s) (right)",
+    "grid:",
+    "think:"
+   ],
+   "screens": 2,
+   "seed": 2,
+   "app_interactions": 1,
+   "app_screens": 2,
+   "app_correct": "1"
+  },
+  {
+   "question_id": "S1-Q3",
+   "view": "glance",
+   "case_id": "S1",
+   "clicks": 0,
+   "app_interactions_expected": 0,
+   "tabs": [],
+   "scroll_page": 0,
+   "scroll_grid": 0,
+   "scroll_list": 0,
+   "hovers": 0,
+   "targets": 1,
+   "think": 0,
+   "think_why": [],
+   "seen": [
+    {
+     "OxyCODONE": "21:37 OxyCODONE (Immediate Release) ×4"
+    }
+   ],
+   "log": [
+    "see: OxyCODONE"
+   ],
+   "screens": 1,
+   "seed": 6,
+   "app_interactions": 0,
+   "app_screens": 1,
+   "app_correct": "1"
+  },
+  {
+   "question_id": "S1-Q3",
+   "view": "tabbed",
+   "case_id": "S1",
+   "clicks": 1,
+   "app_interactions_expected": 1,
+   "tabs": [
+    "Meds"
+   ],
+   "scroll_page": 0,
+   "scroll_grid": 0,
+   "scroll_list": 0,
+   "hovers": 0,
+   "targets": 1,
+   "think": 0,
+   "think_why": [],
+   "seen": [
+    {
+     "oxycodone + 21:37": "10-31 21:37 | Next 12 h | OxyCODONE (Immediate Release) | 5 mg | Administered | completed"
+    }
+   ],
+   "log": [
+    "tab: Meds",
+    "grid:"
+   ],
+   "screens": 2,
+   "seed": 2,
+   "app_interactions": 1,
+   "app_screens": 2,
+   "app_correct": "1"
+  },
+  {
+   "question_id": "S1-Q4",
+   "view": "glance",
+   "case_id": "S1",
+   "clicks": 0,
+   "app_interactions_expected": 0,
+   "tabs": [],
+   "scroll_page": 0,
+   "scroll_grid": 0,
+   "scroll_list": 0,
+   "hovers": 0,
+   "targets": 2,
+   "think": 0,
+   "think_why": [],
+   "seen": [
+    {
+     "Heparin Sodium": "Heparin Sodium 1401 units/hour"
+    },
+    {
+     "hemoglobin": "Hemoglobin9.3 g/dLL 17h ago"
+    }
+   ],
+   "log": [
+    "see: Heparin Sodium",
+    "see:"
+   ],
+   "screens": 1,
+   "seed": 6,
+   "app_interactions": 0,
+   "app_screens": 1,
+   "app_correct": ""
+  },
+  {
+   "question_id": "S1-Q4",
+   "view": "tabbed",
+   "case_id": "S1",
+   "clicks": 2,
+   "app_interactions_expected": 2,
+   "tabs": [
+    "Labs"
+   ],
+   "scroll_page": 0,
+   "scroll_grid": 1,
+   "scroll_list": 0,
+   "hovers": 0,
+   "targets": 2,
+   "think": 0,
+   "think_why": [],
+   "seen": [
+    {
+     "Heparin + True": "10-31 14:10 | 10-31 19:41 | Heparin Sodium | 01-Drips | 1401 units/hour | 7726 units | true"
+    },
+    {
+     "Hemoglobin": {
+      "10-31 02:15": "9.3 (L)"
+     }
+    }
+   ],
+   "log": [
+    "section: Infusions",
+    "grid:",
+    "tab: Labs",
+    "table rows 'Hemoglobin': 1 gesture(s) (down)",
+    "grid:"
+   ],
+   "screens": 2,
+   "seed": 2,
+   "app_interactions": 2,
+   "app_screens": 2,
+   "app_correct": ""
+  },
+  {
+   "question_id": "S2-Q1",
+   "view": "glance",
+   "case_id": "S2",
+   "clicks": 0,
+   "app_interactions_expected": 0,
+   "tabs": [],
+   "scroll_page": 0,
+   "scroll_grid": 0,
+   "scroll_list": 0,
+   "hovers": 0,
+   "targets": 1,
+   "think": 0,
+   "think_why": [],
+   "seen": [
+    {
+     "gcs_total": "GCS total15 12 h 14–15"
+    }
+   ],
+   "log": [
+    "see:"
+   ],
+   "screens": 1,
+   "seed": 2,
+   "app_interactions": 0,
+   "app_screens": 1,
+   "app_correct": "1"
+  },
+  {
+   "question_id": "S2-Q1",
+   "view": "tabbed",
+   "case_id": "S2",
+   "clicks": 2,
+   "app_interactions_expected": 1,
+   "tabs": [],
+   "scroll_page": 0,
+   "scroll_grid": 0,
+   "scroll_list": 1,
+   "hovers": 0,
+   "targets": 1,
+   "think": 0,
+   "think_why": [],
+   "seen": [
+    {
+     "GCS Total": {
+      "01-16 06:00": "15"
+     }
+    }
+   ],
+   "log": [
+    "group: Neurological",
+    "grid:"
+   ],
+   "screens": 1,
+   "seed": 6,
+   "app_interactions": 1,
+   "app_screens": 1,
+   "app_correct": "1"
+  },
+  {
+   "question_id": "S2-Q2",
+   "view": "glance",
+   "case_id": "S2",
+   "clicks": 0,
+   "app_interactions_expected": 0,
+   "tabs": [],
+   "scroll_page": 0,
+   "scroll_grid": 0,
+   "scroll_list": 0,
+   "hovers": 0,
+   "targets": 1,
+   "think": 0,
+   "think_why": [],
+   "seen": [
+    {
+     "map": "MAP87 mmHg ↑12 h 63–97"
+    }
+   ],
+   "log": [
+    "see:"
+   ],
+   "screens": 1,
+   "seed": 2,
+   "app_interactions": 0,
+   "app_screens": 1,
+   "app_correct": "1"
+  },
+  {
+   "question_id": "S2-Q2",
+   "view": "tabbed",
+   "case_id": "S2",
+   "clicks": 2,
+   "app_interactions_expected": 1,
+   "tabs": [],
+   "scroll_page": 0,
+   "scroll_grid": 1,
+   "scroll_list": 2,
+   "hovers": 0,
+   "targets": 2,
+   "think": 2,
+   "think_why": [
+    "find the lowest of about 13 values in each of two MAP rows, then compare"
+   ],
+   "seen": [
+    {
+     "ART BP Mean": {
+      "01-15 19:00": "87"
+     }
+    },
+    {
+     "Arterial Blood Pressure mean": {
+      "01-15 19:00": "78"
+     }
+    }
+   ],
+   "log": [
+    "group: Routine Vital Signs",
+    "table columns ['01-15 19:00', '01-16 07:00']: 1 gesture(s) (right)",
+    "grid:",
+    "think:"
+   ],
+   "screens": 1,
+   "seed": 6,
+   "app_interactions": 1,
+   "app_screens": 1,
+   "app_correct": "1"
+  },
+  {
+   "question_id": "S2-Q3",
+   "view": "glance",
+   "case_id": "S2",
+   "clicks": 0,
+   "app_interactions_expected": 0,
+   "tabs": [],
+   "scroll_page": 0,
+   "scroll_grid": 0,
+   "scroll_list": 0,
+   "hovers": 0,
+   "targets": 1,
+   "think": 0,
+   "think_why": [],
+   "seen": [
+    {
+     "NiMODipine": "10:50 NiMODipine ×4"
+    }
+   ],
+   "log": [
+    "see: NiMODipine"
+   ],
+   "screens": 1,
+   "seed": 2,
+   "app_interactions": 0,
+   "app_screens": 1,
+   "app_correct": "1"
+  },
+  {
+   "question_id": "S2-Q3",
+   "view": "tabbed",
+   "case_id": "S2",
+   "clicks": 1,
+   "app_interactions_expected": 1,
+   "tabs": [
+    "Meds"
+   ],
+   "scroll_page": 0,
+   "scroll_grid": 0,
+   "scroll_list": 0,
+   "hovers": 0,
+   "targets": 1,
+   "think": 0,
+   "think_why": [],
+   "seen": [
+    {
+     "nimodipine + 10:50": "01-16 10:50 | Next 12 h | NiMODipine | 30 mg | Administered | completed"
+    }
+   ],
+   "log": [
+    "tab: Meds",
+    "grid:"
+   ],
+   "screens": 2,
+   "seed": 6,
+   "app_interactions": 1,
+   "app_screens": 2,
+   "app_correct": "1"
+  },
+  {
+   "question_id": "S2-Q4",
+   "view": "glance",
+   "case_id": "S2",
+   "clicks": 0,
+   "app_interactions_expected": 0,
+   "tabs": [],
+   "scroll_page": 0,
+   "scroll_grid": 0,
+   "scroll_list": 0,
+   "hovers": 0,
+   "targets": 2,
+   "think": 0,
+   "think_why": [],
+   "seen": [
+    {
+     "gcs_total": "GCS total15 12 h 14–15"
+    },
+    {
+     "map": "MAP87 mmHg ↑12 h 63–97"
+    }
+   ],
+   "log": [
+    "see:",
+    "see:"
+   ],
+   "screens": 1,
+   "seed": 2,
+   "app_interactions": 0,
+   "app_screens": 1,
+   "app_correct": ""
+  },
+  {
+   "question_id": "S2-Q4",
+   "view": "tabbed",
+   "case_id": "S2",
+   "clicks": 3,
+   "app_interactions_expected": 2,
+   "tabs": [
+    "Vitals"
+   ],
+   "scroll_page": 0,
+   "scroll_grid": 2,
+   "scroll_list": 1,
+   "hovers": 0,
+   "targets": 3,
+   "think": 2,
+   "think_why": [
+    "find the lowest MAP in two rows, then compare"
+   ],
+   "seen": [
+    {
+     "ART BP Mean": {
+      "01-15 19:00": "87"
+     }
+    },
+    {
+     "Arterial Blood Pressure mean": {
+      "01-15 19:00": "78"
+     }
+    },
+    {
+     "GCS Total": {
+      "01-16 06:00": "15"
+     }
+    }
+   ],
+   "log": [
+    "tab: Vitals",
+    "table columns ['01-15 19:00', '01-16 07:00']: 1 gesture(s) (right)",
+    "grid:",
+    "think:",
+    "group: Neurological",
+    "table columns ['01-16 06:00']: 1 gesture(s) (left)",
+    "grid:"
+   ],
+   "screens": 2,
+   "seed": 6,
+   "app_interactions": 2,
+   "app_screens": 2,
+   "app_correct": ""
+  }
+ ]
+}

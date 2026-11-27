@@ -1,6 +1,6 @@
 # NurseGlance: a nurse-centered, FHIR-based ICU handoff dashboard
 
-**Technical report, version 0.3 · Ibrahim Baabdallah · November 2026**
+**Technical report, version 1.1 · Ibrahim Baabdallah · November 2026**
 
 Research prototype, not for clinical use. No nurse has taken part in a study. Every click
 and time result below is a design-level estimate from scripted runs, not a measurement of
@@ -10,15 +10,17 @@ Clinical Database Demo on FHIR v2.1.0 (Bennett et al. 2025; PhysioNet, ODbL).
 ## Summary
 
 ICU nurses review the chart at every handoff, and in a typical EHR the values they need
-are spread across tabs. NurseGlance shows one patient on one screen, by organ system, with
-a list of running infusions and upcoming doses at the top. It reads standard HL7 FHIR R4
+are spread across tabs. NurseGlance shows one patient on one screen, by organ system, under
+a header with the patient's safety facts and a task strip of running infusions, care done
+and doses due. It reads standard HL7 FHIR R4
 resources and shows the same patients in a conventional tabbed view, which serves as the
 control. On four ICU patients from the open MIMIC-IV demo, 57 of 58 nurse handoff data
 elements (98%) could be mapped to FHIR. A scripted replay of the shortest path to each of
 16 handoff answers, scored with the keystroke-level model, estimated 3.2 s per question
-for NurseGlance and 12.9 s for the tabbed view, with no clicks, scrolls or hovers in
+for NurseGlance and 12.4 s for the tabbed view, with no clicks, scrolls or hovers in
 NurseGlance on a 1440×900 screen. A heuristic evaluation found 10 major problems across both
-views and the study screen; all were fixed and re-rated. A crossover study with ICU and
+views and the study screen; all were fixed and re-rated. A later review against the AWARE
+trial's design gave the control a summary screen and both views the same safety facts. A crossover study with ICU and
 virtual nurses is proposed to test whether these estimates hold for real users.
 
 ## 1. Introduction
@@ -64,26 +66,34 @@ above and nursing handoff practice. A Python pipeline reads the FHIR NDJSON file
 Condition and others) and writes one JSON file per case: values in a 24-hour window (72
 hours for labs), running infusions and devices at handoff, and medications given in the 12
 hours after handoff. Fifty displayed items were mapped to LOINC and each code checked
-against the NLM. The project has 64 automated tests, including one that compares the FHIR
-data with the CSV tables.
+against the NLM. When a patient came through the emergency department, the ED chief
+complaint (LOINC 8661-1) serves as the reason for admission and the ED's medication
+reconciliation as the home medication list. The project has 81 automated tests, including
+one that compares the FHIR data with the CSV tables.
 
-**Two views.** The control has four tabs (Vitals, Labs, Meds, Notes/Problems), a
-flowsheet with groups, and newest-first tables, like a current EHR. NurseGlance (Figure 1)
-shows a header with diagnoses, a medication strip, 8 organ-system panels with the latest
-value, a trend arrow, the 12-hour range and an H or L badge when abnormal, and a 12-hour timeline of
-doses and infusions. Empty elements are folded into one line per panel, and "none", "not
+**Two views.** The control has a patient banner (code status, allergies, isolation) and
+six tabs, like a current EHR: Summary (latest vital signs, running infusions and 12-hour
+intake and output), Flowsheet with sections, Labs, MAR (doses, infusions, active orders,
+home medications), Problems, and Lines & drains, with newest-first tables. It opens on
+Summary. NurseGlance (Figure 1) shows a header with the reason for admission and chips for
+code status, allergies, isolation and VTE prophylaxis; a task strip with the infusions
+running now and their titration, care done in the last 12 hours and doses and turns due in
+the next 12; 8 organ-system panels with the latest value, a trend arrow, the 12-hour range
+and an H or L badge when abnormal; and a 12-hour timeline of doses and infusions. Both views
+show the same safety facts, so the comparison is about layout. Empty elements are folded into one line per panel, and "none", "not
 charted" and "not in FHIR demo" are kept apart so a true negative is not mistaken for a
 data gap. Eight rule-based flags, each showing its rule and evidence, are available in
 explore mode and turned off in study mode.
 
-![Figure 1. NurseGlance for case C1 on a 1440×900 screen.](figures/after_glance_C1_screen.png)
+![Figure 1. NurseGlance for case C1 on a 1440×900 screen, version 1.1.](figures/v1.1_glance_C1_screen.png)
 
 **Study mode and questions.** Sixteen draft questions, 4 per case, cover a lookup, a trend,
 a timing and a synthesis question ("What is your top safety concern for the next 12 hours,
 and what data support it?", scored 0 to 2 with a rubric). Study mode runs a full crossover
 session: a seeded plan sets the view order and which cases go with each view, every click
-and screen is logged with a timestamp, the SUS and raw NASA-TLX follow each view, and the
-session exports CSV files.
+and screen is logged with a timestamp, 2 untimed practice questions on a fifth stay come
+before each view, the SUS and raw NASA-TLX follow each view, a break separates the views,
+and the session exports CSV files. A Pause button stops the clock for interruptions.
 
 **Task analysis.** For each question and view, the shortest path to the data the answer
 key names was written as steps (fewest clicks, then fewest scrolls). A Playwright script
@@ -95,7 +105,9 @@ mental preparation 1.35 s, pointing 1.10 s, button press 0.20 s.
 **Heuristic evaluation.** The author rated both views and the study screen against
 Nielsen's 10 heuristics, with severity from 0 (not a problem) to 4 (catastrophe) (Nielsen
 1994; Zhang et al. 2003). Problems rated 3 or 4 were fixed in version 0.3, and the task
-analysis was run again on both versions.
+analysis was run again on both versions. Version 1.1 followed a review of every screen
+against the AWARE trial's design and outcomes, the virtual-nursing fatigue study and the
+nurse survey above, and the task analysis was run a third time.
 
 ## 3. Results
 
@@ -123,21 +135,24 @@ replayed paths matched the app's own log. Table 1 and Figure 2 show the results.
 
 | Version | View | Clicks | Scrolls | Hovers | Estimated seconds |
 | --- | --- | --- | --- | --- | --- |
-| 0.2 (before) | Tabbed EHR | 1.5 | 4.1 | 0.0 | 18.1 |
-| 0.2 (before) | NurseGlance | 0.0 | 0.9 | 0.4 | 5.9 |
-| 0.3 (after) | Tabbed EHR | 1.5 | 1.9 | 0.0 | 12.9 |
-| 0.3 (after) | NurseGlance | 0.0 | 0.0 | 0.0 | 3.2 |
+| 0.2 | Tabbed EHR | 1.5 | 4.1 | 0.0 | 18.1 |
+| 0.2 | NurseGlance | 0.0 | 0.9 | 0.4 | 5.9 |
+| 0.3 | Tabbed EHR | 1.5 | 1.9 | 0.0 | 12.9 |
+| 0.3 | NurseGlance | 0.0 | 0.0 | 0.0 | 3.2 |
+| 1.1 | Tabbed EHR | 1.4 | 1.9 | 0.0 | 12.4 |
+| 1.1 | NurseGlance | 0.0 | 0.0 | 0.0 | 3.2 |
 
 *Table 1. Mean per question over 16 questions, 1440×900 screen.*
 
-In version 0.3, NurseGlance was estimated faster on 15 of 16 questions and tied on one
-lookup. The gap was largest for trend questions (2.7 s against 18.2 s), where the tabbed
-view needs scrolling across flowsheet columns, and for synthesis questions (4.7 s against
-20.6 s), which need values from several tabs. Complex cases took longer than standard
-cases in the tabbed view (13.8 s against 11.9 s) but barely changed NurseGlance (3.4 s
-against 3.0 s). On a 1920×1080 screen the estimates were 12.2 s and 3.2 s.
+In version 1.1, NurseGlance was estimated faster on 14 of 16 questions. It tied on two
+current-value lookups (C1's norepinephrine rate and C2's heart rate), which the control's
+Summary tab answers without a click. The gap was largest for trend questions (2.7 s
+against 18.2 s), where the tabbed view needs scrolling across flowsheet columns or down lab
+and infusion rows, and for synthesis questions (4.7 s against 19.3 s), which need values from several
+tabs. Complex cases took slightly longer than standard cases in the tabbed view (12.5 s
+against 12.2 s) and in NurseGlance (3.4 s against 3.0 s). On a 1920×1080 screen the estimates were 11.8 s and 3.2 s.
 
-![Figure 2. Estimated seconds per question, version 0.3, by case and view.](figures/task_time.png)
+![Figure 2. Estimated seconds per question, version 1.1, by case and view.](figures/task_time.png)
 
 **Research question 3: heuristic evaluation.** Version 0.2 had 10 problems rated 3
 (major). Five were in NurseGlance: the page did not fit one laptop screen; the 12-hour
@@ -150,7 +165,10 @@ Two were in the study screen, including a question box that cost scrolling in wh
 view needed more. After the redesign, none is rated above 2. Six problems remain at 2,
 among them provenance shown only on hover, mixed trend windows, and timeline clutter from
 carrier fluids, which needs a clinical decision. The tabbed view's estimate also fell, from
-18.1 s to 12.9 s, because of its fidelity fixes.
+18.1 s to 12.9 s, because of its fidelity fixes. The version 1.1 review made the control
+open on a Summary tab, as current EHRs do, which brought it to 12.4 s; showed the ED chief
+complaint as the reason for admission where one exists, so S2's header now names the
+subarachnoid hemorrhage; and moved code status, allergies and isolation into both views.
 
 ## 4. Proposed user study
 
@@ -176,7 +194,7 @@ study needs IRB approval and a faculty principal investigator, and has not start
   views or may cost more clicks.
 - Four patients from one center's demo data, without nursing notes or a medication
   schedule, cannot represent ICU care in general. On a 1366×768 screen, NurseGlance needs
-  scrolling for every case.
+  scrolling for the complex cases.
 
 ## 6. Equity and responsible use
 

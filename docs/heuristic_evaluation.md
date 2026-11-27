@@ -86,14 +86,35 @@ diagnosis priority), N8 (provenance by hover only), N9 (mixed trend windows), N1
 
 From `docs/task_analysis.md` (16 questions, 1440×900, design-level estimates):
 
-| | Version 0.2 | Version 0.3 |
-| --- | --- | --- |
-| NurseGlance: scrolls + hovers per question | 0.9 + 0.4 | 0 + 0 |
-| NurseGlance: estimated seconds per question | 5.9 | 3.2 |
-| Tabbed view: clicks, scrolls per question | 1.5, 4.1 | 1.5, 1.9 |
-| Tabbed view: estimated seconds per question | 18.1 | 12.9 |
+| | Version 0.2 | Version 0.3 | Version 1.1 |
+| --- | --- | --- | --- |
+| NurseGlance: scrolls + hovers per question | 0.9 + 0.4 | 0 + 0 | 0 + 0 |
+| NurseGlance: estimated seconds per question | 5.9 | 3.2 | 3.2 |
+| Tabbed view: clicks, scrolls per question | 1.5, 4.1 | 1.5, 1.9 | 1.4, 1.9 |
+| Tabbed view: estimated seconds per question | 18.1 | 12.9 | 12.4 |
 
-The tabbed view got faster because its fidelity fixes removed most sideways scrolling.
+The tabbed view got faster in version 0.3 because its fidelity fixes removed most
+sideways scrolling, and again in version 1.1 because its Summary tab answers two
+current-value lookups without a click.
+
+## Version 1.1: screen review
+
+After version 0.3, every screen was reviewed against the AWARE trial's design and
+outcomes (Khairat et al. 2025, JMIR Res Protoc), the virtual-nursing fatigue study
+(Khairat et al. 2025, JMIR Hum Factors) and the ICU nurse survey (Lindroth et al. 2022).
+The review was not re-rated with the heuristics above; it changed the following.
+
+| Area | Change in version 1.1 | Finding it touches |
+| --- | --- | --- |
+| Control fidelity | Opens on a Summary tab (latest vital signs, infusions running at handoff, 12-hour intake and output), as a current EHR's summary screen does. Adds a patient banner (code status, allergies, isolation), a Problems tab and a Lines & drains tab; the Meds tab is now the MAR, with a Home meds section. | New. Keeps the control from being a straw man. |
+| NurseGlance header | Shows the ED chief complaint as the reason for admission when the patient came through the emergency department (S1, S2), with its FHIR source; otherwise the first 3 disease diagnoses and a note that FHIR carries no priority. Chips for code status, allergies, isolation and VTE prophylaxis. | N5: fixed for S1 and S2, still 2 for C1 and C2, which have no ED encounter. |
+| NurseGlance task strip | Three rows: infusions running now with their titration since 12 hours ago, care done in the last 12 hours (turns, oral, bath and eye care, labs drawn, doses given), and doses and the next turn due in the next 12 hours, in time order. | N3, N4 (kept at 1). The turn interval (every 2 hours) is a placeholder rule and says so. |
+| NurseGlance layout | The 8 panels sit in four columns, two systems each, so no column leaves a gap. | N1 (still 2): standard cases fit a 1440×900 screen; for C1 (INR, Foley, Braden, skin) and C2 (IV antibiotics, Braden, skin) the last rows fall below the edge. None of the 16 answers is there. |
+| Same facts in both views | Code status, allergies and isolation appear in both views, so the comparison tests layout, not data. | New. |
+| Study screen | 2 untimed practice questions on a fifth stay before each view, a break screen between views, a Pause button that hides the view and stops the clock, a progress bar, and debrief notes in the log. While a session runs, the other pages are hidden. | New. Matches the protocol's procedure. |
+| Virtual nurse | Shows what is already in the chart, marks checklist items the chart already covers, offers "take a break" or "snooze" at 10 minutes, and writes a review note for the bedside nurse. | New. |
+
+Problems N8, N9, N10, T6 and T7 are unchanged.
 
 ## Screenshots
 
@@ -106,8 +127,20 @@ The tabbed view got faster because its fidelity fixes removed most sideways scro
 The red dashed line marks the bottom of a 1440×900 screen. Study mode in version 0.3:
 `figures/after_study_S2-Q2_glance.png` and `figures/after_study_S2-Q2_tabbed.png`.
 
+Version 1.1 on a 1440×900 screen: NurseGlance for C1 (`figures/v1.1_glance_C1_screen.png`)
+and the control's Summary tab for C1 (`figures/v1.1_tabbed_C1_summary.png`).
+
 ## References
 
+- Khairat S, Morelli J, Boynton MH, Bice T, Gold JA, Carson SS. Investigating information
+  visualization to combat information overload in electronic health records: protocol for
+  a randomized controlled trial. JMIR Res Protoc. 2025;14:e74247.
+- Khairat S, Morelli J, Liao WT, Aucoin J, Edson BS, Jones CB. Association of virtual
+  nurses' workflow and cognitive fatigue during inpatient encounters: cross-sectional
+  study. JMIR Hum Factors. 2025;12:e67111.
+- Lindroth HL, Pinevich Y, Barwise AK, et al. Information and data visualization needs
+  among direct care nurses in the intensive care unit. Appl Clin Inform.
+  2022;13(5):1207-1213.
 - Nielsen J, Molich R. Heuristic evaluation of user interfaces. In: Proceedings of the
   SIGCHI Conference on Human Factors in Computing Systems (CHI '90). ACM; 1990:249-256.
 - Nielsen J. Enhancing the explanatory power of usability heuristics. In: Proceedings of

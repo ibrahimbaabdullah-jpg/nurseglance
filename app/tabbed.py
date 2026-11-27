@@ -161,8 +161,17 @@ def infusions_table(inf: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
+def _fit(n_rows: int) -> int:
+    """Table height that shows every row with no inner scroll bar (35 px rows plus the header)."""
+    return 35 * (n_rows + 1) + 3
+
+
 def summary_tab(case: dict) -> None:
-    """Latest vital signs, running infusions and 12-hour intake and output, as an EHR summary shows them."""
+    """Latest vital signs, running infusions and 12-hour intake and output, as an EHR summary shows them.
+
+    Every table shows all its rows: a summary that hides a running drip behind a scroll bar
+    would be a weaker control than a real EHR's summary screen.
+    """
     ref = data.handoff(case)
     rows = []
     for eid in ("heart_rate", "heart_rhythm", "sbp", "map", "resp_rate", "spo2", "o2_device", "temperature"):
@@ -176,7 +185,7 @@ def summary_tab(case: dict) -> None:
     left, right = st.columns([1, 1], gap="large")
     with left:
         st.markdown("**Latest vital signs**")
-        st.dataframe(pd.DataFrame(rows), width="stretch", hide_index=True)
+        st.dataframe(pd.DataFrame(rows), width="stretch", hide_index=True, height=_fit(len(rows)))
     with right:
         from app.timeline import timeline_rows
         _, running = timeline_rows(case)
@@ -185,7 +194,7 @@ def summary_tab(case: dict) -> None:
             st.dataframe(pd.DataFrame([{"Infusion": r["label"],
                                         "Rate": f"{data.fmt_num(r.get('rate'))} {r.get('rate_unit') or ''}".strip(),
                                         "Since": data.fmt_time(r.get("start"), ref)} for r in running]),
-                         width="stretch", hide_index=True)
+                         width="stretch", hide_index=True, height=_fit(len(running)))
         else:
             st.caption("None running.")
         st.markdown("**Intake and output, last 12 h**")
