@@ -5,7 +5,7 @@ type: software
 authors:
   - family-names: Baabdallah
     given-names: Ibrahim
-version: 1.1.0
+version: 1.2.0
 license: MIT
 repository-code: "https://github.com/ibrahimbaabdullah-jpg/nurseglance"
 url: "https://ibrahimbaabdullah-jpg-nurseglance-streamlit-app-uvwgbm.streamlit.app/"

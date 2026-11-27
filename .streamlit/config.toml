@@ -5,3 +5,36 @@ gatherUsageStats = false
 [client]
 # Hide developer options such as "Deploy" in the toolbar, as viewers see the app.
 toolbarMode = "viewer"
+
+[server]
+# Serves static/ (the two fonts), so no request leaves for a font service during a study session.
+enableStaticServing = true
+
+# Version 1.2 look: light theme with the colors and fonts of the design mockup.
+[theme]
+base = "light"
+primaryColor = "#1C5D86"
+backgroundColor = "#F3F5F6"
+secondaryBackgroundColor = "#EBEFF2"
+textColor = "#16212B"
+borderColor = "#DCE2E6"
+linkColor = "#1C5D86"
+font = "Inter, system-ui, sans-serif"
+headingFont = "'Space Grotesk', Inter, sans-serif"
+headingFontWeights = [700, 600, 600, 600, 600, 600]
+headingFontSizes = ["1.625rem", "1.25rem", "1.0625rem", "1rem", "0.9375rem", "0.875rem"]
+baseRadius = "9px"
+showWidgetBorder = true
+dataframeHeaderBackgroundColor = "#F3F5F6"
+
+[[theme.fontFaces]]
+family = "Inter"
+url = "app/static/fonts/Inter-latin.woff2"
+weight = "400 700"
+style = "normal"
+
+[[theme.fontFaces]]
+family = "Space Grotesk"
+url = "app/static/fonts/SpaceGrotesk-latin.woff2"
+weight = "500 700"
+style = "normal"

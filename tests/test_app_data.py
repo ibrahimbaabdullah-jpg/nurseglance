@@ -47,27 +47,30 @@ def test_every_case_renders_a_timeline(case_id):
 
 @needs_cases
 @pytest.mark.parametrize("case_id", CASES)
-def test_every_organ_panel_builds(case_id):
+def test_every_organ_card_builds(case_id):
     from app import glance
     case = data.load_case(case_id)
     for system in data.ORGAN_SYSTEMS:
-        assert f'<div class="ng-h">{system}' in glance.panel_html(case, system, data.handoff(case)).replace("&amp;", "&")
+        card = glance.card_html(case, system, data.handoff(case))
+        assert f'data-system="{system}"' in card.replace("&amp;", "&")
+        assert f">{glance.TITLES.get(system, system)}</h3>" in card.replace("&amp;", "&")
 
 
 @needs_cases
 @pytest.mark.parametrize("case_id", CASES)
 def test_every_element_is_shown_once(case_id):
-    """Each element appears as a row, by name in a panel's none / not charted line, or as a header chip."""
+    """Each element appears as a row, by name in a card's none / not charted line, or in the patient card."""
     import re
 
     from app import glance
     case = data.load_case(case_id)
     ref = data.handoff(case)
-    page = "".join(glance.panel_html(case, s, ref) for s in data.ORGAN_SYSTEMS)
+    page = "".join(glance.card_html(case, s, ref) for s in data.ORGAN_SYSTEMS)
     rows = set(re.findall(r'data-eid="([a-z0-9_]+)"', page))
     empty = " ".join(re.findall(r'<div class="ng-empty">(.*?)</div>', page)).replace("&amp;", "&")
-    header = glance.header_html(case, ref)
-    chips = {"code_status": "Code status", "allergies": "Allergies", "precautions": "Isolation"}
+    header = glance.patient_card(case, ref)
+    chips = {"code_status": "Code status", "allergies": "Allergies", "precautions": "Isolation",
+             "fall_risk": "Fall risk", "restraints": "Restraints"}
     for eid, el in case["elements"].items():
         if eid in glance.HEADER_EIDS:
             assert chips[eid] in header, eid
@@ -77,12 +80,14 @@ def test_every_element_is_shown_once(case_id):
 
 
 @needs_cases
-def test_meds_strip_lists_running_drips_and_next_doses():
+def test_tasks_list_shows_done_and_due():
     from app import glance
     case = data.load_case("S1")
-    strip = glance.meds_strip(case, data.handoff(case))
-    assert "Heparin Sodium" in strip and "21:37" in strip and "OxyCODONE" in strip
-    assert "Done, last 12 h" in strip and "Turned" in strip and "placeholder rule" in strip
+    ref = data.handoff(case)
+    tasks = glance.tasks_html(case, ref)
+    assert "21:37" in tasks and "OxyCODONE" in tasks
+    assert "Done · last 12 h" in tasks and "Turned" in tasks and "placeholder rule" in tasks
+    assert "Heparin Sodium" in glance.infusions_row(case, ref)
 
 
 def test_diagnoses_sorted_puts_external_causes_last():

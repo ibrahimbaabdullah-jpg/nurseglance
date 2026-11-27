@@ -102,6 +102,18 @@ Scroll counts include page scrolls; the path column lists clicks and table scrol
 | C2-Q3 | Timing | 1, 0, 1 | Doses section | 0, 0 | 5.3 / 2.7 |
 | C2-Q4 | Synthesis | 1, 5, 2 | Labs tab; find Hemoglobin row (3 scrolls); find Platelet Count row (2 scrolls) | 0, 0 | 20.3 / 4.0 |
 
+## Version 1.2: the same paths in the new look
+
+Version 1.2 gives both views the look of a design mockup (white top bar and cards,
+Inter and Space Grotesk; see `docs/design/`). NurseGlance keeps one patient on one
+1440×900 screen: vasoactive and sedation drips sit in their organ-system cards, the other
+infusions in the patient card, and due doses in a Tasks & meds column. The replay was run
+again on version 1.2 at 1440×900 (`docs/sensitivity/task_replay_1440x900_v1.2.json`):
+all 32 paths gave the same clicks, scrolls, hovers, targets and screens as version 1.1,
+the app's event log matched every path, and every NurseGlance card of every case now
+ends above the bottom of a 1440×900 screen. The numbers above therefore hold for
+version 1.2.
+
 ## What changed in version 1.1
 
 Version 1.1 follows a review of the screens against the AWARE trial's design and the

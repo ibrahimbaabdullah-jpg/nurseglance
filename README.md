@@ -10,10 +10,10 @@
 A nurse-centered ICU handoff dashboard built on HL7 FHIR data from the open
 MIMIC-IV Clinical Database Demo on FHIR. It shows the same four ICU patients in two
 ways: a conventional tabbed EHR-style view (the control) and the NurseGlance view,
-one screen with a patient header and safety facts, a task strip (infusions running
-now, care done in the last 12 hours, doses and turns due next), eight organ-system
-panels with sparklines and abnormal highlighting, and a 12-hour medication and
-infusion timeline.
+one laptop screen with a patient card (reason for admission, code status, allergies,
+safety chips, other infusions), seven organ-system cards with sparklines and
+abnormal highlighting, and a Tasks & meds column (care done in the last 12 hours,
+doses and turns due next).
 
 ## Why this project: alignment with Dr. Saif Khairat's work
 
@@ -60,7 +60,8 @@ whether the same approach helps bedside and virtual nurses.
 | `analysis/sample_size.py`, `analysis/allocation.py` | The protocol's sample size (34 nurses for d<sub>z</sub> = 0.5, recruit 40) and its balanced allocation list |
 | `tools/build_pdf.py` | Renders a Markdown file in `docs/` to PDF (pandoc and Chromium) |
 | `tools/record_demo.py`, `docs/video/` | Records the captioned demo video from the running app, with subtitles (`.srt`) and a narration script |
-| `streamlit_app.py`, `app/` | The dashboard, with four pages in a top bar: `glance.py` (NurseGlance view), `tabbed.py` (control view), `timeline.py` (12 h timeline), `data.py` (shared loading) |
+| `streamlit_app.py`, `app/` | The dashboard: `ui.py` (shared look: top bar, colors, fonts), `glance.py` (NurseGlance view), `tabbed.py` (control view), `timeline.py` (dose and infusion rows), `data.py` (shared loading) |
+| `static/fonts/`, `docs/design/` | Inter and Space Grotesk (SIL Open Font License, served by the app so no font service is called) and screenshots of the design mockup that version 1.2 follows |
 | `app/study.py`, `app/events.py`, `app/scoring.py` | Study mode: seeded randomization, practice questions, break, pause, event log, SUS and raw NASA-TLX scoring, debrief notes, CSV export |
 | `app/research.py` | Researcher page: the allocation list from a private master seed, a check of uploaded session files, and the planned analysis |
 | `app/flags.py` | 8 transparent rule-based flags, each showing its rule, values, times and FHIR IDs (off in study mode) |
@@ -131,7 +132,7 @@ the admission; if you'd rather use a survivor, the next complex candidate
 - **Times.** FHIR timestamps carry UTC offsets. They are converted back to
   Boston wall-clock time, which matches the CSV tables exactly.
 - **Windows.** 24 h before handoff for vitals, I&O and drips; 72 h for labs;
-  12 h after handoff for the medication timeline. Change them in `etl/config.py`.
+  12 h after handoff for doses due. Change them in `etl/config.py`.
 - **Code systems.** The FHIR demo changed its URL base between releases. The
   scripts match identifiers by suffix and item IDs by code, so both work.
 - **RASS goal.** MIMIC stores the goal without its minus sign (goal -3 is stored
@@ -151,7 +152,7 @@ the admission; if you'd rather use a survivor, the next complex candidate
   reporting under research question 1.
 - **eMAR coverage.** The demo has eMAR records for only some admissions (6 of the
   top 10 standard candidates have none). Cases were checked for eMAR data so every
-  case has a 12-hour medication timeline.
+  case has doses given and due.
 - **Code status** is rarely charted in the demo. When a hospital diagnosis code for
   DNR status (Z66 or V49.86) exists, both views show DNR and say it came from a
   diagnosis code.
@@ -186,14 +187,28 @@ the admission; if you'd rather use a survivor, the next complex candidate
   pause that stops the clock and debrief notes; virtual-nurse mode gained a review
   note for the bedside nurse; a Researcher page was added. The turn interval in the
   task strip (every 2 hours) is a placeholder rule.
+- **Version 1.2 look.** The screens follow a design mockup (`docs/design/`): a white
+  top bar with the view switch (Glance or Tabbed EHR), the mode switch (Handoff or
+  Virtual nurse) and a "Start study mode" button; white cards on a light grey page;
+  Inter and Space Grotesk. NurseGlance keeps one patient on one 1440×900 screen: a
+  patient card with safety chips and the infusions no card lists, seven organ-system
+  cards (vasoactive and sedation drips sit in their cards with any 12 h titration),
+  and a Tasks & meds column that replaces the task strip and the 12 h timeline below
+  the fold. Flags are cards that name their rule and source. The tabbed control uses
+  the same patient card and an EHR tab strip. Virtual-nurse mode has a session band
+  under the top bar (break reminder snoozes 5 minutes). Content rules kept: no
+  "stable" or "improving" labels, allergies shown as not in the FHIR demo, only data
+  that exists, and no buttons that do nothing.
 - **Thresholds** marked "placeholder" in `docs/data_elements.csv` are yours to set
   and cite. Labs with no threshold use each result's own reference range.
 
 ## Modes
 
-The four pages sit in a bar at the top.
+The top bar holds the view switch (Glance view or Tabbed EHR view), the mode switch
+(Handoff or Virtual nurse) and "Start study mode". The Researcher page is linked at
+the foot of each page.
 
-- **Handoff view:** pick a patient and a view; switch on the rule-based flags if you like.
+- **Handoff:** pick a patient and a view; switch on the rule-based flags if you like.
 - **Study session:** anonymous run ID and seed, then 2 practice questions and the
   first view with 2 cases (4 questions each), SUS and NASA-TLX, a 2-minute break, 2
   practice questions and the second view with the other 2 cases, SUS and NASA-TLX,
@@ -208,7 +223,7 @@ The four pages sit in a bar at the top.
 - **Virtual nurse:** an admission or discharge review built from the same case data:
   what is already in the chart, a grouped checklist that marks which items the chart
   already shows, a session timer, a break prompt after 10 minutes (take a break or
-  snooze 2 minutes), and a review note to hand to the bedside nurse.
+  remind again in 5 minutes), and a review note to hand to the bedside nurse.
 - **Researcher:** the allocation list built from a private master seed, a check of
   uploaded session files (complete, answered, surveys, pauses) with medians by view,
   and the planned analysis.
@@ -220,7 +235,7 @@ debrief_note, session_abandoned, session_end`.
 
 ## How it was tested
 
-- 81 tests (`pytest`), including SUS and NASA-TLX scoring against hand-calculated
+- 85 tests (`pytest`), including SUS and NASA-TLX scoring against hand-calculated
   examples, randomization balance over 200 seeds, the answer keys checked against the
   case files, the flags' evidence, and the protocol's sample size and allocation balance. Also: unit and synthetic ETL tests (windows, calculated MAP, GCS,
   urine output per kg, drip titration, line days, lab flags), the FHIR-vs-CSV check,
@@ -228,7 +243,7 @@ debrief_note, session_abandoned, session_end`.
 - The full pipeline ran on the official FHIR demo v2.1.0 and CSV demo v2.2 from
   PhysioNet (checksums verified). The FHIR-vs-CSV test passes for all 4 cases.
 - Every page, case, view, tab, MAR section and Flowsheet section was clicked through in
-  a headless browser at 1440×900 (154 screens, version 1.1) with no errors and no
+  a headless browser at 1440×900 (161 screens, version 1.2) with no errors and no
   sideways page scroll, and the study session's pause, resume and abandon were checked.
 - Two full scripted study sessions (16 questions, 4 practice questions, 2 surveys and a
   break each) exported clean CSVs; one is the Researcher page's example run
@@ -252,8 +267,9 @@ out of git; the small processed case files are committed so the app can deploy.
 | v0.2 | `f582b5a` | Study mode, rule-based flags, virtual-nurse mode |
 | v0.3 | `fd2791a` | Heuristic evaluation and redesign of both views, task analysis |
 | v1.0 | `501957c` | Evaluation protocol, technical report, brief and demo video |
-| v1.1 | latest `main` | Screen review: Summary tab and patient banner in the control, header chips and task strip in NurseGlance, practice questions, break and pause in study mode, Researcher page |
+| v1.1 | `378bab0` | Screen review: Summary tab and patient banner in the control, header chips and task strip in NurseGlance, practice questions, break and pause in study mode, Researcher page |
+| v1.2 | latest `main` | The design mockup's look: top bar, patient card, organ-system cards, Tasks & meds column, flag cards, virtual-nurse session band; self-hosted fonts |
 
 To cite NurseGlance, use `CITATION.cff` (GitHub's "Cite this repository" button reads
-it). A Zenodo DOI will be added here once v1.1 is archived. Code is MIT-licensed; the
+it). A Zenodo DOI will be added here once a release is archived. Code is MIT-licensed; the
 MIMIC-derived data files are ODbL (see `DATA_LICENSE.md`).

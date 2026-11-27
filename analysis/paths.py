@@ -8,15 +8,18 @@ resets its controls: MAR reopens on Doses and Flowsheet on Routine Vital Signs
 (Streamlit drops the state of widgets that are not on screen). Every question
 starts with the page and its tables scrolled to the top-left.
 
-These paths are for version 1.1 (six-tab control with a Summary tab; NurseGlance
-with the task strip under the patient header). The paths for the version 0.3
-numbers are in git history (commit "Release prep: CITATION.cff ...").
+These paths are for version 1.2 (six-tab control with a Summary tab; NurseGlance in
+the design mockup's layout: vasoactive and sedation drips listed in their organ-system
+cards, the other infusions in the patient card, and due doses in the Tasks & meds
+column). The version 1.1 paths (task strip under the patient header) and the version
+0.3 paths are in git history.
 
 Step types
   tabbed:  tab, group (Flowsheet section selectbox), section (MAR radio),
            grid (make rows visible and cover columns in a table on screen;
            frame = which table on the tab, 0 = the first)
-  glance:  see (a row, list item or task-strip item is in view and shows the value),
+  glance:  see (a row, a list item, an "Other infusions" item or a Tasks & meds item is in
+           view and shows the value),
            hover (read a row's tooltip or a timeline dose's hover label)
   both:    think (extra mental steps beyond reading a value, with the reason)
 
@@ -62,7 +65,7 @@ def see_li(eid, text, expect):
 
 
 def see_strip(text, expect):
-    """An item of the task strip under the header (running now, due in the next 12 h)."""
+    """An item of the patient card's "Other infusions" row or of the Tasks & meds column (due doses)."""
     return {"do": "see", "kind": "strip", "text": text, "expect": expect}
 
 
@@ -122,7 +125,7 @@ PATHS: dict[str, dict[str, list[dict]]] = {
     # ---------------------------------------------------------------- C1
     "C1-Q1": {   # Summary lists the running infusions: no click
         "tabbed": [grid([["Norepinephrine", "0.2"]], table="summary", frame=INFUSIONS)],
-        "glance": [see_strip("Norepinephrine", "0.2")],
+        "glance": [see_li("vasoactive_drips", "Norepinephrine", "0.2")],
     },
     "C1-Q2": {
         "tabbed": [tab("Labs"), grid(["Lactate"], ["window"], "labs"),
@@ -137,8 +140,8 @@ PATHS: dict[str, dict[str, list[dict]]] = {
         "tabbed": [tab("Summary"), grid([["Mean arterial pressure", "64"]], table="summary", frame=VITALS),
                    grid([["Norepinephrine", "0.2"], ["Vasopressin", "units"]], table="summary", frame=INFUSIONS),
                    tab("Labs"), grid(["Lactate"], ["last"], "labs")],
-        "glance": [see_row("map", "64"), see_strip("Norepinephrine", "0.2"),
-                   see_strip("Vasopressin", "units"), see_row("lactate", "4.3")],
+        "glance": [see_row("map", "64"), see_li("vasoactive_drips", "Norepinephrine", "0.2"),
+                   see_li("vasoactive_drips", "Vasopressin", "units"), see_row("lactate", "4.3")],
     },
     # ---------------------------------------------------------------- C2
     "C2-Q1": {   # Summary lists the latest vital signs: no click
@@ -149,7 +152,7 @@ PATHS: dict[str, dict[str, list[dict]]] = {
         "tabbed": [tab("MAR"), section("Infusions"),
                    grid([["Norepinephrine", "03-26 06:30"], ["Norepinephrine", RUNNING]], table="infusions"),
                    think(1, "compare the rate in effect 12 h before handoff with the current rate")],
-        "glance": [see_strip("Norepinephrine", "from 0.2")],
+        "glance": [see_li("vasoactive_drips", "Norepinephrine", "from 0.2")],
     },
     "C2-Q3": {
         "tabbed": [section("Doses"), grid([["cefepime", "01:41"]], table="mar")],
