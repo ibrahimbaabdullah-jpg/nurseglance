@@ -1,0 +1,3 @@
+[browser]
+# No usage statistics leave the app; it may run study sessions.
+gatherUsageStats = false

@@ -1,0 +1,17 @@
+{
+  "_note": "Practice questions for study mode (protocol section 4). They use the practice stay P1 (data/processed/practice), are shown before each view's timed questions, and are logged but never scored or analyzed. Questions 1 and 2 go with the first view, 3 and 4 with the second.",
+  "questions": [
+    {"id": "P1-Q1", "case_id": "P1", "kind": "lookup", "answer_type": "number", "unit": "mg/dL",
+     "text": "Practice: what is the most recent point-of-care glucose?", "answer": 121, "tolerance": 1,
+     "elements": ["glucose_poc"], "source": "Fingerstick glucose at 18:30"},
+    {"id": "P1-Q2", "case_id": "P1", "kind": "timing", "answer_type": "time",
+     "text": "Practice: at what time is the next lorazepam dose given after handoff?", "answer": "22:15",
+     "tolerance_min": 30, "elements": ["med_administrations"], "source": "eMAR: lorazepam 0.5 mg at 22:15"},
+    {"id": "P1-Q3", "case_id": "P1", "kind": "lookup", "answer_type": "number", "unit": "bpm",
+     "text": "Practice: what is the current heart rate?", "answer": 103, "tolerance": 2,
+     "elements": ["heart_rate"], "source": "Heart rate at 19:00"},
+    {"id": "P1-Q4", "case_id": "P1", "kind": "timing", "answer_type": "time",
+     "text": "Practice: at what time is the next guaifenesin dose given after handoff?", "answer": "21:48",
+     "tolerance_min": 30, "elements": ["med_administrations"], "source": "eMAR: guaifenesin 10 mL at 21:48"}
+  ]
+}

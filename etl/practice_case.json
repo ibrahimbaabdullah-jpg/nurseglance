@@ -1,0 +1,19 @@
+{
+  "_note": "The practice stay for study mode (protocol section 4). Not scored and not part of the coverage counts, so it is built into its own folder: python etl/build_cases.py --cases etl/practice_case.json --out-dir data/processed/practice",
+  "lookback_hours": 24,
+  "trend_hours": 12,
+  "lab_lookback_hours": 72,
+  "lookahead_hours": 12,
+  "cases": [
+    {
+      "case_id": "P1",
+      "complexity": "practice",
+      "subject_id": 10023239,
+      "hadm_id": 21759936,
+      "stay_id": 35024147,
+      "careunit": "Medical/Surgical Intensive Care Unit (MICU/SICU)",
+      "handoff_time": "2140-10-04T19:00:00",
+      "why": "practice stay: rank 17 standard candidate from etl/select_cases.py, a different patient from the 4 study cases, with eMAR doses after handoff for the timing practice questions"
+    }
+  ]
+}

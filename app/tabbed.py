@@ -1,6 +1,10 @@
 """Control view: a deliberately conventional, tabbed EHR-style layout of the same case data.
 
-Tabs are Vitals (flowsheet), Labs, Meds and Notes/Problems, like a typical EHR.
+Tabs are Summary, Flowsheet, Labs, MAR, Problems and Lines & drains, like a typical
+ICU EHR (version 1.1; before that: Vitals, Labs, Meds, Notes/Problems). The demo
+has no nursing notes, so there is no Notes tab. A patient banner carries code
+status, allergies and isolation, as an EHR's header does, so both views show the
+same safety facts and the comparison stays about layout.
 The tab bar is a radio control rather than st.tabs so that each tab change is a
 real interaction the study mode can count as a click and a screen visit.
 
@@ -21,7 +25,8 @@ import streamlit as st
 from app import data
 from app.events import on_change_logger
 
-TABS = ["Vitals", "Labs", "Meds", "Notes/Problems"]
+TABS = ["Summary", "Flowsheet", "Labs", "MAR", "Problems", "Lines & drains"]
+MAR_SECTIONS = ["Doses", "Infusions", "Active orders", "Home meds"]
 
 
 # Calculated values (built by the ETL) go where an EHR flowsheet would show them.
@@ -68,7 +73,7 @@ def vitals_tab(case: dict, df: pd.DataFrame) -> None:
     groups = sorted(chart["category"].dropna().unique())
     default = groups.index("Routine Vital Signs") if "Routine Vital Signs" in groups else 0
     key = f"fs_{case['case_id']}"
-    group = st.selectbox("Flowsheet group", groups, index=default, key=key,
+    group = st.selectbox("Flowsheet section", groups, index=default, key=key,
                          on_change=on_change_logger(key, "toggle", "Flowsheet: "))
     st.caption("Flowsheet, last 24 h before handoff. Newest column first.")
     st.dataframe(_pivot(chart[chart["category"] == group]), width="stretch", height=420)
@@ -89,9 +94,19 @@ def labs_tab(case: dict, df: pd.DataFrame) -> None:
 def meds_tab(case: dict) -> None:
     ref = data.handoff(case)
     key = f"meds_{case['case_id']}"
-    section = st.radio("Section", ["MAR", "Infusions", "Active orders"], horizontal=True, key=key,
-                       on_change=on_change_logger(key, "toggle", "Meds: "))
-    if section == "MAR":
+    section = st.radio("Section", MAR_SECTIONS, horizontal=True, key=key,
+                       on_change=on_change_logger(key, "toggle", "MAR: "))
+    if section == "Home meds":
+        meds = data.home_meds(case)
+        if not meds:
+            st.info("No home medication list for this admission. The demo has one only when the patient came "
+                    "through the emergency department and the ED reconciled medications.")
+            return
+        table = pd.DataFrame([{"Medication": m["name"], "Recorded": data.fmt_time(m["t"], ref),
+                               "Source": "ED medication reconciliation"} for m in meds])
+        st.dataframe(table, width="stretch", hide_index=True)
+        return
+    if section == "Doses":
         mar = pd.DataFrame(case["med_administrations"])
         if mar.empty:
             st.info("No eMAR entries in this window.")
@@ -146,40 +161,110 @@ def infusions_table(inf: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
-def notes_tab(case: dict) -> None:
+def summary_tab(case: dict) -> None:
+    """Latest vital signs, running infusions and 12-hour intake and output, as an EHR summary shows them."""
     ref = data.handoff(case)
-    st.markdown("**Problem list** (hospital billing diagnoses)")
+    rows = []
+    for eid in ("heart_rate", "heart_rhythm", "sbp", "map", "resp_rate", "spo2", "o2_device", "temperature"):
+        el = case["elements"].get(eid) or {}
+        latest = el.get("latest") or {}
+        if not el.get("has_data"):
+            continue
+        value = latest.get("value_text") or data.fmt_num(latest.get("value"))
+        rows.append({"Vital sign": el["label"], "Latest": f"{value} {latest.get('unit') or ''}".strip(),
+                     "Time": data.fmt_time(latest.get("t"), ref)})
+    left, right = st.columns([1, 1], gap="large")
+    with left:
+        st.markdown("**Latest vital signs**")
+        st.dataframe(pd.DataFrame(rows), width="stretch", hide_index=True)
+    with right:
+        from app.timeline import timeline_rows
+        _, running = timeline_rows(case)
+        st.markdown("**Infusions running at handoff**")
+        if running:
+            st.dataframe(pd.DataFrame([{"Infusion": r["label"],
+                                        "Rate": f"{data.fmt_num(r.get('rate'))} {r.get('rate_unit') or ''}".strip(),
+                                        "Since": data.fmt_time(r.get("start"), ref)} for r in running]),
+                         width="stretch", hide_index=True)
+        else:
+            st.caption("None running.")
+        st.markdown("**Intake and output, last 12 h**")
+        io = []
+        for eid, name in (("intake_12h", "Intake"), ("output_12h", "Output"), ("net_12h", "Net")):
+            latest = (case["elements"].get(eid) or {}).get("latest") or {}
+            io.append({"": name, "mL": data.fmt_num(latest.get("value")) if latest else "–"})
+        st.dataframe(pd.DataFrame(io), width="content", hide_index=True)
+
+
+def problems_tab(case: dict) -> None:
+    reason = data.reason_for_admission(case)
+    if reason["kind"] == "chief_complaint":
+        st.markdown(f"**Reason for admission:** {reason['text']}  \n"
+                    f"<span style='opacity:.75;font-size:.85rem'>{reason['source']}</span>", unsafe_allow_html=True)
+    else:
+        st.markdown("**Reason for admission:** no ED chief complaint for this admission.")
+    st.markdown("**Problem list** (hospital billing diagnoses; FHIR carries no billing priority)")
     dx = pd.DataFrame(case["diagnoses"])
     if not dx.empty:
         dx = dx[["code", "display", "version"]]
         dx.columns = ["Code", "Diagnosis", "Version"]
-        st.dataframe(dx, width="stretch", hide_index=True, height=240)
-    st.markdown("**Lines, devices and procedures**")
+        st.dataframe(dx, width="stretch", hide_index=True, height=380)
+
+
+def lines_tab(case: dict) -> None:
+    ref = data.handoff(case)
     dev = pd.DataFrame(case["devices"])
-    if not dev.empty:
-        dev = dev[pd.to_datetime(dev["start"]) <= ref]
-        for col in ("start", "end"):
-            dev[col] = pd.to_datetime(dev[col]).dt.strftime("%m-%d %H:%M")
-        dev = dev[["label", "category", "site", "start", "end", "in_place_at_handoff"]]
-        dev.columns = ["Device", "Category", "Site", "Start", "End", "In place at handoff"]
-        st.dataframe(dev, width="stretch", hide_index=True)
-    st.caption("The MIMIC-IV demo has no free-text nursing notes, so this tab shows problems and devices.")
+    if dev.empty:
+        st.info("No lines, drains or devices charted for this stay.")
+        return
+    dev = dev[pd.to_datetime(dev["start"]) <= ref].copy()
+    dev["Removed"] = [data.fmt_time(e, ref) if e and data.ts(e) <= ref else ""
+                      for e in dev["end"]]   # nothing after handoff: the nurse could not know it yet
+    dev["Inserted"] = pd.to_datetime(dev["start"]).dt.strftime("%m-%d %H:%M")
+    for col in ("site", "day"):
+        dev[col] = dev[col].map(lambda v: "" if v is None or (isinstance(v, float) and pd.isna(v)) else v)
+    lines = dev[dev["is_line_or_device"] == True].copy()   # noqa: E712
+    lines["order"] = lines["in_place_at_handoff"].map(lambda v: 0 if v else 1)
+    lines = lines.sort_values(["order", "start"], ascending=[True, False], kind="stable")
+    table = lines[["label", "category", "site", "day", "Inserted", "Removed", "in_place_at_handoff"]]
+    table.columns = ["Line, drain or device", "Category", "Site", "Day", "Inserted", "Removed", "In place at handoff"]
+    st.caption("In place at handoff first.")
+    st.dataframe(table, width="stretch", hide_index=True)
+    procs = dev[dev["is_line_or_device"] != True].sort_values("start", ascending=False)   # noqa: E712
+    if not procs.empty:
+        st.markdown("**Procedures and imaging in this stay, before handoff**")
+        procs = procs[["label", "category", "Inserted"]]
+        procs.columns = ["Procedure", "Category", "Time"]
+        st.dataframe(procs, width="stretch", hide_index=True)
+
+
+def banner(case: dict) -> None:
+    """The patient banner an EHR keeps above every tab."""
+    ref = data.handoff(case)
+    code, allergy, iso = data.code_status(case), data.allergies(case), data.isolation(case)
+    code_text = code["text"] + (" (diagnosis code)" if code["text"] == "DNR" and
+                                code["source"].startswith("Not charted") else "")
+    st.markdown(f"**{data.patient_line(case)}** · {data.weight_text(case)} · handoff {ref:%Y-%m-%d %H:%M}  \n"
+                f"<span style='font-size:.86rem'>Code status: <b>{code_text}</b> · Allergies: <b>{allergy['text']}"
+                f"</b> · Isolation: <b>{iso['text']}</b></span>", unsafe_allow_html=True)
 
 
 def render(case: dict) -> None:
-    ref = data.handoff(case)
-    st.markdown(f"**{data.patient_line(case)}** · {data.weight_text(case)} · "
-                f"handoff {ref:%Y-%m-%d %H:%M}")
+    banner(case)
     key = f"tab_{case['case_id']}"
     tab = st.radio("Chart tab", TABS, horizontal=True, key=key, label_visibility="collapsed",
                    on_change=on_change_logger(key, "tab_switch", ""))
     st.divider()
     df = _obs_frame(case)
-    if tab == "Vitals":
+    if tab == "Summary":
+        summary_tab(case)
+    elif tab == "Flowsheet":
         vitals_tab(case, df)
     elif tab == "Labs":
         labs_tab(case, df)
-    elif tab == "Meds":
+    elif tab == "MAR":
         meds_tab(case)
+    elif tab == "Problems":
+        problems_tab(case)
     else:
-        notes_tab(case)
+        lines_tab(case)

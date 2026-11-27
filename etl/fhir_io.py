@@ -34,6 +34,9 @@ RESOURCE_FILES = {
     "medication_mix": "MedicationMix",
     "procedure_icu": "ProcedureICU",
     "condition": "Condition",
+    "encounter_ed": "EncounterED",
+    "observation_ed": "ObservationED",
+    "med_statement_ed": "MedicationStatementED",
 }
 
 

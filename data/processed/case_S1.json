@@ -15,7 +15,10 @@
    "MimicMedicationAdministration.ndjson.gz",
    "MimicObservationOutputevents.ndjson.gz",
    "MimicObservationLabevents.ndjson.gz",
-   "MimicObservationChartevents.ndjson.gz"
+   "MimicObservationChartevents.ndjson.gz",
+   "MimicEncounterED.ndjson.gz",
+   "MimicObservationED.ndjson.gz",
+   "MimicMedicationStatementED.ndjson.gz"
   ]
  },
  "time_note": "Times are MIMIC's date-shifted local (Boston) wall-clock times.",
@@ -16560,6 +16563,37 @@
    "fhir_id": "7bec444f-8ebc-5eb0-b6ea-245af6c5f9e8"
   }
  ],
+ "admission": {
+  "ed_encounter_fhir_id": "abbd935e-e46a-56cd-a609-3d9be0c646ba",
+  "chief_complaint": {
+   "text": "L Leg DVT",
+   "t": "2144-10-28T18:29:00",
+   "loinc": "8661-1",
+   "fhir_id": "a1f53272-ff28-5bac-a2f5-a52b66b2b0f5"
+  },
+  "home_meds": [
+   {
+    "name": "Apri",
+    "t": "2144-10-28T19:35:00",
+    "fhir_id": "fe9ab725-c815-580e-8b1b-15c82b40f3fe"
+   },
+   {
+    "name": "Cymbalta",
+    "t": "2144-10-28T19:34:00",
+    "fhir_id": "32942b49-e51d-5151-b2e6-76f1202e5972"
+   },
+   {
+    "name": "Klonopin",
+    "t": "2144-10-28T19:34:00",
+    "fhir_id": "76b9edb7-9d65-53f9-961b-151994b25dab"
+   },
+   {
+    "name": "levothyroxine",
+    "t": "2144-10-28T19:34:00",
+    "fhir_id": "955ea272-2d64-5f12-9aa8-c4d0e51990dc"
+   }
+  ]
+ },
  "counts": {
   "observations": 1208,
   "infusions": 29,

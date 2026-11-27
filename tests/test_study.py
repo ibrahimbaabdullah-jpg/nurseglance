@@ -71,6 +71,43 @@ def test_steps_have_16_questions_and_2_surveys():
     assert steps[-1]["kind"] == "done"
 
 
+def test_steps_follow_the_protocol_order():
+    """Per view: 2 practice questions, 8 timed, the surveys; one break between the views."""
+    plan = study.make_plan(7)
+    steps = study.make_steps(plan, study.load_questions(), study.load_practice())
+    kinds = [s["kind"] for s in steps]
+    block = ["practice"] * 2 + ["question"] * 8 + ["survey"]
+    assert kinds == block + ["break"] + block + ["done"]
+    practice = [s for s in steps if s["kind"] == "practice"]
+    assert [s["view"] for s in practice] == [plan[0]["view"]] * 2 + [plan[1]["view"]] * 2
+    assert len({s["question"]["id"] for s in practice}) == 4   # no practice question repeats
+    assert all(s["case_id"] not in ("S1", "S2", "C1", "C2") for s in practice)
+
+
+def test_practice_keys_match_the_practice_case():
+    case = data.load_case("P1")
+    for q in study.load_practice():
+        if q["kind"] == "lookup":
+            assert scoring.check_answer(q, case["elements"][q["elements"][0]]["latest"]["value"]), q["id"]
+        else:
+            drug = q["text"].split("next ")[1].split(" dose")[0].lower()
+            times = sorted(m["t"] for m in case["med_administrations"]
+                           if m["relative"] == "after_handoff" and drug in m["name"].lower())
+            assert times and times[0][11:16] == q["answer"], q["id"]
+
+
+def test_paused_time_is_left_out():
+    steps = study.make_steps(study.make_plan(1), study.load_questions())
+    q = steps[0]["question"]
+    base = {"run_id": "R1", "seed": 1, "view": steps[0]["view"], "case_id": q["case_id"], "question_id": q["id"],
+            "target": "", "value": ""}
+    rows = [dict(base, ts_utc="2026-11-28T10:00:00.000Z", event="question_shown"),
+            dict(base, ts_utc="2026-11-28T10:00:04.000Z", event="pause"),
+            dict(base, ts_utc="2026-11-28T10:01:04.000Z", event="resume"),
+            dict(base, ts_utc="2026-11-28T10:01:10.000Z", event="answer_submit", target="submit")]
+    assert study.summarize(rows, steps)[0]["time_s"] == 10.0   # 70 s on the clock, 60 s paused
+
+
 # ---- answer keys still match the case files
 @pytest.mark.parametrize("q", [q for qs in study.load_questions().values() for q in qs
                                if q["kind"] == "lookup"], ids=lambda q: q["id"])

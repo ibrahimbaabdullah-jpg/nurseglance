@@ -105,7 +105,18 @@ def evaluate(case: dict) -> list[Flag]:
     return flags
 
 
+FLAG_CSS = """<style>
+.ng-flags {display:flex; flex-wrap:wrap; gap:8px; margin:0 0 10px;}
+.ng-flag {border:1px solid #e0a3a3; border-left:4px solid #c62828; border-radius:8px; padding:5px 10px;
+  background:rgba(198,40,40,.05); font-size:.8rem; line-height:1.3; max-width:22rem;}
+.ng-flag b {font-size:.86rem;}
+.ng-flag .ng-rule {color:var(--ng-muted, #5f6b7a);}
+.ng-flag ul {margin:2px 0 0 14px; padding:0;}
+</style>"""
+
+
 def render(case: dict) -> None:
+    """One card per rule that fired, above the view: what fired, the rule, and the values behind it."""
     import html
 
     import streamlit as st
@@ -113,15 +124,18 @@ def render(case: dict) -> None:
     flags = evaluate(case)
     ref = data.handoff(case)
     if not flags:
-        st.success("No rule-based flags for this patient at handoff.")
+        st.caption("Rule-based flags: none of the 8 rules fired for this patient at handoff.")
         return
-    with st.expander(f"⚑ {len(flags)} rule-based flags: " + " · ".join(f.title for f in flags), expanded=False):
-        for f in flags:
-            rows = "".join(
-                f"<li>{html.escape(str(e['what']))}: <b>{html.escape(str(e['value']))} "
-                f"{html.escape(e.get('unit') or '')}</b> at {data.fmt_time(e.get('t'), ref)}"
-                f"{' · FHIR ' + html.escape(e['fhir_id']) if e.get('fhir_id') else ''}</li>"
-                for e in f.evidence)
-            st.markdown(f"**{html.escape(f.title)}**  \nRule: {html.escape(f.rule)} "
-                        f"<span style='opacity:.7'>({html.escape(f.cite)})</span><ul>{rows}</ul>",
-                        unsafe_allow_html=True)
+    cards = []
+    for f in flags:
+        rows = "".join(
+            f"<li>{html.escape(str(e['what']))}: <b>{html.escape(str(e['value']))} "
+            f"{html.escape(e.get('unit') or '')}</b> at {data.fmt_time(e.get('t'), ref)}</li>"
+            for e in f.evidence[:4])
+        more = f"<li>and {len(f.evidence) - 4} more</li>" if len(f.evidence) > 4 else ""
+        tip = " · ".join(f"FHIR {e['fhir_id']}" for e in f.evidence if e.get("fhir_id"))
+        cards.append(f'<div class="ng-flag" role="note" title="{html.escape(tip)}"><b>⚑ {html.escape(f.title)}</b>'
+                     f'<div class="ng-rule">Rule: {html.escape(f.rule)} ({html.escape(f.cite)})</div>'
+                     f'<ul>{rows}{more}</ul></div>')
+    st.markdown(FLAG_CSS + f'<div class="ng-flags" aria-label="Rule-based flags">{"".join(cards)}</div>',
+                unsafe_allow_html=True)
