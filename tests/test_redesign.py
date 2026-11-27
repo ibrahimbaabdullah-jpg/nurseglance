@@ -77,8 +77,9 @@ def test_vn_note_lists_what_is_left_to_confirm():
     assert f"Reviewed {sum(checked)} of {len(items)} items in 06:12." in note
     assert "Still to confirm with the bedside nurse:" in note
     still = note.split("Still to confirm")[1]
-    assert items[1][1] in still and items[0][1] + " (not in the chart)" in still   # unchecked items
-    assert items[2][1] not in still                                                 # a checked item
+    assert f"- {items[1][1]} (not in the chart)" in still      # unchecked, and the chart has no code status
+    assert f"- {items[3][1]} (not in the chart)" in still      # unchecked: isolation
+    assert items[0][1] not in still and items[2][1] not in still   # checked items
 
 
 def test_vn_checklist_marks_what_the_chart_cannot_cover():
