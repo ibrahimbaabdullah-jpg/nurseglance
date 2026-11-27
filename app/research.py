@@ -25,11 +25,13 @@ def _allocation(n: int, master_seed: int) -> list[dict]:
 
 def allocation_tab() -> None:
     st.markdown("Each seed fixes three things: which view comes first, and which standard and which complex patient "
-                "go with NurseGlance. That makes 8 sequences, and every block of 8 nurses gets all 8, so 40 nurses "
-                "see each sequence 5 times. Someone outside the session team makes the list and keeps the master "
-                "seed private until enrollment ends.")
+                "go with NurseGlance. That makes 8 sequences, and every block of 8 nurses gets all 8. Every "
+                "half-block of 4 is balanced too (2 start with each view; each patient goes with NurseGlance "
+                "twice), so the protocol keeps one list per role: 20 bedside and 20 virtual nurses, each list "
+                "with its own master seed. Someone outside the session team makes the lists and keeps the master "
+                "seeds private until enrollment ends.")
     c1, c2 = st.columns(2)
-    n = c1.number_input("Nurses", min_value=8, max_value=200, value=40, step=8)
+    n = c1.number_input("Nurses in this list (one role)", min_value=4, max_value=200, value=20, step=4)
     master = c2.text_input("Master seed (not stored or shown again)", type="password",
                            help="Any whole number. The same master seed always gives the same list.")
     if not master:
@@ -141,9 +143,12 @@ def analysis_tab() -> None:
 **Primary model** (R, `lme4` and `lmerTest`, Kenward-Roger degrees of freedom):
 
 ```r
-lmer(log(time_s) ~ view + period + case_type + question_type + view:case_type
+lmer(log(time_s) ~ view + period + case_type + case_position + question_type + view:case_type
      + (1 + view | nurse) + (1 | question), data = questions)
 ```
+
+`case_position` (1 or 2 within the view, in the summary CSV) separates the order of the standard and complex case,
+which affected ICU providers' information-processing burden in Khairat et al. (JAMIA 2026).
 
 The result is the ratio of geometric mean times, NurseGlance to tabbed, with a 95% confidence interval.
 

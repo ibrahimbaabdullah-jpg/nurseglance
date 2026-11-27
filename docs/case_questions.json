@@ -1,5 +1,5 @@
 {
-  "_note": "DRAFT handoff questions and answer keys, written from the case files on 2026-11-26. Review each one in your own clinical words before any session. Q1-Q3 are scored automatically (exact, or within the tolerance); Q4 is scored 0-2 afterwards with the rubric.",
+  "_note": "DRAFT handoff questions and answer keys, written from the case files on 2026-11-26. Review each one in your own clinical words before any session. Q1-Q3 are scored automatically (exact, or within the tolerance); Q4 is scored 0-2 afterwards with the rubric. Rising/Falling/Stable trend questions compare the latest value with the value 12 h before handoff. All three of those keys are Falling, so before the study the clinical reviewers should change one to a Rising or Stable key; otherwise a participant who always answers Falling scores 3 of 3.",
   "questions": [
     {"id": "S1-Q1", "case_id": "S1", "kind": "lookup", "answer_type": "number", "unit": "mEq/L",
      "text": "What is the most recent potassium?",
@@ -7,7 +7,7 @@
      "source": "Lab 50971 at 02:15 (below the 3.3 reference limit)"},
     {"id": "S1-Q2", "case_id": "S1", "kind": "trend", "answer_type": "choice",
      "options": ["Rising", "Falling", "Stable"],
-     "text": "How has the heart rate changed over the last 12 hours?",
+     "text": "Compared with 12 hours before handoff, is the heart rate now rising, falling or stable?",
      "answer": "Falling", "elements": ["heart_rate"],
      "source": "Range 71-98 bpm over 12 h; latest 81 bpm, down 16 from 12 h earlier"},
     {"id": "S1-Q3", "case_id": "S1", "kind": "timing", "answer_type": "time",
@@ -48,7 +48,7 @@
      "source": "Rate since 17:19 (0.4 twelve hours earlier)"},
     {"id": "C1-Q2", "case_id": "C1", "kind": "trend", "answer_type": "choice",
      "options": ["Rising", "Falling", "Stable"],
-     "text": "How has lactate changed over the last 12 hours?",
+     "text": "Compared with 12 hours before handoff, is the lactate now rising, falling or stable?",
      "answer": "Falling", "elements": ["lactate"],
      "source": "Lactate 9.0 at its highest, 4.3 at 17:41"},
     {"id": "C1-Q3", "case_id": "C1", "kind": "timing", "answer_type": "time",
@@ -69,7 +69,7 @@
      "source": "Heart rate at 19:00; rhythm AF"},
     {"id": "C2-Q2", "case_id": "C2", "kind": "trend", "answer_type": "choice",
      "options": ["Rising", "Falling", "Stable"],
-     "text": "How has the norepinephrine rate changed over the last 12 hours?",
+     "text": "Compared with 12 hours before handoff, is the norepinephrine rate now rising, falling or stable?",
      "answer": "Falling", "elements": ["vasoactive_drips"],
      "source": "0.20 mcg/kg/min twelve hours earlier, 0.04 since 18:24"},
     {"id": "C2-Q3", "case_id": "C2", "kind": "timing", "answer_type": "time",

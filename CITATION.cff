@@ -1,11 +1,11 @@
-cff-version: 1.2.0
+cff-version: 1.2.1
 message: "If you use this software, please cite it as below. It is a research prototype, not for clinical use."
 title: "NurseGlance: a nurse-centered, FHIR-based ICU handoff dashboard"
 type: software
 authors:
   - family-names: Baabdallah
     given-names: Ibrahim
-version: 1.2.0
+version: 1.2.1
 license: MIT
 repository-code: "https://github.com/ibrahimbaabdullah-jpg/nurseglance"
 url: "https://ibrahimbaabdullah-jpg-nurseglance-streamlit-app-uvwgbm.streamlit.app/"
@@ -39,7 +39,7 @@ references:
       - family-names: Szul
         given-names: Piotr
       - family-names: Grimes
-        given-names: Jason
+        given-names: John
       - family-names: Johnson
         given-names: Alistair
     publisher:
@@ -67,3 +67,24 @@ references:
     end: 725
     year: 2023
     doi: "10.1093/jamia/ocad002"
+  - type: data
+    title: "MIMIC-IV Clinical Database Demo"
+    version: "2.2"
+    authors:
+      - family-names: Johnson
+        given-names: Alistair
+      - family-names: Bulgarelli
+        given-names: Lucas
+      - family-names: Pollard
+        given-names: Tom
+      - family-names: Horng
+        given-names: Steven
+      - family-names: Celi
+        given-names: Leo Anthony
+      - family-names: Mark
+        given-names: Roger
+    publisher:
+      name: PhysioNet
+    doi: "10.13026/dp1f-ex47"
+    license: ODbL-1.0
+    year: 2023

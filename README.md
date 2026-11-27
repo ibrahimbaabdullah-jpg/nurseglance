@@ -4,7 +4,7 @@
 
 **Live demo:** https://ibrahimbaabdullah-jpg-nurseglance-streamlit-app-uvwgbm.streamlit.app/
 
-**Demo video (3 min, captioned):** [docs/video/nurseglance_demo.mp4](docs/video/nurseglance_demo.mp4) ·
+**Demo video (3 min, captioned, version 1.0):** [docs/video/nurseglance_demo.mp4](docs/video/nurseglance_demo.mp4) ·
 **Technical report:** [PDF](docs/pdf/technical_report.pdf) · **One-page brief:** [PDF](docs/pdf/brief.pdf)
 
 A nurse-centered ICU handoff dashboard built on HL7 FHIR data from the open
@@ -19,11 +19,12 @@ doses and turns due next).
 
 | NurseGlance element | Work it builds on |
 | --- | --- |
-| Tabbed "control" view vs. NurseGlance "intervention" view; 2 standard + 2 complex ICU cases | AWARE crossover RCT of an ICU visualization dashboard vs. the EHR (Khairat et al., JMIR Res Protoc 2025; NCT05937646; NIH NLM R01LM013606) |
+| Tabbed "control" view vs. NurseGlance "intervention" view; 2 standard + 2 complex ICU cases; seven organ-system cards | AWARE crossover RCT of a body-system visualization dashboard (seven systems) vs. each site's EHR (Khairat et al., JMIR Res Protoc 2025; NCT05937646; NIH NLM R01LM013606) |
+| Each case's position within a view is logged and modeled | Reviewing a complex case first raised ICU providers' eye fixations and task times (Khairat et al., J Am Med Inform Assoc 2026) |
 | Study mode: logged interface actions, time per question, answer accuracy, SUS and NASA-TLX | The AWARE protocol's primary and secondary outcomes |
-| Nurse-specific data elements, organ-system layout, task timeline | ICU nurses' stated visualization needs (Lindroth et al., Appl Clin Inform 2022) and Khairat's nurse EHR usability and well-being work (JMIR Nursing 2020) |
-| Virtual-nurse mode with a 10-minute break prompt and a completeness counter | Virtual-nurse cognitive fatigue at 9.8-11.9 minutes (Khairat et al., JMIR Hum Factors 2025) and task completeness (SAGE Open Nursing 2025); NINR R01NR021711 on nurse job demands |
-| Logs and surveys collected together | Actual vs. perceived EHR measures diverge (Khairat et al., Perspect Health Inf Manag 2022) |
+| Nurse-specific data elements, organ-system layout, Tasks & meds column | ICU nurses' stated visualization needs (Lindroth et al., Appl Clin Inform 2022) and Khairat's nurse EHR usability and well-being work (JMIR Nursing 2020) |
+| Virtual-nurse mode with a 10-minute break prompt and a completeness counter | First cognitive-fatigue instance at 9.8 (discharge) and 11.9 (admission) minutes in 22 of 29 virtual-nurse encounters (Khairat et al., JMIR Hum Factors 2025) and documentation completeness (Khairat et al., SAGE Open Nursing 2025); NINR R01 "Evaluating Nurse Demands and Resources with Virtual Nursing to Mitigate Burnout" (R01NR021711) |
+| Logs and surveys collected together | Low congruency between physicians' measured EHR fatigue and their perceived usability, workload and satisfaction (Khairat et al., Perspect Health Inf Manag 2022) |
 
 AWARE's participants are physicians and advanced practice providers. NurseGlance asks
 whether the same approach helps bedside and virtual nurses.
@@ -55,16 +56,16 @@ whether the same approach helps bedside and virtual nurses.
 | `docs/task_analysis.md` | Clicks, scrolls, screens and estimated seconds per question, for versions 0.2, 0.3 and 1.1 |
 | `docs/heuristic_evaluation.md` | Draft heuristic evaluation of both views (Nielsen's 10, severity 0 to 4), with what versions 0.3 and 1.1 changed |
 | `docs/brief.md` ([PDF](docs/pdf/brief.pdf)) | One-page summary of the project, its results and the proposed study |
-| `docs/technical_report.md` ([PDF](docs/pdf/technical_report.pdf)) | Six-page technical report: background, methods, results for the three research questions, limitations, equity and responsible use |
+| `docs/technical_report.md` ([PDF](docs/pdf/technical_report.pdf)) | Seven-page technical report: background, methods, results for the three research questions, limitations, equity and responsible use |
 | `docs/protocol.md` ([PDF](docs/pdf/protocol.pdf)) | Proposed crossover usability study with ICU and virtual nurses, modeled on the AWARE trial; not started, needs IRB approval |
-| `analysis/sample_size.py`, `analysis/allocation.py` | The protocol's sample size (34 nurses for d<sub>z</sub> = 0.5, recruit 40) and its balanced allocation list |
+| `analysis/sample_size.py`, `analysis/allocation.py` | The protocol's sample size (34 nurses for d<sub>z</sub> = 0.5, recruit 40) and its allocation lists (one per role, balanced in every block of 4) |
 | `tools/build_pdf.py` | Renders a Markdown file in `docs/` to PDF (pandoc and Chromium) |
 | `tools/record_demo.py`, `docs/video/` | Records the captioned demo video from the running app, with subtitles (`.srt`) and a narration script |
 | `streamlit_app.py`, `app/` | The dashboard: `ui.py` (shared look: top bar, colors, fonts), `glance.py` (NurseGlance view), `tabbed.py` (control view), `timeline.py` (dose and infusion rows), `data.py` (shared loading) |
 | `static/fonts/`, `docs/design/` | Inter and Space Grotesk (SIL Open Font License, served by the app so no font service is called) and screenshots of the design mockup that version 1.2 follows |
 | `app/study.py`, `app/events.py`, `app/scoring.py` | Study mode: seeded randomization, practice questions, break, pause, event log, SUS and raw NASA-TLX scoring, debrief notes, CSV export |
 | `app/research.py` | Researcher page: the allocation list from a private master seed, a check of uploaded session files, and the planned analysis |
-| `app/flags.py` | 8 transparent rule-based flags, each showing its rule, values, times and FHIR IDs (off in study mode) |
+| `app/flags.py` | 8 transparent rule-based flags, each showing its rule, values, times and FHIR IDs (a calculated value, such as urine output per kg, has none) (off in study mode) |
 | `app/vn.py` | Virtual-nurse mode: admission and discharge checklists, session timer, 10-minute break prompt |
 | `docs/case_questions.json` | The 16 handoff questions (4 per case) with answer keys and the synthesis rubric |
 | `docs/practice_questions.json` | 4 practice questions on a fifth stay (2 before each view), logged but never scored |
@@ -142,8 +143,14 @@ the admission; if you'd rather use a survivor, the next complex candidate
 - **Due medications.** eMAR doses given in the 12 h after handoff stand in for
   what was due, because the data has no separate schedule.
 - **Intake and output** totals are approximate (ICU input events in mL, prorated by time).
-- **Organ systems.** The starter list adds a Heme/ID group (temperature, WBC,
-  hemoglobin, platelets, INR, antibiotics). Fold it into another panel if you want seven.
+  Output windows end at handoff and are open at their start: an output entry holds what
+  was collected since the previous one, so an entry charted exactly 6 h (or 12 h) before
+  handoff belongs to the hour before the window (version 1.2.1 fix; S2's 6-hour urine
+  output had counted 7 hourly entries).
+- **Organ systems.** The starter list has 8 groups, including a Heme/ID group
+  (temperature, WBC, hemoglobin, platelets, INR, antibiotics). NurseGlance shows seven
+  organ-system cards, as AWARE shows seven body systems; the Safety group's values are the
+  chips in the patient card.
 - **Coded text.** FHIR demo v2.1.0 carries some charted text items only as
   MIMIC's numeric code (ventilator mode "CMV/ASSIST/AutoFlow" arrives as 49; pain
   level, CAM-ICU likewise). `etl/value_codes.py` rebuilds the code-to-text table
@@ -190,7 +197,9 @@ the admission; if you'd rather use a survivor, the next complex candidate
 - **Version 1.2 look.** The screens follow a design mockup (`docs/design/`): a white
   top bar with the view switch (Glance or Tabbed EHR), the mode switch (Handoff or
   Virtual nurse) and a "Start study mode" button; white cards on a light grey page;
-  Inter and Space Grotesk. NurseGlance keeps one patient on one 1440×900 screen: a
+  Inter and Space Grotesk. In study mode NurseGlance keeps one patient on one 1440×900
+  screen (on the Handoff page, whose patient picker and title take extra height, the
+  complex cases' lowest rows fall just below that edge): a
   patient card with safety chips and the infusions no card lists, seven organ-system
   cards (vasoactive and sedation drips sit in their cards with any 12 h titration),
   and a Tasks & meds column that replaces the task strip and the 12 h timeline below
@@ -215,7 +224,8 @@ the foot of each page.
   debrief notes and a CSV download. View order, which standard and complex case go
   with which view, and case order within each view are randomized with a logged seed.
   Each participant sees each case once. The question sits in the sidebar with a
-  progress bar; Pause hides the view and stops the clock. While a session runs, the
+  progress bar; Pause hides the view and stops the clock; End early stops the session
+  and keeps its data. The summary CSV gives each case's position within its view. While a session runs, the
   other pages are hidden. Streamlit cannot see raw mouse clicks or scrolling, so
   "interactions" are logged interface actions (tab switches, toggles, selects). Files
   saved on Streamlit Community Cloud do not survive a restart, so download the CSVs
@@ -231,20 +241,22 @@ the foot of each page.
 Event log columns: `run_id, seed, ts_utc, view, case_id, question_id, event, target, value`.
 Events: `session_start, practice_shown, practice_submit, question_shown, tab_switch,
 toggle, answer_submit, survey_submit, break_start, break_end, pause, resume,
-debrief_note, session_abandoned, session_end`.
+debrief_note, session_abandoned, session_end`. "End early" logs `session_abandoned` and
+keeps the session's data for export, since the protocol keeps nurses who finish one view.
 
 ## How it was tested
 
-- 85 tests (`pytest`), including SUS and NASA-TLX scoring against hand-calculated
+- 91 tests (`pytest`), including SUS and NASA-TLX scoring against hand-calculated
   examples, randomization balance over 200 seeds, the answer keys checked against the
   case files, the flags' evidence, and the protocol's sample size and allocation balance. Also: unit and synthetic ETL tests (windows, calculated MAP, GCS,
-  urine output per kg, drip titration, line days, lab flags), the FHIR-vs-CSV check,
+  urine output per kg and output windows, drip titration, line days, lab flags), the FHIR-vs-CSV check,
   the restored text codes, and the app's data helpers, timeline and panels for every case.
 - The full pipeline ran on the official FHIR demo v2.1.0 and CSV demo v2.2 from
-  PhysioNet (checksums verified). The FHIR-vs-CSV test passes for all 4 cases.
+  PhysioNet (checksums verified). The FHIR-vs-CSV test passes for all 4 cases, and
+  rebuilding the case files from the downloads reproduces the committed files exactly.
 - Every page, case, view, tab, MAR section and Flowsheet section was clicked through in
   a headless browser at 1440×900 (161 screens, version 1.2) with no errors and no
-  sideways page scroll, and the study session's pause, resume and abandon were checked.
+  sideways page scroll, and the study session's pause, resume and end-early were checked.
 - Two full scripted study sessions (16 questions, 4 practice questions, 2 surveys and a
   break each) exported clean CSVs; one is the Researcher page's example run
   (`docs/mock_session_events.csv`).
@@ -268,7 +280,8 @@ out of git; the small processed case files are committed so the app can deploy.
 | v0.3 | `fd2791a` | Heuristic evaluation and redesign of both views, task analysis |
 | v1.0 | `501957c` | Evaluation protocol, technical report, brief and demo video |
 | v1.1 | `378bab0` | Screen review: Summary tab and patient banner in the control, header chips and task strip in NurseGlance, practice questions, break and pause in study mode, Researcher page |
-| v1.2 | latest `main` | The design mockup's look: top bar, patient card, organ-system cards, Tasks & meds column, flag cards, virtual-nurse session band; self-hosted fonts |
+| v1.2 | `92bdd9e` | The design mockup's look: top bar, patient card, organ-system cards, Tasks & meds column, flag cards, virtual-nurse session band; self-hosted fonts |
+| v1.2.1 | latest `main` | Review fixes: output windows open at their start, case position in the export and model, role-stratified allocation in balanced blocks of 4, "End early" keeps data, data-driven virtual-nurse checklist, citations checked against PubMed and PhysioNet |
 
 To cite NurseGlance, use `CITATION.cff` (GitHub's "Cite this repository" button reads
 it). A Zenodo DOI will be added here once a release is archived. Code is MIT-licensed; the

@@ -43,6 +43,13 @@ def _latest(case: dict, eid: str) -> dict | None:
     return el.get("latest") if el.get("has_data") else None
 
 
+def _fhir_id_at(case: dict, eid: str, moment: datetime) -> str | None:
+    """FHIR id of the element's observation charted at this moment (series() keeps only time and value)."""
+    ids = set((data.element_specs().get(eid) or {}).get("item_id_list", []))
+    stamp = moment.isoformat(timespec="seconds")
+    return next((o.get("fhir_id") for o in case["observations"] if o["item_id"] in ids and o["t"] == stamp), None)
+
+
 def _ev(what: str, latest: dict, value=None) -> dict:
     return {"what": what, "value": value if value is not None else latest.get("value"),
             "unit": latest.get("unit"), "t": latest.get("t"), "fhir_id": latest.get("fhir_id")}
@@ -67,10 +74,11 @@ def evaluate(case: dict) -> list[Flag]:
         earlier = [(t, v) for t, v in spo2 if t <= t_last - timedelta(hours=rule["hours"])]
         drop = earlier and earlier[-1][1] - v_last >= rule["drop"]
         if v_last < rule["limit"] or drop:
-            ev = [{"what": "SpO2", "value": v_last, "unit": "%", "t": t_last.isoformat(), "fhir_id": None}]
+            ev = [{"what": "SpO2", "value": v_last, "unit": "%", "t": t_last.isoformat(),
+                   "fhir_id": _fhir_id_at(case, "spo2", t_last)}]
             if drop:
                 ev.insert(0, {"what": "SpO2 2 h earlier", "value": earlier[-1][1], "unit": "%",
-                              "t": earlier[-1][0].isoformat(), "fhir_id": None})
+                              "t": earlier[-1][0].isoformat(), "fhir_id": _fhir_id_at(case, "spo2", earlier[-1][0])})
             add("spo2", f"SpO2 {data.fmt_num(v_last)}%" + (" and falling" if drop else ""), ev)
 
     uop = _latest(case, "urine_rate_6h")

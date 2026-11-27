@@ -17,7 +17,7 @@ ui.inject()
 
 VIEWS = {"glance": "Glance view", "tabbed": "Tabbed EHR view"}
 MODES = {"handoff": "Handoff", "virtual-nurse": "Virtual nurse"}
-KINDS = {"S": "Simple", "C": "Complex"}
+KINDS = {"S": "Standard", "C": "Complex"}   # the AWARE trial's case types
 
 if not data.available_cases():
     st.error("No case files in data/processed. Run etl/build_cases.py first.")

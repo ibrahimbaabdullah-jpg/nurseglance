@@ -5,6 +5,7 @@ stay -> first view with 2 cases (4 timed questions each) -> SUS and NASA-TLX -> 
 2-minute break -> 2 practice questions -> second view with the other 2 cases -> SUS
 and NASA-TLX -> debrief notes and export. Practice answers are logged, never scored.
 The facilitator can pause; paused time is logged and left out of the question's time.
+"End early" stops a session but keeps what was logged, for export and analysis.
 
 Each view gets one standard and one complex case, so each participant sees each
 case once. Three things are randomized with a seeded generator, and the seed is
@@ -112,6 +113,13 @@ def summarize(rows: list[dict], steps: list[dict]) -> list[dict]:
     """One row per question (time, interactions, screens, answer, correct) and per survey."""
     out = []
     questions = {s["question"]["id"]: s["question"] for s in steps if s["kind"] == "question"}
+    # Position of each case within its view (1 or 2). With one standard and one complex case per view,
+    # a complex case in position 1 means the view started with the complex case, an order that raised
+    # information-processing burden in ICU providers (Khairat et al., JAMIA 2026).
+    position: dict[str, int] = {}
+    for view in dict.fromkeys(s["view"] for s in steps if s["kind"] == "question"):
+        cases = list(dict.fromkeys(s["case_id"] for s in steps if s["kind"] == "question" and s["view"] == view))
+        position.update({c: n for n, c in enumerate(cases, start=1)})
     for qid, q in questions.items():
         mine = [r for r in rows if r["question_id"] == qid]
         shown = next((r for r in mine if r["event"] == "question_shown"), None)
@@ -125,9 +133,10 @@ def summarize(rows: list[dict], steps: list[dict]) -> list[dict]:
         actions = [r for r in mine if r["event"] in events.INTERACTIONS]
         screens = {r["target"] for r in actions if r["event"] == "tab_switch"}
         value = answer["value"] if answer else ""
-        correct = scoring.check_answer(q, value) if answer else False
+        correct = scoring.check_answer(q, value) if answer else None   # never answered: missing, not wrong
         out.append({"run_id": shown["run_id"], "seed": shown["seed"], "view": shown["view"],
-                    "case_id": shown["case_id"], "question_id": qid, "kind": q["kind"],
+                    "case_id": shown["case_id"], "case_position": position.get(shown["case_id"], ""),
+                    "question_id": qid, "kind": q["kind"],
                     "time_s": seconds, "interactions": len(actions), "screens_visited": len(screens) + 1,
                     "answer": value, "correct": "" if correct is None else int(correct),
                     "sus": "", "tlx_raw": ""})
@@ -135,7 +144,7 @@ def summarize(rows: list[dict], steps: list[dict]) -> list[dict]:
         if r["event"] == "survey_submit" and r["target"] in ("SUS_score", "TLX_raw"):
             row = next((o for o in out if o["question_id"] == f"survey-{r['view']}"), None)
             if row is None:
-                row = {"run_id": r["run_id"], "seed": r["seed"], "view": r["view"], "case_id": "",
+                row = {"run_id": r["run_id"], "seed": r["seed"], "view": r["view"], "case_id": "", "case_position": "",
                        "question_id": f"survey-{r['view']}", "kind": "survey", "time_s": "",
                        "interactions": "", "screens_visited": "", "answer": "", "correct": "",
                        "sus": "", "tlx_raw": ""}
@@ -346,14 +355,19 @@ def _done_step(study: dict) -> None:
         events.log("session_end")
     rows = study_rows(study, st.session_state.get("events", []))
     summary = summarize(rows, study["steps"])
-    summary_cols = ["run_id", "seed", "view", "case_id", "question_id", "kind", "time_s", "interactions",
+    summary_cols = ["run_id", "seed", "view", "case_id", "case_position", "question_id", "kind", "time_s", "interactions",
                     "screens_visited", "answer", "correct", "sus", "tlx_raw"]
     events_csv, summary_csv = to_csv(rows, events.COLUMNS), to_csv(summary, summary_cols)
     stamp = study.setdefault("stamp", datetime.now().strftime("%Y%m%d-%H%M%S"))
     if "saved" not in study:
         study["saved"] = str(save_local(study["run_id"], events_csv, summary_csv, stamp) or "")
-    st.header("Session complete")
-    st.success(f"Run {study['run_id']} · seed {study['seed']} · {len(rows)} events logged.")
+    if study.get("abandoned"):
+        st.header("Session ended early")
+        st.warning(f"Run {study['run_id']} · seed {study['seed']} · {len(rows)} events logged before the session "
+                   "was ended. Download the files: the data so far stays in the analysis, marked as abandoned.")
+    else:
+        st.header("Session complete")
+        st.success(f"Run {study['run_id']} · seed {study['seed']} · {len(rows)} events logged.")
     with st.form("debrief"):
         st.markdown("**Debrief** (facilitator's notes; protocol step 6)")
         note = st.text_area("Which view would you use at handoff, and why? Was anything missing or misleading?",
@@ -362,7 +376,9 @@ def _done_step(study: dict) -> None:
             events.log("debrief_note", value=note)
             study.pop("saved", None)   # save again, so the note reaches the saved copy
             st.rerun()
-    st.dataframe(summary, hide_index=True, width="stretch")
+    # Text cells: survey rows leave the question columns blank, which Arrow cannot mix with numbers.
+    st.dataframe([{k: "" if v is None else str(v) for k, v in r.items()} for r in summary], hide_index=True,
+                 width="stretch")
     c1, c2, c3 = st.columns(3)
     c1.download_button("Download event log (CSV)", events_csv, f"{study['run_id']}_events.csv", "text/csv",
                        type="primary")
@@ -373,6 +389,21 @@ def _done_step(study: dict) -> None:
     st.caption("Download both files now. On Streamlit Community Cloud, files saved on the server do not "
                "survive a restart; a real study would run locally or log to a database."
                + (f" A copy was also saved to {study['saved']}." if study.get("saved") else ""))
+
+
+def end_early(study: dict) -> None:
+    """Stop a session before its last step: log session_abandoned and go to the export screen.
+
+    Nothing is discarded, so a nurse who completed one view still contributes that view's data
+    (protocol section 8). The Researcher page marks such a run as abandoned. "Start a new session"
+    on the export screen clears it.
+    """
+    events.log("session_abandoned", target=study["steps"][study["i"]]["kind"],
+               value=sum(1 for s in study["steps"][:study["i"]] if s["kind"] == "question"))
+    study["abandoned"] = True
+    study["ended"] = True   # no session_end event: that event means the session was completed
+    study["paused"] = False
+    study["i"] = len(study["steps"]) - 1
 
 
 def is_running() -> bool:
@@ -408,9 +439,10 @@ def render(question_slot=None) -> None:
                 study["paused"] = True
                 events.log("pause")
                 st.rerun()
-            if c2.button("Abandon", width="stretch", help="Ends the session and discards it."):
-                events.log("session_abandoned")
-                _reset()
+            if c2.button("End early", width="stretch",
+                         help="Ends the session now. The answers so far are kept and can be downloaded, as the "
+                              "protocol keeps a nurse who finished only one view."):
+                end_early(study)
                 st.rerun()
             st.caption("Other modes are hidden until the session ends.")
     if study.get("paused"):

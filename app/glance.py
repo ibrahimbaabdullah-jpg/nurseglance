@@ -123,7 +123,7 @@ ul.ng-row {display:block; list-style:none; margin:0; padding:0; border-top:0; mi
 .ng-li .ng-label {color:var(--ng-text2);}
 .ng-li .ng-val small {white-space:normal; display:inline-block; max-width:11em; text-align:right; line-height:1.15;}
 .ng-li .ng-right:has(.ng-cap:empty) {display:none;}
-.ng-dot {color:#C2620F; font-weight:700; margin-left:2px;}
+.ng-dot {color:var(--ng-warn); font-weight:700; margin-left:2px;}   /* 5.8:1 on white (WCAG AA) */
 .ng-val {font-size:14px; font-weight:600; color:var(--ng-text); text-align:right; white-space:nowrap;}
 .ng-val small {font-size:11.5px; font-weight:400; color:var(--ng-muted); margin-left:3px;}
 .ng-val .ng-arrow {font-size:12px; color:var(--ng-text2); margin-left:2px; font-weight:600;}
@@ -180,8 +180,12 @@ def short(label: str) -> str:
     return SHORT_LABELS.get(label, label)
 
 
-def sparkline(points: list[tuple[datetime, float]], low=None, high=None) -> str:
-    """A 56 x 16 line over the window; drawn in the warning color when the latest value is out of range."""
+def sparkline(points: list[tuple[datetime, float]], low=None, high=None, warn: bool | None = None) -> str:
+    """A 52 x 13 line over the window; drawn in the warning color when the latest value is out of range.
+
+    warn, when given, is the element's own flag for its latest value, so a lab outside its reference range
+    (labs have no threshold in docs/data_elements.csv) is drawn in the warning color too.
+    """
     if len(points) < 2:
         return ""
     w, h, pad = 52, 13, 1.5
@@ -195,8 +199,8 @@ def sparkline(points: list[tuple[datetime, float]], low=None, high=None) -> str:
            h - pad - (v - lo) / (hi - lo) * (h - 2 * pad)) for t, v in points]
     path = " ".join(f"{x:.1f},{y:.1f}" for x, y in xy)
     lx, ly = xy[-1]
-    last_bad = (low not in (None, "") and vals[-1] < float(low)) or \
-               (high not in (None, "") and vals[-1] > float(high))
+    last_bad = warn if warn is not None else (
+        (low not in (None, "") and vals[-1] < float(low)) or (high not in (None, "") and vals[-1] > float(high)))
     line, dot = ("#A84A0A", "#A84A0A") if last_bad else ("#8C98A3", "#1C5D86")
     return svg_img(f'<svg width="{w}" height="{h}" viewBox="0 0 {w} {h}">'
                    f'<polyline points="{path}" fill="none" stroke="{line}" stroke-width="1.6" stroke-linejoin="round" '
@@ -255,7 +259,7 @@ def value_row(case: dict, eid: str, el: dict, ref: datetime) -> tuple[str, bool,
     spark = ""
     if trend:
         hours = TREND_HOURS.get(el.get("source"), 12)
-        spark = sparkline(data.series(case, eid, hours), spec.get("low"), spec.get("high"))
+        spark = sparkline(data.series(case, eid, hours), spec.get("low"), spec.get("high"), warn=abnormal)
     arrow = _arrow(el.get("change_12h")) if trend else ""
     age = data.hours_before(latest.get("t"), ref)
     if trend and (el.get("n_12h") or 0) >= 2 and el.get("min_12h") != el.get("max_12h"):

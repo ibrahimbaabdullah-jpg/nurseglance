@@ -2,6 +2,8 @@
 
 Generated from `docs/case_questions.json`, which study mode reads. **Draft:** review each question and answer key in your own clinical words. Q1-Q3 are scored automatically (exact, or within the tolerance); Q4 is scored 0-2 with the rubric.
 
+**For the clinical reviewers.** The three Rising/Falling/Stable trend questions compare the latest value with the value 12 hours before handoff, and all three keys are Falling. Change one to a question whose key is Rising or Stable (for example C2's fentanyl rate, 30 mcg/h 12 hours before handoff and 40 mcg/h now), so that a participant who always answers Falling cannot score 3 of 3.
+
 ## S1
 
 **S1-Q1 (lookup).** What is the most recent potassium?
@@ -9,7 +11,7 @@ Generated from `docs/case_questions.json`, which study mode reads. **Draft:** re
 - Source: Lab 50971 at 02:15 (below the 3.3 reference limit)
 - Data elements: potassium
 
-**S1-Q2 (trend).** How has the heart rate changed over the last 12 hours?
+**S1-Q2 (trend).** Compared with 12 hours before handoff, is the heart rate now rising, falling or stable?
 - Answer: **Falling** (options: Rising, Falling, Stable)
 - Source: Range 71-98 bpm over 12 h; latest 81 bpm, down 16 from 12 h earlier
 - Data elements: heart_rate
@@ -55,7 +57,7 @@ Generated from `docs/case_questions.json`, which study mode reads. **Draft:** re
 - Source: Rate since 17:19 (0.4 twelve hours earlier)
 - Data elements: vasoactive_drips
 
-**C1-Q2 (trend).** How has lactate changed over the last 12 hours?
+**C1-Q2 (trend).** Compared with 12 hours before handoff, is the lactate now rising, falling or stable?
 - Answer: **Falling** (options: Rising, Falling, Stable)
 - Source: Lactate 9.0 at its highest, 4.3 at 17:41
 - Data elements: lactate
@@ -78,7 +80,7 @@ Generated from `docs/case_questions.json`, which study mode reads. **Draft:** re
 - Source: Heart rate at 19:00; rhythm AF
 - Data elements: heart_rate
 
-**C2-Q2 (trend).** How has the norepinephrine rate changed over the last 12 hours?
+**C2-Q2 (trend).** Compared with 12 hours before handoff, is the norepinephrine rate now rising, falling or stable?
 - Answer: **Falling** (options: Rising, Falling, Stable)
 - Source: 0.20 mcg/kg/min twelve hours earlier, 0.04 since 18:24
 - Data elements: vasoactive_drips

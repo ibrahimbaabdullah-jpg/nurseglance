@@ -116,6 +116,21 @@ The review was not re-rated with the heuristics above; it changed the following.
 
 Problems N8, N9, N10, T6 and T7 are unchanged.
 
+## Version 1.2: design mockup
+
+Version 1.2 gave both views the look of a design mockup (`docs/design/`). It was not
+re-rated with the heuristics; these are measured facts that bear on the ratings above.
+
+| Problem | What version 1.2 measured |
+| --- | --- |
+| N1 (fit) | In study mode, every card of every case ends above the bottom of a 1440×900 screen (lowest edge: C1 at 897 px). On the Handoff page, whose patient picker and title add height, C1 and C2 end at 976 and 954 px. On 1366×768 in study mode, one of the 16 NurseGlance paths needs a scroll. |
+| N3, N4 | The 12-hour timeline is gone. Due doses and turns are in the Tasks & meds column; infusions that no card lists are in the patient card. |
+| N7 (color) | The "abnormal earlier" dot now uses the warning color (5.8:1 on white). Every text color the app sets meets the WCAG AA 4.5:1 ratio. |
+| N10 (clutter) | Due doses show the drug without its carrier fluid ("Vancomycin", not "Vancomycin + Iso-Osmotic Dextrose"), but the patient card still lists carrier infusions running at handoff. Still a clinical decision. |
+
+The replay of all 32 paths on version 1.2 gave the same clicks, scrolls, hovers and screens
+as version 1.1, and the app's event log matched every path (`docs/task_analysis.md`).
+
 ## Screenshots
 
 | Version 0.2 | Version 0.3 |
@@ -129,6 +144,7 @@ The red dashed line marks the bottom of a 1440×900 screen. Study mode in versio
 
 Version 1.1 on a 1440×900 screen: NurseGlance for C1 (`figures/v1.1_glance_C1_screen.png`)
 and the control's Summary tab for C1 (`figures/v1.1_tabbed_C1_summary.png`).
+Version 1.2, study mode, 1440×900: NurseGlance for C1 (`figures/v1.2_glance_C1_screen.png`).
 
 ## References
 

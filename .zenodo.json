@@ -10,6 +10,7 @@
   "related_identifiers": [
     {"identifier": "10.1093/jamia/ocad002", "relation": "references", "scheme": "doi"},
     {"identifier": "https://physionet.org/content/mimic-iv-fhir-demo/2.1.0/", "relation": "references", "scheme": "url"},
+    {"identifier": "10.13026/dp1f-ex47", "relation": "references", "scheme": "doi"},
     {"identifier": "https://ibrahimbaabdullah-jpg-nurseglance-streamlit-app-uvwgbm.streamlit.app/", "relation": "isDocumentedBy", "scheme": "url"}
   ],
   "notes": "Code is MIT-licensed. Files derived from MIMIC (data/processed and some docs) are shared under the Open Data Commons Open Database License v1.0; see DATA_LICENSE.md."

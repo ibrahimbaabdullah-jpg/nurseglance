@@ -2,6 +2,8 @@
 
 The video (`nurseglance_demo.mp4`, 3 min 4 s, 1440×900) is recorded from the running app by `tools/record_demo.py`. Its captions are drawn into the picture, so it works without sound, and `nurseglance_demo.srt` holds the same captions as subtitles.
 
+**Correction to the recorded caption at 2:28.** The study found a first instance of cognitive fatigue at 9.8 minutes into discharges and 11.9 minutes into admissions in 75% (22 of 29) of virtual-nurse encounters (Khairat et al., JMIR Hum Factors 2025), not fatigue in every encounter. `tools/record_demo.py` now uses this wording, so the next recording will carry it.
+
 To add a voice-over, read each line when its caption appears. Each caption stays up long enough to read aloud at about 145 words a minute. After any change to the app, record again with `python tools/record_demo.py --out docs/video/nurseglance_demo.mp4` (app running on port 8501).
 
 | Start | End | Narration |
