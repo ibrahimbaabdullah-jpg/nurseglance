@@ -6,8 +6,9 @@ Code and reports: [github.com/ibrahimbaabdullah-jpg/nurseglance](https://github.
 Research prototype, not for clinical use.
 
 **Problem.** ICU nurses check the EHR at every handoff, and the values they need sit in
-different tabs. In a survey of 107 ICU nurses, 64% said EHR visualization was insufficient
-at handoff and 53% wanted screens organized by organ system (Lindroth et al. 2022).
+different tabs. In a survey of 107 ICU nurses about handoff, 64% said current EHR
+visualization was insufficient and 53% wanted screens organized by organ system (Lindroth
+et al. 2022).
 Visualization dashboards such as AWARE are being tested with ICU physicians and advanced
 practice providers (Khairat et al. 2025a). Nurses need different things: drips and their
 titration, lines and devices, intake and output, the medication schedule and safety risks.
@@ -15,10 +16,12 @@ titration, lines and devices, intake and output, the medication schedule and saf
 **What I built, on open data.**
 
 - A FHIR R4 pipeline over the MIMIC-IV demo on FHIR: 58 nurse handoff data elements, 4 ICU
-  patients (2 standard, 2 complex), 50 items mapped to LOINC, 81 automated tests.
-- Two views of the same data: a tabbed EHR-style control that opens on a Summary tab,
-  and NurseGlance, one screen by organ system under a patient header with safety facts
-  and a task strip (infusions running now, care done, doses and turns due next).
+  patients (2 standard, 2 complex), 50 items mapped to LOINC, 91 automated tests; rebuilding
+  from the PhysioNet files reproduces the case files exactly.
+- Two views of the same data under the same patient card (safety facts in both): a tabbed
+  EHR-style control that opens on a Summary tab, and NurseGlance, one screen with seven
+  organ-system cards and a Tasks & meds column (care done in the last 12 hours, doses and
+  turns due next).
 - An AWARE-style study mode (seeded crossover, practice questions, pause, event log, SUS
   and NASA-TLX, CSV export), a researcher page, transparent rule-based flags, and a
   virtual-nurse mode with a 10-minute break prompt.
@@ -40,10 +43,12 @@ The study needs IRB approval and a faculty principal investigator; the protocol 
 for a lab that runs such studies.
 
 **Why CHIP.** The project carries the AWARE crossover design from physicians to bedside and
-virtual nurses, whose cognitive fatigue Dr. Saif Khairat's group has measured in virtual
-nursing (Khairat et al. 2025b). It also draws on visual analytics and human-factors
-evaluation, areas of CHIP faculty such as Dr. David Gotz and Dr. Amy Cole.
+virtual nurses, whose cognitive fatigue Dr. Saif Khairat's group has measured with eye
+tracking (in 22 of 29 encounters, first signs 9.8 to 11.9 minutes in; Khairat et al. 2025b),
+and it logs each case's position within a view because his group found that reviewing a
+complex case first raises ICU providers' burden (Khairat et al. 2026). It also draws on
+visual analytics and human-factors evaluation, areas of CHIP faculty such as Dr. David Gotz and Dr. Amy Cole.
 
 <small>Lindroth HL et al. Appl Clin Inform 2022;13(5):1207-1213. · Khairat S et al. (a) JMIR Res Protoc
-2025;14:e74247 (NCT05937646); (b) JMIR Hum Factors 2025;12:e67111. · Data: MIMIC-IV Clinical Database
-Demo on FHIR v2.1.0, PhysioNet, ODbL.</small>
+2025;14:e74247 (NCT05937646); (b) JMIR Hum Factors 2025;12:e67111; and J Am Med Inform Assoc 2026;33(4):881-889. ·
+Data: MIMIC-IV Clinical Database Demo on FHIR v2.1.0, PhysioNet, ODbL.</small>

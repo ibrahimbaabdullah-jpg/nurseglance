@@ -61,6 +61,8 @@ def built(tmp_path):
         obs("wt", "p1", 226512, "2150-01-02T11:00:00-05:00", 80, "kg"),        # outside 24 h, inside the admission
         obs("other", "p2", 220045, "2150-01-03T18:00:00-05:00", 60, "bpm")])   # another patient
     write(fhir, "ObservationOutputevents", [
+        obs("uo-12h", "p1", 226559, "2150-01-03T07:00:00-05:00", 50, "ml"),   # charted at the 12 h edge: hour before
+        obs("uo-6h", "p1", 226559, "2150-01-03T13:00:00-05:00", 400, "ml"),   # charted at the 6 h edge: hour before
         obs("uo1", "p1", 226559, "2150-01-03T15:00:00-05:00", 200, "ml"),
         obs("uo2", "p1", 226559, "2150-01-03T18:00:00-05:00", 100, "ml")])
     write(fhir, "ObservationLabevents", [
@@ -128,7 +130,16 @@ def test_calculated_values(built):
     assert el["urine_output_6h"]["latest"]["value"] == 300
     assert el["urine_rate_6h"]["latest"]["value"] == pytest.approx(0.625, abs=0.01)
     assert el["intake_12h"]["latest"]["value"] == 500
-    assert el["net_12h"]["latest"]["value"] == 200
+    assert el["output_12h"]["latest"]["value"] == 700     # 400 + 200 + 100; the 07:00 entry is the hour before
+    assert el["net_12h"]["latest"]["value"] == -200
+
+
+def test_output_windows_are_open_at_their_start(built):
+    """An output entry covers the time since the previous one, so one charted exactly at a window's start
+    belongs to the hour before it. 6 h of hourly charting is 6 entries, not 7."""
+    assert built["elements"]["urine_output_6h"]["latest"]["value"] == 300   # 15:00 and 18:00, not the 13:00 entry
+    uo = next(o for o in built["observations"] if o["item_id"] == "UO_6H")
+    assert uo["note"].startswith("2 urine entries")
 
 
 def test_drip_titration_and_lines(built):

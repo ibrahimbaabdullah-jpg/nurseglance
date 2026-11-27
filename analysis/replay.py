@@ -489,8 +489,10 @@ def start_session(page, seed: int, url: str, first_view: str):
         shown = page.get_by_text("Practice 1 of 2").first
         if shown.count() and expect in shown.inner_text():
             return
-        if page.get_by_role("button", name="Abandon").count():   # the seed did not take; start again
-            page.get_by_role("button", name="Abandon").click()
+        if page.get_by_role("button", name="End early").count():   # the seed did not take; start again
+            page.get_by_role("button", name="End early").click()
+            page.wait_for_timeout(2500)
+            page.get_by_role("button", name="Start a new session").click()
             page.wait_for_timeout(2500)
     raise SystemExit(f"could not start a session with seed {seed}")
 

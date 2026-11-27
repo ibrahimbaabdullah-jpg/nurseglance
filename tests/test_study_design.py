@@ -1,7 +1,7 @@
 """Checks for the proposed study's sample size and allocation list (docs/protocol.md)."""
 from collections import Counter
 
-from analysis.allocation import allocation, sequence
+from analysis.allocation import allocation, half_block, sequence
 from analysis.sample_size import n_needed, power
 
 
@@ -22,3 +22,14 @@ def test_allocation_balances_every_block_of_eight():
     for start in range(0, 40, 8):
         assert len(set(keys[start:start + 8])) == 8
     assert Counter(r["first_view"] for r in rows) == {"glance": 20, "tabbed": 20}
+
+
+def test_every_half_block_of_four_is_balanced_so_a_list_per_role_works():
+    rows = allocation(20, master_seed=7)          # one role's list: 20 nurses
+    keys = [sequence(r["seed"]) for r in rows]
+    assert Counter(r["first_view"] for r in rows) == {"glance": 10, "tabbed": 10}
+    for start in range(0, 20, 4):
+        quad = keys[start:start + 4]
+        assert len({half_block(k) for k in quad}) == 1
+        for factor in range(3):
+            assert set(Counter(k[factor] for k in quad).values()) == {2}

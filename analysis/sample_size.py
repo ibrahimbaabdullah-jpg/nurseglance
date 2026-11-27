@@ -70,7 +70,7 @@ def n_needed(d: float, target: float = 0.80, alpha: float = 0.05) -> int:
 
 def smallest_effect(n: int, target: float = 0.80, alpha: float = 0.05) -> float:
     lo, hi = 0.05, 3.0
-    for _ in range(40):
+    for _ in range(40):   # bisection; returns the upper end, so power(n, result) >= target
         mid = (lo + hi) / 2
         lo, hi = (mid, hi) if power(n, mid, alpha) < target else (lo, mid)
     return hi
@@ -84,7 +84,7 @@ def main() -> None:
     print(f"power at n=34, d_z=0.5: {power(34, 0.5):.3f}")
     print(f"power at n=33, d_z=0.5: {power(33, 0.5):.3f}")
     for n in (34, 40):
-        print(f"smallest d_z with 80% power at n={n}: {smallest_effect(n):.2f}")
+        print(f"smallest d_z with 80% power at n={n}: {smallest_effect(n):.3f}")
     print(f"n for d_z=0.5 at alpha 0.025 (two primary outcomes): {n_needed(0.5, alpha=0.025)}")
 
 

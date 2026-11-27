@@ -7,9 +7,10 @@ nurse can copy to the bedside nurse. There are no camera or call buttons: those
 belong to the telehealth system, not to the chart.
 
 A band under the top bar (version 1.2, as in the design mockup) shows the time in
-the review. After 10 minutes it turns orange and offers a break, because virtual
-nurses showed first signs of cognitive fatigue 9.8 minutes into discharges and 11.9
-minutes into admissions (Khairat et al., JMIR Hum Factors 2025). The nurse can take
+the review. After 10 minutes it turns orange and offers a break, because in 75%
+(22 of 29) of observed virtual-nurse encounters the first instance of cognitive fatigue
+came 9.8 minutes into discharges and 11.9 minutes into admissions (Khairat et al.,
+JMIR Hum Factors 2025). The nurse can take
 the break (the timer restarts) or ask to be reminded in 5 minutes. The band changes
 on its own, without waiting for a click. The patient's chart sits above the review,
 in whichever view the top bar has chosen. Virtual nurses reached 80.2% documentation
@@ -84,6 +85,11 @@ def checklist_items(case: dict, kind: str) -> list[tuple[str, str, str, bool]]:
                f"{_latest_text(case, 'output_12h', ref).split(' (')[0]}, net "
                f"{_latest_text(case, 'net_12h', ref).split(' (')[0]} (12 h)")
     devices = _devices(case)
+
+    def charted(*eids: str) -> bool:
+        """True when the chart has a value for at least one of these elements, so the item is 'from chart'."""
+        return any((case["elements"].get(e) or {}).get("has_data") for e in eids)
+
     items = [
         ("Identity and safety", "Two patient identifiers confirmed", "with the patient, over video", False),
         ("Identity and safety", "Code status", code["text"] + (" (from a diagnosis code)" if code["text"] == "DNR"
@@ -92,23 +98,25 @@ def checklist_items(case: dict, kind: str) -> list[tuple[str, str, str, bool]]:
         ("Identity and safety", "Allergies", allergy["text"] + "; ask the patient", not allergy["empty"]),
         ("Identity and safety", "Isolation and precautions", iso["text"], not iso["empty"]),
         ("Identity and safety", "Fall risk",
-         f"Morse {_latest_text(case, 'fall_risk', ref)}; restraints {_latest_text(case, 'restraints', ref)}", True),
+         f"Morse {_latest_text(case, 'fall_risk', ref)}; restraints {_latest_text(case, 'restraints', ref)}",
+         charted("fall_risk", "restraints")),
         ("Lines and devices", "Lines, tubes and devices", devices, devices != "none"),
         ("Medications", "Home medications reconciled",
          ", ".join(m["name"] for m in meds) if meds else "no home medication list in the chart", bool(meds)),
         ("Medications", "Infusions running", drip_text, True),
         ("Medications", "Doses due in the next 12 h", next_doses, bool(due)),
         ("Assessment", "Neuro baseline",
-         f"GCS {_latest_text(case, 'gcs_total', ref)}; RASS {_latest_text(case, 'rass', ref)}", True),
+         f"GCS {_latest_text(case, 'gcs_total', ref)}; RASS {_latest_text(case, 'rass', ref)}",
+         charted("gcs_total", "rass")),
         ("Assessment", "Skin and pressure injury risk",
-         f"Braden {_latest_text(case, 'braden_total', ref)}; skin {_latest_text(case, 'skin_condition', ref)}", True),
-        ("Assessment", "Intake and output", io_text, True),
+         f"Braden {_latest_text(case, 'braden_total', ref)}; skin {_latest_text(case, 'skin_condition', ref)}",
+         charted("braden_total", "skin_condition")),
+        ("Assessment", "Intake and output", io_text, charted("intake_12h", "output_12h")),
         ("Assessment", "Most recent labs", f"last results at {data.fmt_time(last_lab, ref)}; pending orders are "
                                            "not in the demo data", bool(last_lab)),
     ]
     if kind == "Admission":
-        items.append(("Assessment", "Diet and nutrition", _latest_text(case, "diet", ref),
-                      not _latest_text(case, "diet", ref).startswith("not")))
+        items.append(("Assessment", "Diet and nutrition", _latest_text(case, "diet", ref), charted("diet")))
     else:
         items.append(("Discharge", "Teaching and follow-up", "not in the demo data", False))
         items.append(("Discharge", "Lines to remove before transfer", devices, devices != "none"))
@@ -177,11 +185,12 @@ def _banner(session_key: str, kind: str) -> None:
             note = (f"<b>{int(elapsed // 60)} minutes into this review.</b> Plan a short break away from the "
                     "workstation now.")
         else:
-            note = ("First signs of fatigue came 9.8 min into discharges and 11.9 min into admissions. "
-                    "Plan a short break away from the workstation.")
-        st.html(f'<span class="ng-vn-note" title="Virtual nurses showed first signs of cognitive fatigue 9.8 minutes '
-                f'into discharges and 11.9 minutes into admissions">{note} <small>Khairat et al., JMIR Hum Factors '
-                f'2025</small></span>', width="stretch")
+            note = ("In 22 of 29 observed virtual-nurse encounters, the first sign of fatigue came 9.8 min into "
+                    "discharges and 11.9 min into admissions. Plan a short break away from the workstation.")
+        st.html(f'<span class="ng-vn-note" title="Eye tracking of virtual nurses: 75% (22 of 29) of encounters showed '
+                f'a first instance of cognitive fatigue (pupil size) at 9.8 minutes during discharges and 11.9 minutes '
+                f'during admissions">{note} <small>Khairat et al., JMIR Hum Factors 2025</small></span>',
+                width="stretch")
         if due and st.button("Take a break now", key=f"{session_key}_break", type="primary"):
             events.log("toggle", target="break_taken", value=round(elapsed))
             vn["start"], vn["prompt_at"] = time.time(), BREAK_AFTER_S
@@ -232,7 +241,7 @@ def render(patient_view, footer=None) -> None:
         with st.container(key="ng-ctx", horizontal=True, vertical_alignment="center"):
             st.html('<span class="ng-ctx-label">Patient</span>', width="content")
             st.segmented_control("Patient", cases, default=cases[0], required=True, key="vn_case",
-                                 format_func=lambda c: f"{c} · {'Simple' if c.startswith('S') else 'Complex'}",
+                                 format_func=lambda c: f"{c} · {'Standard' if c.startswith('S') else 'Complex'}",
                                  label_visibility="collapsed")
             st.html('<span class="ng-ctx-label">Review</span>', width="content")
             st.segmented_control("Review type", ["Admission", "Discharge"], default="Admission", required=True,

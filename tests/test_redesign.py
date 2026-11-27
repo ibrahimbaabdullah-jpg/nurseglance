@@ -122,3 +122,13 @@ def test_progress_counts_patients_across_the_session():
     last_q = max(i for i, s in enumerate(steps) if s["kind"] == "question")
     assert study.progress_text(st_, last_q)[0].startswith("Question 16 of 16 · patient 4 of 4")
     assert study.progress_text(st_, 0)[0].startswith("Practice 1 of 2 · not scored")
+
+
+def test_vn_checklist_only_says_from_chart_when_the_chart_has_it():
+    import copy
+    case = copy.deepcopy(data.load_case("S2"))
+    for eid in ("fall_risk", "restraints", "gcs_total", "rass"):
+        case["elements"][eid]["has_data"] = False
+    items = {item: covered for _, item, _, covered in vn.checklist_items(case, "Admission")}
+    assert items["Fall risk"] is False and items["Neuro baseline"] is False
+    assert items["Intake and output"] is True

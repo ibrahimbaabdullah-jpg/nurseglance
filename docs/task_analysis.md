@@ -110,9 +110,12 @@ Inter and Space Grotesk; see `docs/design/`). NurseGlance keeps one patient on o
 infusions in the patient card, and due doses in a Tasks & meds column. The replay was run
 again on version 1.2 at 1440×900 (`docs/sensitivity/task_replay_1440x900_v1.2.json`):
 all 32 paths gave the same clicks, scrolls, hovers, targets and screens as version 1.1,
-the app's event log matched every path, and every NurseGlance card of every case now
+the app's event log matched every path, and in study mode every NurseGlance card of every case now
 ends above the bottom of a 1440×900 screen. The numbers above therefore hold for
-version 1.2.
+version 1.2. Version 1.2.1 was replayed twice more at 1440×900 (`docs/sensitivity/task_replay_1440x900_v1.2.1_run1.json` and `_run2.json`; it changed no layout that
+a path uses): of the 96 path measurements in the three runs, 95 were identical, and one
+run counted one extra table scroll for C1-Q4 in the tabbed view, a timing artifact of the
+replay rather than a change in the app.
 
 ## What changed in version 1.1
 
@@ -156,12 +159,16 @@ Both views changed, for reasons recorded in `docs/heuristic_evaluation.md`:
 - KLM gives every search the same 1.35 s. Finding one value among about 58 on a dense
   screen like NurseGlance likely takes longer than that, so the model probably favors
   NurseGlance. Only the user study can measure search time.
-- The no-scroll result for NurseGlance depends on the screen and the questions. All
-  eight panels fit on a 1920×1080 screen for all four cases. On 1440×900 they fit for
-  the standard cases, but the last rows of the complex cases' lower panels fall below
-  the edge (none of the 16 answers is there). On 1366×768 the standard cases still fit,
-  but the complex cases need a scroll for their lower panels, where C2's hemoglobin and
-  platelets sit.
+- The no-scroll result for NurseGlance depends on the screen and the questions. In
+  version 1.1 all eight panels fit on a 1920×1080 screen for all four cases, but on
+  1440×900 the last rows of the complex cases' lower panels fell below the edge (none of
+  the 16 answers was there). In version 1.2 every card of every case ends above the
+  bottom of a 1440×900 screen in study mode (on the Handoff page, whose patient picker and
+  title add height, the complex cases' lowest rows fall below it). On a 1366×768 screen (version 1.2.1,
+  `docs/sensitivity/task_replay_1366x768_v1.2.1.json`), NurseGlance needed one scroll in
+  its 16 paths, for C2-Q3 (the cefepime dose at the foot of the Tasks & meds column):
+  3.4 s per question against 14.8 s for the tabbed view, which needed 2.9 scrolls per
+  question there.
 - Treating a scroll gesture as one pointing operation is an assumption.
 - The tabbed view is the author's own control, not a commercial EHR. A real EHR may offer
   shortcuts (search, saved views) or cost more (log-ins, slower screens, more tabs).

@@ -1,4 +1,10 @@
-"""12-hour task and medication timeline shown under the NurseGlance panels."""
+"""Infusions running at handoff and doses in the next 12 h, shared by both views and virtual-nurse mode.
+
+timeline_rows() feeds NurseGlance's patient card and Tasks & meds column, the control's Summary tab and the
+virtual-nurse checklist. timeline_figure() is the 12-hour Plotly timeline that versions 0.2 to 1.1 drew under
+the NurseGlance panels; version 1.2 replaced it with the Tasks & meds column, and it is kept for the tests
+and for replaying those versions.
+"""
 from __future__ import annotations
 
 from datetime import timedelta

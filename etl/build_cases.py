@@ -419,8 +419,9 @@ def derived_obs(moment: str, item: str, label: str, value: float | None, unit: s
 
 
 def overlap_fraction(start: datetime, end: datetime, a: datetime, b: datetime) -> float:
-    if end <= start:  # a single moment, e.g. a bolus
-        return 1.0 if a <= start <= b else 0.0
+    """Share of [start, end] that falls in the window (a, b]."""
+    if end <= start:  # a single moment, e.g. a bolus; same (a, b] rule as charted output
+        return 1.0 if a < start <= b else 0.0
     shared = (min(end, b) - max(start, a)).total_seconds()
     return max(0.0, shared) / (end - start).total_seconds()
 
@@ -462,8 +463,11 @@ def add_derived(case: Case) -> dict:
     handoff = case.handoff
     six_h = handoff - timedelta(hours=6)
     def times_in(start):
+        # An output entry charted at time t holds what was collected since the previous entry, so a
+        # window ending at handoff is (start, handoff]: an entry charted exactly at its start belongs
+        # to the hour before. Counting both ends would put 7 hourly entries in 6 hours.
         return [o for o in case.observations if o["source"] == "outputevents" and o["value"] is not None
-                and start <= datetime.fromisoformat(o["t"]) <= handoff]
+                and start < datetime.fromisoformat(o["t"]) <= handoff]
     out_6h, out_12h = times_in(six_h), times_in(case.trend_start)
     urine_rows = [o for o in out_6h if o["item_id"] in URINE_IDS]
     urine_6h = sum(o["value"] for o in urine_rows) \

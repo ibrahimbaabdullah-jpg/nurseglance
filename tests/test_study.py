@@ -181,3 +181,41 @@ def test_saving_again_with_the_same_stamp_overwrites(tmp_path, monkeypatch):
     assert files == ["R017_20261127-010000_events.csv", "R017_20261127-010000_summary.csv"]
     assert "note" in (tmp_path / files[0]).read_text()
 
+
+
+def test_ending_early_keeps_the_data_and_is_marked_abandoned(monkeypatch):
+    from app import research
+    logged = []
+    monkeypatch.setattr(study.events, "log", lambda event, target="", value="": logged.append(
+        {"run_id": "R1", "seed": "6", "event": event, "target": target, "value": value, "question_id": ""}))
+    plan = study.make_plan(6)
+    steps = study.make_steps(plan, study.load_questions(), study.load_practice())
+    first_q = next(i for i, s in enumerate(steps) if s["kind"] == "question")
+    run = {"run_id": "R1", "seed": 6, "plan": plan, "steps": steps, "i": first_q + 3, "shown": set(),
+           "paused": True}
+    study.end_early(run)
+    assert steps[run["i"]]["kind"] == "done" and run["abandoned"] and not run["paused"]
+    assert logged[-1]["event"] == "session_abandoned" and logged[-1]["value"] == 3   # 3 questions done
+    check = research.check_run([{"run_id": "R1", "seed": "6", "event": "session_start", "target": "",
+                                 "value": "", "question_id": ""}] + logged)
+    assert check["complete"] is False and "abandoned" in check["problems"]
+
+
+def test_summary_gives_each_case_its_position_within_the_view():
+    import csv
+    with open(data.ROOT / "docs" / "mock_session_events.csv", newline="", encoding="utf-8") as handle:
+        rows = list(csv.DictReader(handle))
+    plan = study.make_plan(2)
+    out = study.summarize(rows, study.make_steps(plan, study.load_questions(), study.load_practice()))
+    got = {r["case_id"]: r["case_position"] for r in out if r["kind"] != "survey"}
+    want = {c: n for block in plan for n, c in enumerate(block["cases"], start=1)}
+    assert got == want
+
+
+def test_a_question_never_answered_is_missing_not_wrong():
+    steps = study.make_steps(study.make_plan(6), study.load_questions())
+    qid = next(s["question"]["id"] for s in steps if s["kind"] == "question")
+    rows = [{"run_id": "R1", "seed": "6", "ts_utc": "2026-11-27T10:00:00.000Z", "view": "glance", "case_id": qid[:2],
+             "question_id": qid, "event": "question_shown", "target": "", "value": ""}]
+    out = study.summarize(rows, steps)[0]
+    assert out["correct"] == "" and out["time_s"] is None

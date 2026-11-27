@@ -336,9 +336,11 @@ def run(url: str, out: Path) -> None:
         answer(demo, "0.2")
         demo.cap("After each view come the System Usability Scale and NASA-TLX, then a break, debrief "
                  "notes and CSV files for analysis.", 6)
-        abandon = page.get_by_role("button", name="Abandon")
-        if abandon.count():
-            abandon.click()
+        end = page.get_by_role("button", name="End early")
+        if end.count():
+            end.click()
+            demo.settle()
+            page.get_by_role("button", name="Start a new session").click()
             demo.settle()
 
         # Virtual nurse
@@ -349,8 +351,8 @@ def run(url: str, out: Path) -> None:
         boxes = page.locator('[data-testid="stMain"] [data-testid="stCheckbox"]')
         for i in range(min(3, boxes.count())):
             demo.point(boxes.nth(i), click=True)
-        demo.cap("Virtual nurses showed cognitive fatigue within about 10 to 12 minutes of an encounter "
-                 "in a 2025 eye-tracking study.", 6)
+        demo.cap("In a 2025 eye-tracking study, 22 of 29 virtual-nurse encounters showed a first sign of "
+                 "cognitive fatigue 9.8 to 11.9 minutes in.", 6)
         note = page.get_by_text("Virtual admission review").first
         if note.count():
             note.scroll_into_view_if_needed()
